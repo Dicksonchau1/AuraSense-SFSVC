@@ -6,6 +6,7 @@ Instead of streaming raw video to the cloud, SFSVC converts frame changes into *
 
 This repository contains a **simple Python neuromorphic codec demo** and reference benchmark structure that demonstrate the core concept on real inspection video.
 
+
 ---
 
 ## Why this matters for drone inspection
