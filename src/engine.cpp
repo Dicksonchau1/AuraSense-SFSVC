@@ -10,6 +10,7 @@
 #include "yolo_manager.h"
 #include "yolo_bridge.h"
 #include "types.h"
+#include "detection_controller.h" // ✅ ADDED: Include for full class definition
 
 #include <algorithm>
 #include <chrono>
@@ -176,7 +177,7 @@ void MultiRateEngine::lane1_control()
         frame_id_.store(out.frame_id, std::memory_order_release);
         ++crack_frames_;
 
-        // --- NEW: Advanced Crack Fusion ---
+        // --- Advanced Crack Fusion ---
         const float sig_conf = latest_sig_conf_.load(std::memory_order_relaxed);
         const float luminance = 0.5f; // Placeholder, calculate from frame if needed
         CrackInferenceOutput inference_out = crack_inference_engine_->update(
@@ -187,7 +188,7 @@ void MultiRateEngine::lane1_control()
 
         last_crack_score_.store(out.fused_crack_score, std::memory_order_relaxed);
 
-        // Update the statistics tracker with the new fused score
+        // Update statistics tracker with the new fused score
         crack_stats_->update(t_start, out.crack_score, out.fused_crack_score, 0.0f, out.frame_id);
 
         ControlDecision decision = make_decision(out, sig_conf, semantic_age_ms());
@@ -265,7 +266,8 @@ void MultiRateEngine::lane2_signature()
         std::vector<float> descriptor;
         hist.copyTo(descriptor);
 
-        MatchResult raw_match = signature_bank_->find_match_full(descriptor, {}, {}, {}, {}, job.crack_score);
+        // ✅ FIXED: Corrected to 5 arguments to match signature_bank.hpp
+        MatchResult raw_match = signature_bank_->find_match_full(descriptor, {}, {}, {}, job.crack_score);
         SignatureMatch match = signature_bank_->to_signature_match(raw_match);
         latest_sig_conf_.store(match.confidence, std::memory_order_relaxed);
 

@@ -1,18 +1,8 @@
+// yolo_manager.h
 #pragma once
 
 #include <opencv2/opencv.hpp>
-
-struct YoloResult {
-    float front_risk       = 0.0f;
-    float left_risk        = 0.0f;
-    float right_risk       = 0.0f;
-    float crack_risk       = 0.0f;
-    float min_distance_m   = 0.0f;
-    float max_confidence   = 0.0f;
-    int   num_detections   = 0;
-    int   priority_detections = 0;
-    int   num_filtered_out = 0;
-};
+#include "yolo_bridge.h" // <--- INCLUDE THIS TO GET THE YoloResult DEFINITION
 
 struct AdaptiveYoloConfig {
     int  base_w;
@@ -33,6 +23,7 @@ public:
 
     ~YoloManager() = default;
 
+    // This can now use YoloResult without redefining it
     YoloResult run(const cv::Mat& frame, double timestamp_ms) {
         YoloResult r;
         // Placeholder inference logic

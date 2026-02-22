@@ -1,3 +1,4 @@
+// crack_statistics.hpp
 #pragma once
 
 #include <algorithm>
@@ -5,8 +6,7 @@
 #include <deque>
 #include <mutex>
 #include <vector>
-#include <string>  // ADD THIS
-
+#include <string>
 
 // =============================================================================
 // CrackStatistics - Real-Time Crack Analysis with Statistical Tracking
@@ -63,7 +63,6 @@ struct CrackStatistics {
 // =============================================================================
 // CrackStatisticsTracker - Maintains running statistics over time window
 // =============================================================================
-
 class CrackStatisticsTracker {
 public:
     explicit CrackStatisticsTracker(
@@ -176,17 +175,9 @@ public:
         last_detection_timestamp_ms_ = 0.0;
     }
 
-private:
-    struct CrackSample {
-        double timestamp_ms = 0.0;
-        float crack_score = 0.0f;
-        float fused_crack_score = 0.0f;
-        float yolo_confidence = 0.0f;
-        int frame_id = 0;
-    };
-
     // =========================================================================
-    // Compute full statistics (assumes lock is held)
+    // --- CORRECTED SECTION ---
+    // Compute full statistics (moved from private to public)
     // =========================================================================
     CrackStatistics compute_statistics(
         double current_time_ms,
@@ -332,6 +323,16 @@ private:
 
         return stats;
     }
+    // --- END OF CORRECTED SECTION ---
+
+private:
+    struct CrackSample {
+        double timestamp_ms = 0.0;
+        float crack_score = 0.0f;
+        float fused_crack_score = 0.0f;
+        float yolo_confidence = 0.0f;
+        int frame_id = 0;
+    };
 
     // =========================================================================
     // Helper: Compute variance of crack scores in window
