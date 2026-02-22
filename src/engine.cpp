@@ -40,39 +40,6 @@ static const FailsafeSignalConfig kFailsafeSignals[] = {
 };
 
 // =============================================================================
-// Internal Job Structs
-// =============================================================================
-struct Lane2Job {
-    uint64_t frame_id = 0;
-    int height = 0;
-    int width  = 0;
-    float crack_score = 0.0f;
-    std::vector<uint8_t> frame_bgr;
-};
-
-struct Lane3Job {
-    uint64_t frame_id = 0;
-    int height = 0;
-    int width  = 0;
-    double timestamp = 0.0;
-    float crack_score = 0.0f;
-    float sparsity = 0.0f;
-    float target_hz = 0.0f;
-    std::vector<uint8_t> frame_bgr;
-};
-
-struct VisJob {
-    uint64_t frame_id = 0;
-    int frame_h = 0;
-    int frame_w = 0;
-    float crack_score = 0.0f;
-    float sparsity = 0.0f;
-    int on_count = 0;
-    int off_count = 0;
-    std::vector<uint8_t> frame_bgr;
-};
-
-// =============================================================================
 // Constructor / Destructor
 // =============================================================================
 

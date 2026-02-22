@@ -1,4 +1,5 @@
 #pragma once
+#include "yolo_manager.h"
 #include <opencv2/core.hpp>
 
 struct YoloResult {
