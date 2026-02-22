@@ -5,6 +5,8 @@
 #include <deque>
 #include <mutex>
 #include <vector>
+#include <string>  // ADD THIS
+
 
 // =============================================================================
 // CrackStatistics - Real-Time Crack Analysis with Statistical Tracking

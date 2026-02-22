@@ -4,14 +4,12 @@
 
 #include "engine.h"
 #include "rt_core.h"
-#include "signature_bank.h"
-#include "gating_engine.h"
-#include "failsafe.h"
-#include "detection_controller.h"
-#include "crack_statistics.h"
-#include "yolo_manager.h"
-#include "yolo_bridge.h" // Real YOLO implementation
-#include "types.h"
+#include "signature_bank.hpp"
+#include "gating_engine.hpp"
+#include "failsafe.hpp"
+#include "crack_statistics.hpp"
+#include "yolo_bridge.hpp"
+#include "types.h"              // this one is already .h in your tree
 
 #include <algorithm>
 #include <chrono>
