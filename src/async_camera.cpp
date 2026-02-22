@@ -1,6 +1,5 @@
 // async_camera.cpp
 #define PY_SSIZE_T_CLEAN
-#include <pybind11/pybind11.h>
 #include <opencv2/opencv.hpp>
 #include <thread>
 #include <atomic>

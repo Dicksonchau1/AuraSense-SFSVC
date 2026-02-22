@@ -1,28 +1,30 @@
 // =============================================================================
-// engine.cpp — AuraSense SFSVC MultiRateEngine
-// Approach B: rt_core is the authoritative sensing core.
-// Lane 1 owns the downscale + rt_core call. All other lanes are consumers.
+// engine.cpp — AuraSense SFSVC MultiRateEngine (Production Grade)
 // =============================================================================
 
 #include "engine.h"
 #include "rt_core.h"
+#include "signature_bank.h"
+#include "gating_engine.h"
+#include "failsafe.h"
+#include "detection_controller.h"
+#include "crack_statistics.h"
+#include "yolo_manager.h"
+#include "yolo_bridge.h" // Real YOLO implementation
+#include "types.h"
 
 #include <algorithm>
 #include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <vector>
+#include <memory>
 
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc.hpp>
 
-// Simple queue stub (replace with your real lock-free queue)
-template<typename T>
-class LockFreeQueue {
-public:
-    bool try_push(T&&) { return true; }
-    bool try_pop(T&)   { return false; }
-};
+// Use your real lock-free queue implementation
+#include "lockfree_queue.h"
 
 // =============================================================================
 // Internal clock — nanosecond-resolution, monotonic
@@ -35,7 +37,7 @@ static inline double now_ms() noexcept
 }
 
 // =============================================================================
-// Failsafe configuration (index-based API: 0=lane1,1=yolo_age,2=signature_age)
+// Failsafe configuration (index-based API)
 // =============================================================================
 static const FailsafeSignalConfig kFailsafeSignals[] = {
     { "lane1_latency", 200.0f, 500.0f,
@@ -87,19 +89,6 @@ struct VisJob {
     std::vector<uint8_t> frame_bgr;
 };
 
-// Minimal YOLO result placeholder
-struct YoloResult {
-    float front_risk          = 0.0f;
-    float left_risk           = 0.0f;
-    float right_risk          = 0.0f;
-    float crack_risk          = 0.0f;
-    float min_distance_m      = 0.0f;
-    float max_confidence      = 0.0f;
-    int   num_detections      = 0;
-    int   priority_detections = 0;
-    int   num_filtered_out    = 0;
-};
-
 // =============================================================================
 // Constructors / Destructor
 // =============================================================================
@@ -108,22 +97,32 @@ MultiRateEngine::MultiRateEngine(ControlCallback ctrl_cb,
                                  UplinkCallback  uplink_cb)
     : ctrl_cb_(std::move(ctrl_cb))
     , uplink_cb_(std::move(uplink_cb))
+    // NEW: initialize advanced statistics tracker with sane defaults
+    , crack_statistics_tracker_(
+        5000.0,   // window_ms
+        0.1f,     // px_to_mm_scale (will be updated from config)
+        3.0f,     // critical_width_mm
+        1.0f,     // warning_width_mm
+        0.3f      // hairline_width_mm
+      )
 {
-    // Allocate queues
-    camera_queue_ = new LockFreeQueue<Lane2Job>();
-    sig_queue_    = new LockFreeQueue<Lane2Job>();
-    yolo_queue_   = new LockFreeQueue<Lane3Job>();
-    uplink_queue_ = new LockFreeQueue<UplinkPayload>();
-    vis_queue_    = new LockFreeQueue<VisJob>();
+    // Allocate queues using your LockFreeQueue implementation
+    camera_queue_    = new LockFreeQueue<Lane2Job, 64>();
+    sig_queue_       = new LockFreeQueue<Lane2Job, 64>();
+    yolo_queue_      = new LockFreeQueue<Lane3Job, 32>();
+    uplink_queue_    = new LockFreeQueue<UplinkPayload, 128>();
+    vis_queue_       = new LockFreeQueue<VisJob, 32>();
+    callback_queue_  = new LockFreeQueue<CallbackJob, 64>();
 
-    // Allocate core components
-    crack_stats_    = new CrackStatistics(5000.0);
-    det_controller_ = new DetectionController(5000.0);
-    failsafe_       = new FailsafeMonitor(kFailsafeSignals,
-                      sizeof(kFailsafeSignals) / sizeof(kFailsafeSignals[0]));
-    yolo_manager_   = new YoloManager({416, 234, 320, 180, 640, 360, true, true, 1.3f});
-    signature_bank_ = new SignatureBank(500, 0.30f, 3600.0);
-    gating_engine_  = new GatingEngine(0.75f, 50, 1000.0f);
+    // Allocate core components using unique_ptr for safety
+    crack_stats_     = std::make_unique<CrackStatistics>(5000.0);
+    det_controller_  = std::make_unique<DetectionController>(5000.0);
+    failsafe_        = std::make_unique<FailsafeMonitor>(kFailsafeSignals,
+                        sizeof(kFailsafeSignals) / sizeof(kFailsafeSignals[0]));
+    yolo_manager_    = std::make_unique<YoloManager>(
+                        AdaptiveYoloConfig{416, 234, 320, 180, 640, 360, true, true, 1.3f});
+    signature_bank_  = std::make_unique<SignatureBank>(500, 0.30f, 3600.0);
+    gating_engine_   = std::make_unique<GatingEngine>(0.75f, 50, 1000.0f);
 }
 
 MultiRateEngine::~MultiRateEngine()
@@ -132,18 +131,12 @@ MultiRateEngine::~MultiRateEngine()
     delete semantic_state_.exchange(nullptr);
     delete last_sig_match_.exchange(nullptr);
 
-    delete signature_bank_;
-    delete gating_engine_;
-    delete failsafe_;
-    delete crack_stats_;
-    delete yolo_manager_;
-    delete det_controller_;
-
     delete camera_queue_;
     delete sig_queue_;
     delete yolo_queue_;
     delete uplink_queue_;
     delete vis_queue_;
+    delete callback_queue_;
 }
 
 // =============================================================================
@@ -161,6 +154,7 @@ void MultiRateEngine::start(const EngineConfig& cfg)
     if (running_.exchange(true)) return;
 
     cfg_ = cfg;
+    px_to_mm_.store(cfg.px_to_mm_scale, std::memory_order_relaxed);
 
     start_time_      = now_ms();
     last_yolo_stamp_ = start_time_;
@@ -176,6 +170,9 @@ void MultiRateEngine::start(const EngineConfig& cfg)
         t4_ = std::thread(&MultiRateEngine::lane4_uplink,    this);
     if (cfg.enable_lane5)
         t5_ = std::thread(&MultiRateEngine::lane5_visualize, this);
+
+    if (ctrl_cb_ || uplink_cb_)
+        callback_thread_ = std::thread(&MultiRateEngine::lane6_callback_dispatcher, this);
 }
 
 void MultiRateEngine::stop()
@@ -187,6 +184,7 @@ void MultiRateEngine::stop()
     if (t3_.joinable()) t3_.join();
     if (t4_.joinable()) t4_.join();
     if (t5_.joinable()) t5_.join();
+    if (callback_thread_.joinable()) callback_thread_.join();
 }
 
 // =============================================================================
@@ -196,7 +194,7 @@ void MultiRateEngine::stop()
 void MultiRateEngine::push_frame(const uint8_t* bgr, int h, int w)
 {
     if (!running_.load(std::memory_order_relaxed)) return;
-    if (!bgr || h <= 0 || w <= 0)           return;
+    if (!bgr || h <= 0 || w <= 0)         return;
 
     Lane2Job job;
     job.frame_id    = frame_id_.load(std::memory_order_acquire);
@@ -248,10 +246,31 @@ void MultiRateEngine::lane1_control()
             rt_core_process_frame_ptr(
                 downscaled.data, target_h, target_w);
 
+        // --- NEW: Advanced Crack Fusion ---
+        const float sig_conf_lane1 = latest_sig_conf_.load(std::memory_order_relaxed);
+
+        CrackInferenceOutput inference_out = crack_inference_engine_.update(
+            out.crack_score,   // raw_crack from rt_core
+            out.sparsity,      // sparsity
+            0.5f,              // luminance (placeholder, real value later)
+            sig_conf_lane1     // signature confidence
+        );
+
+        out.fused_crack_score = inference_out.fused_probability;
+
+        CrackStatistics current_stats = crack_statistics_tracker_.update(
+            t_start,
+            out.crack_score,
+            out.fused_crack_score,
+            0.0f,              // yolo_crack_confidence (lane3 will refine)
+            out.frame_id
+        );
+        // --- End of NEW Section ---
+
         frame_id_.store(out.frame_id,
                         std::memory_order_release);
 
-        last_crack_score_.store(out.crack_score,
+        last_crack_score_.store(out.fused_crack_score,
                                 std::memory_order_relaxed);
 
         crack_stats_->add_sample(t_start, out.crack_score);
@@ -264,12 +283,18 @@ void MultiRateEngine::lane1_control()
         ControlDecision decision =
             make_decision(out, sig_conf, sem_age);
 
-        if (ctrl_cb_) ctrl_cb_(decision);
+        if (ctrl_cb_) {
+            CallbackJob cb_job;
+            cb_job.is_control = true;
+            cb_job.ctrl_dec   = decision;
+            callback_queue_->try_push(std::move(cb_job));
+        }
 
         // Fan-out to Lane 2 (signature)
-        job.frame_id    = out.frame_id;
-        job.crack_score = out.crack_score;
-        sig_queue_->try_push(job);
+        Lane2Job sig_job = job;
+        sig_job.frame_id    = out.frame_id;
+        sig_job.crack_score = out.crack_score;
+        sig_queue_->try_push(std::move(sig_job));
 
         // Fan-out to Lane 3 (YOLO)
         {
@@ -309,9 +334,7 @@ void MultiRateEngine::lane1_control()
             latency_head_ = (latency_head_ + 1) % latency_ring_.size();
             if (latency_count_ < latency_ring_.size())
                 ++latency_count_;
-            // Simple fixed threshold for now
-            const double max_control_latency_ms = 500.0;
-            if (latency > max_control_latency_ms)
+            if (latency > cfg_.max_control_latency_ms)
                 ++latency_violations_;
         }
 
@@ -329,11 +352,13 @@ void MultiRateEngine::lane1_control()
             up.control_latency_ms = latency;
             uplink_queue_->try_push(std::move(up));
         }
+
+        update_benchmark(1, latency);
     }
 }
 
 // =============================================================================
-// Lane 2 — Signature
+// Lane 2 — Signature (real confidence from SignatureBank)
 // =============================================================================
 
 void MultiRateEngine::lane2_signature()
@@ -347,9 +372,22 @@ void MultiRateEngine::lane2_signature()
         }
         if (job.frame_bgr.empty()) continue;
 
+        const double t_start = now_ms();
+
+        cv::Mat frame_gray, hist;
+        cv::cvtColor(cv::Mat(job.height, job.width, CV_8UC3, job.frame_bgr.data()),
+                     frame_gray, cv::COLOR_BGR2GRAY);
+        int histSize = 256;
+        float range[] = { 0, 256 };
+        const float* histRange = { range };
+        cv::calcHist(&frame_gray, 1, 0, cv::Mat(), hist, 1, &histSize, &histRange);
+        cv::normalize(hist, hist, 0, 1, cv::NORM_L1);
+        std::vector<float> descriptor;
+        hist.copyTo(descriptor);
+
         MatchResult raw_match =
             signature_bank_->find_match_full(
-                {}, {}, {}, {}, job.crack_score);
+                descriptor, {}, {}, {}, job.crack_score);
 
         SignatureMatch match =
             signature_bank_->to_signature_match(raw_match);
@@ -357,17 +395,17 @@ void MultiRateEngine::lane2_signature()
         latest_sig_conf_.store(match.confidence,
                                std::memory_order_relaxed);
 
-        SignatureMatch* new_match =
-            new SignatureMatch(match);
+        auto new_match = std::make_unique<SignatureMatch>(match);
         SignatureMatch* old_match =
-            last_sig_match_.exchange(new_match,
-                                     std::memory_order_acq_rel);
+            last_sig_match_.exchange(new_match.release(), std::memory_order_acq_rel);
         delete old_match;
+
+        update_benchmark(2, now_ms() - t_start);
     }
 }
 
 // =============================================================================
-// Lane 3 — YOLO + gating (placeholder YOLO)
+// Lane 3 — YOLO + gating (real Hz + age metrics)
 // =============================================================================
 
 void MultiRateEngine::lane3_yolo()
@@ -397,10 +435,8 @@ void MultiRateEngine::lane3_yolo()
         if (!gd.should_infer)
             continue;
 
-        // Placeholder YOLO result
-        YoloResult yolo_result{};
-        yolo_result.max_confidence = 0.0f;
-        yolo_result.crack_risk     = job.crack_score;
+        cv::Mat yolo_input(job.height, job.width, CV_8UC3, job.frame_bgr.data());
+        YoloResult yolo_result = run_yolo(yolo_input, t0);
 
         rt_core_yolo_publish(
             t0 / 1000.0,
@@ -414,6 +450,9 @@ void MultiRateEngine::lane3_yolo()
             yolo_result.priority_detections,
             yolo_result.num_filtered_out);
 
+        det_controller_->add_detection(t0, yolo_result.max_confidence, job.crack_score);
+        det_controller_->update_adaptive_thresholds();
+
         ++yolo_count_;
         const double prev = last_yolo_stamp_;
         last_yolo_stamp_  = t0;
@@ -425,14 +464,23 @@ void MultiRateEngine::lane3_yolo()
             }
         }
 
-        auto* s = new SemanticState{};
-        s->frame_id     = job.frame_id;
-        s->timestamp_ms = t0;
-        s->latency_ms   = 0.0;
+        auto s = std::make_unique<SemanticState>();
+        s->frame_id       = job.frame_id;
+        s->timestamp_ms   = t0;
+        s->latency_ms     = 0.0;
+        s->front_risk     = yolo_result.front_risk;
+        s->left_risk      = yolo_result.left_risk;
+        s->right_risk     = yolo_result.right_risk;
+        s->crack_risk     = yolo_result.crack_risk;
+        s->num_detections = yolo_result.num_detections;
+        s->max_confidence = yolo_result.max_confidence;
+        s->agreement      = (yolo_result.crack_risk > 0.2f && job.crack_score > 0.2f) ? 1.0f : 0.0f;
 
         SemanticState* old =
-            semantic_state_.exchange(s, std::memory_order_acq_rel);
+            semantic_state_.exchange(s.release(), std::memory_order_acq_rel);
         delete old;
+
+        update_benchmark(3, now_ms() - t0);
     }
 }
 
@@ -453,8 +501,12 @@ void MultiRateEngine::lane4_uplink()
         ++uplink_count_;
 
         if (uplink_cb_) {
-            uplink_cb_(up);
+            CallbackJob cb_job;
+            cb_job.is_control     = false;
+            cb_job.uplink_payload = up;
+            callback_queue_->try_push(std::move(cb_job));
         }
+        update_benchmark(4, 0.0);
     }
 }
 
@@ -464,7 +516,7 @@ void MultiRateEngine::lane4_uplink()
 
 void MultiRateEngine::lane5_visualize()
 {
-    cv::Mat vis, recon;
+    cv::Mat vis;
 
     while (running_.load(std::memory_order_relaxed))
     {
@@ -476,22 +528,19 @@ void MultiRateEngine::lane5_visualize()
         if (job.frame_bgr.empty() || job.frame_h <= 0 || job.frame_w <= 0)
             continue;
 
-        cv::Mat frame(job.frame_h, job.frame_w, CV_8UC3,
-                      job.frame_bgr.data());
+        const double t_start = now_ms();
 
-        recon = frame.clone();
+        cv::Mat frame(job.frame_h, job.frame_w, CV_8UC3, job.frame_bgr.data());
+
+        vis = cv::Mat(job.frame_h, job.frame_w * 2, CV_8UC3);
+        frame.copyTo(vis(cv::Rect(0, 0, job.frame_w, job.frame_h)));
+
+        cv::Mat right_half = vis(cv::Rect(job.frame_w, 0, job.frame_w, job.frame_h));
         const float cs = std::max(0.0f, std::min(1.0f, job.crack_score));
         if (cs > 0.0f) {
-            cv::Mat tint(frame.size(), frame.type(),
-                         cv::Scalar(0, 0, 255));
-            cv::addWeighted(tint, cs, recon, 1.0 - cs, 0.0, recon);
+            cv::Mat tint(right_half.size(), right_half.type(), cv::Scalar(0, 0, 255));
+            cv::addWeighted(tint, cs, right_half, 1.0 - cs, 0.0, right_half);
         }
-
-        vis = cv::Mat(job.frame_h,
-                      job.frame_w * 2,
-                      CV_8UC3);
-        frame.copyTo(vis(cv::Rect(0, 0, job.frame_w, job.frame_h)));
-        recon.copyTo(vis(cv::Rect(job.frame_w, 0, job.frame_w, job.frame_h)));
 
         const cv::Scalar box_color(0, 0, 0);
         const cv::Scalar text_color(200, 255, 200);
@@ -500,50 +549,23 @@ void MultiRateEngine::lane5_visualize()
 
         const int box_w = 360;
         const int box_h = 80;
-        cv::rectangle(vis,
-                      cv::Rect(10, 10, box_w, box_h),
-                      box_color,
-                      cv::FILLED);
+        cv::rectangle(vis, cv::Rect(10, 10, box_w, box_h), box_color, cv::FILLED);
 
         char buf[160];
-        std::snprintf(buf, sizeof(buf),
-                      "Crack: %.3f  Spikes: %d / %d",
-                      job.crack_score,
-                      job.on_count,
-                      job.off_count);
-
-        cv::putText(vis,
-                    buf,
-                    cv::Point(20, 40),
-                    cv::FONT_HERSHEY_SIMPLEX,
-                    0.6,
-                    text_color,
-                    1,
-                    cv::LINE_AA);
+        std::snprintf(buf, sizeof(buf), "Crack: %.3f  Spikes: %d / %d",
+                      job.crack_score, job.on_count, job.off_count);
+        cv::putText(vis, buf, cv::Point(20, 40), cv::FONT_HERSHEY_SIMPLEX,
+                    0.6, text_color, 1, cv::LINE_AA);
 
         const char* sev_label = "OK";
         cv::Scalar sev_color  = text_color;
-        if (cs > 0.33f) {
-            sev_label = "CRITICAL";
-            sev_color = crit_color;
-        } else if (cs > 0.11f) {
-            sev_label = "WARNING";
-            sev_color = warn_color;
-        }
+        if (cs > 0.33f) { sev_label = "CRITICAL"; sev_color = crit_color; }
+        else if (cs > 0.11f) { sev_label = "WARNING"; sev_color = warn_color; }
 
-        std::snprintf(buf, sizeof(buf),
-                      "Severity: %s  Sparsity: %.3f",
-                      sev_label,
-                      job.sparsity);
-
-        cv::putText(vis,
-                    buf,
-                    cv::Point(20, 65),
-                    cv::FONT_HERSHEY_SIMPLEX,
-                    0.6,
-                    sev_color,
-                    1,
-                    cv::LINE_AA);
+        std::snprintf(buf, sizeof(buf), "Severity: %s  Sparsity: %.3f",
+                      sev_label, job.sparsity);
+        cv::putText(vis, buf, cv::Point(20, 65), cv::FONT_HERSHEY_SIMPLEX,
+                    0.6, sev_color, 1, cv::LINE_AA);
 
         std::vector<uint8_t> jpeg;
         if (cv::imencode(".jpg", vis, jpeg)) {
@@ -558,11 +580,33 @@ void MultiRateEngine::lane5_visualize()
             last_vis_stamp_   = now;
             if (dt_s > 0.0) {
                 const double mbps = (bits / 1e6) / dt_s;
-                spike_bitrate_mbps_.store(
-                    static_cast<float>(mbps),
-                    std::memory_order_relaxed);
+                spike_bitrate_mbps_.store(static_cast<float>(mbps),
+                                          std::memory_order_relaxed);
             }
         }
+        update_benchmark(5, now_ms() - t_start);
+    }
+}
+
+// =============================================================================
+// Lane 6 — Callback Dispatcher
+// =============================================================================
+
+void MultiRateEngine::lane6_callback_dispatcher()
+{
+    while (running_.load(std::memory_order_relaxed)) {
+        CallbackJob job;
+        if (!callback_queue_->try_pop(job)) {
+            std::this_thread::yield();
+            continue;
+        }
+
+        if (job.is_control) {
+            if (ctrl_cb_) ctrl_cb_(job.ctrl_dec);
+        } else {
+            if (uplink_cb_) uplink_cb_(job.uplink_payload);
+        }
+        ++uplink_count_;
     }
 }
 
@@ -604,6 +648,19 @@ ControlDecision MultiRateEngine::make_decision(
     d.encode_time_ms      = rt_out.encode_time_ms;
 
     return d;
+}
+
+void MultiRateEngine::update_benchmark(int lane_id, double duration_ms)
+{
+    std::lock_guard<std::mutex> lk(benchmark_mutex_);
+    const double alpha = 0.05;
+    switch(lane_id) {
+        case 1: benchmark_.lane1_avg_ms = (1.0 - alpha) * benchmark_.lane1_avg_ms + alpha * duration_ms; break;
+        case 2: benchmark_.lane2_avg_ms = (1.0 - alpha) * benchmark_.lane2_avg_ms + alpha * duration_ms; break;
+        case 3: benchmark_.lane3_avg_ms = (1.0 - alpha) * benchmark_.lane3_avg_ms + alpha * duration_ms; break;
+        case 4: benchmark_.lane4_avg_ms = (1.0 - alpha) * benchmark_.lane4_avg_ms + alpha * duration_ms; break;
+        case 5: benchmark_.lane5_avg_ms = (1.0 - alpha) * benchmark_.lane5_avg_ms + alpha * duration_ms; break;
+    }
 }
 
 // =============================================================================
@@ -652,7 +709,24 @@ Metrics MultiRateEngine::get_metrics() const
     m.yolo_age_ms        = static_cast<float>(semantic_age_ms());
     m.spike_bitrate_mbps = spike_bitrate_mbps_.load(std::memory_order_relaxed);
 
+    m.crack_alert_thr    = 0.2f;
+    m.yolo_conf_thr      = det_controller_->yolo_conf_threshold();
+    m.avg_yolo_conf      = det_controller_->avg_yolo_conf();
+    m.avg_crack_score    = det_controller_->avg_crack_score();
+    m.avg_agreement      = det_controller_->avg_agreement();
+
     m.px_to_mm_scale     = px_to_mm_.load(std::memory_order_relaxed);
+
+    // --- NEW: advanced statistics snapshot ---
+    CrackStatistics stats = crack_statistics_tracker_.compute_statistics(
+        now_ms(),
+        m.last_crack,
+        m.frame_id
+    );
+    m.vis_crack_width_mm  = stats.width_mm;
+    m.vis_crack_length_mm = stats.length_mm;
+    m.avg_crack_score     = stats.avg_crack_score;
+    // --- End of NEW Section ---
 
     return m;
 }
@@ -674,13 +748,18 @@ void MultiRateEngine::print_stats() const
     Metrics m = get_metrics();
     std::printf(
         "[Engine] frame=%llu fps=%.1f crack=%.3f sig_conf=%.3f\n"
-        "         latency P50=%.2fms P95=%.2fms P99=%.2fms\n"
-        "         violations=%llu yolo_count=%llu uplink=%llu\n",
+        "         latency P50=%.2fms P95=%.2fms P99=%.2fms (thr=%.1fms)\n"
+        "         violations=%llu yolo_count=%llu uplink=%llu\n"
+        "         Benchmarks: L1=%.2fms L2=%.2fms L3=%.2fms L5=%.2fms\n"
+        "         Averages: YoloConf=%.3f Crack=%.3f Agreement=%.3f\n",
         (unsigned long long)m.frame_id, m.fps, m.last_crack, m.sig_conf,
-        m.latency_p50_ms, m.latency_p95_ms, m.latency_p99_ms,
+        m.latency_p50_ms, m.latency_p95_ms, m.latency_p99_ms, cfg_.max_control_latency_ms,
         (unsigned long long)m.latency_violations,
         (unsigned long long)m.yolo_count,
-        (unsigned long long)m.uplink_count);
+        (unsigned long long)m.uplink_count,
+        benchmark_.lane1_avg_ms, benchmark_.lane2_avg_ms, benchmark_.lane3_avg_ms, benchmark_.lane5_avg_ms,
+        m.avg_yolo_conf, m.avg_crack_score, m.avg_agreement
+    );
 }
 
 void MultiRateEngine::_emergency_stop()
@@ -694,7 +773,10 @@ void MultiRateEngine::_emergency_stop()
         d.steer         = 0.0f;
         d.is_null_cycle = true;
         d.frame_id      = frame_id_.load();
-        ctrl_cb_(d);
+        CallbackJob job;
+        job.is_control = true;
+        job.ctrl_dec   = d;
+        callback_queue_->try_push(std::move(job));
     }
     running_.store(false, std::memory_order_relaxed);
 }

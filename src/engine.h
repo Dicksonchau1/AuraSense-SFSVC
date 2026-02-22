@@ -8,9 +8,16 @@
 #include <thread>
 #include <vector>
 #include <array>
+#include <memory>
+
+// Core C API
+#include "rt_core.h"
+
+// Advanced inference & statistics
+#include "crack_inference.hpp"
+#include "crack_statistics.hpp"
 
 // Forward declarations from other modules
-struct ControlOutput;      // from rt_core.h
 struct SignatureMatch;
 struct SemanticState;
 class SignatureBank;
@@ -95,12 +102,21 @@ struct BenchmarkSuite {
     double lane5_avg_ms = 0.0;
 };
 
+// Non-blocking callback dispatch jobs
+struct CallbackJob {
+    ControlDecision ctrl_dec;
+    UplinkPayload   uplink_payload;
+    bool            is_control = true;
+};
+
 struct EngineConfig {
-    bool enable_lane1 = true;
-    bool enable_lane2 = true;
-    bool enable_lane3 = true;
-    bool enable_lane4 = true;
-    bool enable_lane5 = true;
+    bool  enable_lane1           = true;
+    bool  enable_lane2           = true;
+    bool  enable_lane3           = true;
+    bool  enable_lane4           = true;
+    bool  enable_lane5           = true;
+    float max_control_latency_ms = 50.0f; // Configurable latency threshold
+    float px_to_mm_scale         = 0.1f;
 };
 
 using ControlCallback = std::function<void(const ControlDecision&)>;
@@ -136,15 +152,16 @@ public:
 
 private:
     // --- Threads ---
-    std::thread      t1_, t2_, t3_, t4_, t5_;
+    std::thread       t1_, t2_, t3_, t4_, t5_, callback_thread_;
     std::atomic<bool> running_{false};
 
     // --- Queues ---
-    LockFreeQueue<Lane2Job>* camera_queue_ = nullptr;
-    LockFreeQueue<Lane2Job>* sig_queue_    = nullptr;
-    LockFreeQueue<Lane3Job>* yolo_queue_   = nullptr;
-    LockFreeQueue<UplinkPayload>* uplink_queue_ = nullptr;
-    LockFreeQueue<VisJob>*  vis_queue_     = nullptr;
+    LockFreeQueue<Lane2Job>*      camera_queue_   = nullptr;
+    LockFreeQueue<Lane2Job>*      sig_queue_      = nullptr;
+    LockFreeQueue<Lane3Job>*      yolo_queue_     = nullptr;
+    LockFreeQueue<UplinkPayload>* uplink_queue_   = nullptr;
+    LockFreeQueue<VisJob>*        vis_queue_      = nullptr;
+    LockFreeQueue<CallbackJob>*   callback_queue_ = nullptr;
 
     // --- Core State ---
     std::atomic<uint64_t> frame_id_{0};
@@ -154,21 +171,25 @@ private:
     std::atomic<float>    spike_bitrate_mbps_{0.0f};
     std::atomic<float>    px_to_mm_{0.1f};
 
-    SignatureBank*      signature_bank_  = nullptr;
-    GatingEngine*       gating_engine_   = nullptr;
-    FailsafeMonitor*    failsafe_        = nullptr;
-    CrackStatistics*    crack_stats_     = nullptr;
-    YoloManager*        yolo_manager_    = nullptr;
-    DetectionController* det_controller_ = nullptr;
+    std::unique_ptr<SignatureBank>     signature_bank_;
+    std::unique_ptr<GatingEngine>      gating_engine_;
+    std::unique_ptr<FailsafeMonitor>   failsafe_;
+    std::unique_ptr<CrackStatistics>   crack_stats_;
+    std::unique_ptr<YoloManager>       yolo_manager_;
+    std::unique_ptr<DetectionController> det_controller_;
+
+    // --- NEW: Advanced Inference & Statistics ---
+    CrackInferenceEngine   crack_inference_engine_;
+    CrackStatisticsTracker crack_statistics_tracker_;
 
     // --- Atomic pointers for latest data ---
     std::atomic<SemanticState*>  semantic_state_{nullptr};
     std::atomic<SignatureMatch*> last_sig_match_{nullptr};
 
     // --- Metrics & Timing ---
-    double start_time_      = 0.0;
-    double last_yolo_stamp_ = 0.0;
-    double last_vis_stamp_  = 0.0;
+    double              start_time_      = 0.0;
+    double              last_yolo_stamp_ = 0.0;
+    double              last_vis_stamp_  = 0.0;
     std::atomic<uint64_t> crack_frames_{0};
     std::atomic<uint64_t> yolo_count_{0};
     std::atomic<uint64_t> uplink_count_{0};
@@ -182,7 +203,7 @@ private:
     mutable std::mutex   vis_mutex_;
     std::vector<uint8_t> latest_spike_jpeg_;
 
-    // --- Benchmarking (simple placeholder struct) ---
+    // --- Benchmarking ---
     mutable std::mutex benchmark_mutex_;
     BenchmarkSuite      benchmark_{};
 
@@ -199,10 +220,12 @@ private:
     void lane3_yolo();
     void lane4_uplink();
     void lane5_visualize();
+    void lane6_callback_dispatcher();
 
     // --- Helpers ---
     ControlDecision make_decision(const ControlOutput& rt_out,
                                   float sig_conf,
                                   double sem_age_ms) const;
     double semantic_age_ms() const;
+    void   update_benchmark(int lane_id, double duration_ms);
 };
