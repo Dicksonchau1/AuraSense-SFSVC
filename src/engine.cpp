@@ -8,14 +8,21 @@
 #include "rt_core.h"
 
 #include <algorithm>
-#include <cassert>
 #include <chrono>
 #include <cmath>
 #include <cstdio>
-#include <numeric>
+#include <vector>
 
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc.hpp>
+
+// Simple queue stub (replace with your real lock-free queue)
+template<typename T>
+class LockFreeQueue {
+public:
+    bool try_push(T&&) { return true; }
+    bool try_pop(T&)   { return false; }
+};
 
 // =============================================================================
 // Internal clock — nanosecond-resolution, monotonic
@@ -48,8 +55,39 @@ static const FailsafeSignalConfig kFailsafeSignals[] = {
 };
 
 // =============================================================================
-// Minimal YOLO result placeholder (real YOLO can fill this)
+// Job Structures for Inter-Lane Communication
 // =============================================================================
+struct Lane2Job {
+    uint64_t frame_id    = 0;
+    int      height      = 0;
+    int      width       = 0;
+    float    crack_score = 0.0f;
+    std::vector<uint8_t> frame_bgr;
+};
+
+struct Lane3Job {
+    uint64_t frame_id    = 0;
+    int      height      = 0;
+    int      width       = 0;
+    double   timestamp   = 0.0;
+    float    crack_score = 0.0f;
+    float    sparsity    = 0.0f;
+    float    target_hz   = 0.0f;
+    std::vector<uint8_t> frame_bgr;
+};
+
+struct VisJob {
+    uint64_t frame_id    = 0;
+    int      frame_h     = 0;
+    int      frame_w     = 0;
+    float    crack_score = 0.0f;
+    float    sparsity    = 0.0f;
+    int      on_count    = 0;
+    int      off_count   = 0;
+    std::vector<uint8_t> frame_bgr;
+};
+
+// Minimal YOLO result placeholder
 struct YoloResult {
     float front_risk          = 0.0f;
     float left_risk           = 0.0f;
@@ -68,25 +106,24 @@ struct YoloResult {
 
 MultiRateEngine::MultiRateEngine(ControlCallback ctrl_cb,
                                  UplinkCallback  uplink_cb)
-    : ctrl_cb_        (std::move(ctrl_cb))
-    , uplink_cb_      (std::move(uplink_cb))
-    , crack_stats_    (5000.0)
-    , det_controller_ (5000.0)
-    , failsafe_(kFailsafeSignals,
-                sizeof(kFailsafeSignals) / sizeof(kFailsafeSignals[0]))
-    , yolo_manager_   ({416, 234, 320, 180, 640, 360, true, true, 1.3f})
-    , signature_bank_ (new SignatureBank(500, 0.30f, 3600.0))
-    , gating_engine_  (0.75f, 50, 1000.0f)
-{}
-
-MultiRateEngine::MultiRateEngine(ControlCallback ctrl_cb,
-                                 UplinkCallback  uplink_cb,
-                                 int             frame_height,
-                                 int             frame_width)
-    : MultiRateEngine(std::move(ctrl_cb), std::move(uplink_cb))
+    : ctrl_cb_(std::move(ctrl_cb))
+    , uplink_cb_(std::move(uplink_cb))
 {
-    frame_height_ = frame_height;
-    frame_width_  = frame_width;
+    // Allocate queues
+    camera_queue_ = new LockFreeQueue<Lane2Job>();
+    sig_queue_    = new LockFreeQueue<Lane2Job>();
+    yolo_queue_   = new LockFreeQueue<Lane3Job>();
+    uplink_queue_ = new LockFreeQueue<UplinkPayload>();
+    vis_queue_    = new LockFreeQueue<VisJob>();
+
+    // Allocate core components
+    crack_stats_    = new CrackStatistics(5000.0);
+    det_controller_ = new DetectionController(5000.0);
+    failsafe_       = new FailsafeMonitor(kFailsafeSignals,
+                      sizeof(kFailsafeSignals) / sizeof(kFailsafeSignals[0]));
+    yolo_manager_   = new YoloManager({416, 234, 320, 180, 640, 360, true, true, 1.3f});
+    signature_bank_ = new SignatureBank(500, 0.30f, 3600.0);
+    gating_engine_  = new GatingEngine(0.75f, 50, 1000.0f);
 }
 
 MultiRateEngine::~MultiRateEngine()
@@ -94,7 +131,19 @@ MultiRateEngine::~MultiRateEngine()
     stop();
     delete semantic_state_.exchange(nullptr);
     delete last_sig_match_.exchange(nullptr);
+
     delete signature_bank_;
+    delete gating_engine_;
+    delete failsafe_;
+    delete crack_stats_;
+    delete yolo_manager_;
+    delete det_controller_;
+
+    delete camera_queue_;
+    delete sig_queue_;
+    delete yolo_queue_;
+    delete uplink_queue_;
+    delete vis_queue_;
 }
 
 // =============================================================================
@@ -103,22 +152,35 @@ MultiRateEngine::~MultiRateEngine()
 
 void MultiRateEngine::start()
 {
-    if (running_.exchange(true)) return;   // idempotent
+    EngineConfig cfg;
+    start(cfg);
+}
+
+void MultiRateEngine::start(const EngineConfig& cfg)
+{
+    if (running_.exchange(true)) return;
+
+    cfg_ = cfg;
 
     start_time_      = now_ms();
     last_yolo_stamp_ = start_time_;
     last_vis_stamp_  = start_time_;
 
-    t1_ = std::thread(&MultiRateEngine::lane1_control,   this);
-    t2_ = std::thread(&MultiRateEngine::lane2_signature, this);
-    t3_ = std::thread(&MultiRateEngine::lane3_yolo,      this);
-    t4_ = std::thread(&MultiRateEngine::lane4_uplink,    this);
-    t5_ = std::thread(&MultiRateEngine::lane5_visualize, this);
+    if (cfg.enable_lane1)
+        t1_ = std::thread(&MultiRateEngine::lane1_control,   this);
+    if (cfg.enable_lane2)
+        t2_ = std::thread(&MultiRateEngine::lane2_signature, this);
+    if (cfg.enable_lane3)
+        t3_ = std::thread(&MultiRateEngine::lane3_yolo,      this);
+    if (cfg.enable_lane4)
+        t4_ = std::thread(&MultiRateEngine::lane4_uplink,    this);
+    if (cfg.enable_lane5)
+        t5_ = std::thread(&MultiRateEngine::lane5_visualize, this);
 }
 
 void MultiRateEngine::stop()
 {
-    if (!running_.exchange(false)) return;   // idempotent
+    if (!running_.exchange(false)) return;
 
     if (t1_.joinable()) t1_.join();
     if (t2_.joinable()) t2_.join();
@@ -143,7 +205,7 @@ void MultiRateEngine::push_frame(const uint8_t* bgr, int h, int w)
     job.crack_score = 0.0f;
     job.frame_bgr.assign(bgr, bgr + h * w * 3);
 
-    camera_queue_.try_push(std::move(job));
+    camera_queue_->try_push(std::move(job));
 }
 
 // =============================================================================
@@ -152,7 +214,6 @@ void MultiRateEngine::push_frame(const uint8_t* bgr, int h, int w)
 
 void MultiRateEngine::lane1_control()
 {
-    // Pin this thread to RT core (core 2) using rt_core API
     const bool pinned = rt_core_pin_thread(2) != 0;
     if (!pinned) {
         std::fprintf(stderr,
@@ -168,7 +229,7 @@ void MultiRateEngine::lane1_control()
     while (running_.load(std::memory_order_relaxed))
     {
         Lane2Job job;
-        if (!camera_queue_.try_pop(job)) {
+        if (!camera_queue_->try_pop(job)) {
             std::this_thread::yield();
             continue;
         }
@@ -193,7 +254,7 @@ void MultiRateEngine::lane1_control()
         last_crack_score_.store(out.crack_score,
                                 std::memory_order_relaxed);
 
-        crack_stats_.add_sample(t_start, out.crack_score);
+        crack_stats_->add_sample(t_start, out.crack_score);
         ++crack_frames_;
 
         // Control decision
@@ -203,13 +264,12 @@ void MultiRateEngine::lane1_control()
         ControlDecision decision =
             make_decision(out, sig_conf, sem_age);
 
-        ctrl_queue_.try_push(decision);
         if (ctrl_cb_) ctrl_cb_(decision);
 
         // Fan-out to Lane 2 (signature)
         job.frame_id    = out.frame_id;
         job.crack_score = out.crack_score;
-        sig_queue_.try_push(job); // copy; Lane 3 also needs data
+        sig_queue_->try_push(job);
 
         // Fan-out to Lane 3 (YOLO)
         {
@@ -224,7 +284,7 @@ void MultiRateEngine::lane1_control()
             yj.frame_bgr.assign(downscaled.data,
                                 downscaled.data +
                                     target_w * target_h * 3);
-            yolo_queue_.try_push(std::move(yj));
+            yolo_queue_->try_push(std::move(yj));
         }
 
         // Fan-out to Lane 5 (vis)
@@ -238,10 +298,10 @@ void MultiRateEngine::lane1_control()
             vj.on_count    = static_cast<int>(out.on_spike_count);
             vj.off_count   = static_cast<int>(out.off_spike_count);
             vj.frame_bgr   = std::move(job.frame_bgr);
-            vis_queue_.try_push(std::move(vj));
+            vis_queue_->try_push(std::move(vj));
         }
 
-        // Latency + failsafe (ignore warm-up frames for stats)
+        // Latency + failsafe
         const double latency = now_ms() - t_start;
 
         if (out.frame_id > 300) {
@@ -249,12 +309,13 @@ void MultiRateEngine::lane1_control()
             latency_head_ = (latency_head_ + 1) % latency_ring_.size();
             if (latency_count_ < latency_ring_.size())
                 ++latency_count_;
-            if (latency > max_control_latency_ms_)
+            // Simple fixed threshold for now
+            const double max_control_latency_ms = 500.0;
+            if (latency > max_control_latency_ms)
                 ++latency_violations_;
         }
 
-        // Failsafe sees every cycle
-        failsafe_.update(0, static_cast<float>(latency));
+        failsafe_->update(0, static_cast<float>(latency));
 
         // Fan-out to Lane 4 (uplink)
         {
@@ -266,13 +327,13 @@ void MultiRateEngine::lane1_control()
             up.crack_score        = out.crack_score;
             up.sparsity           = out.sparsity;
             up.control_latency_ms = latency;
-            uplink_queue_.try_push(std::move(up));
+            uplink_queue_->try_push(std::move(up));
         }
     }
 }
 
 // =============================================================================
-// Lane 2 — Signature (real confidence from SignatureBank)
+// Lane 2 — Signature
 // =============================================================================
 
 void MultiRateEngine::lane2_signature()
@@ -280,7 +341,7 @@ void MultiRateEngine::lane2_signature()
     while (running_.load(std::memory_order_relaxed))
     {
         Lane2Job job;
-        if (!sig_queue_.try_pop(job)) {
+        if (!sig_queue_->try_pop(job)) {
             std::this_thread::yield();
             continue;
         }
@@ -306,7 +367,7 @@ void MultiRateEngine::lane2_signature()
 }
 
 // =============================================================================
-// Lane 3 — YOLO + gating (real Hz + age metrics)
+// Lane 3 — YOLO + gating (placeholder YOLO)
 // =============================================================================
 
 void MultiRateEngine::lane3_yolo()
@@ -314,7 +375,7 @@ void MultiRateEngine::lane3_yolo()
     while (running_.load(std::memory_order_relaxed))
     {
         Lane3Job job;
-        if (!yolo_queue_.try_pop(job)) {
+        if (!yolo_queue_->try_pop(job)) {
             std::this_thread::yield();
             continue;
         }
@@ -326,7 +387,7 @@ void MultiRateEngine::lane3_yolo()
             sig_match = *sm;
 
         GatingDecision gd =
-            gating_engine_.decide(
+            gating_engine_->decide(
                 sig_match,
                 job.frame_id,
                 t0,
@@ -336,7 +397,7 @@ void MultiRateEngine::lane3_yolo()
         if (!gd.should_infer)
             continue;
 
-        // Placeholder YOLO result; replace with real inference when ready
+        // Placeholder YOLO result
         YoloResult yolo_result{};
         yolo_result.max_confidence = 0.0f;
         yolo_result.crack_risk     = job.crack_score;
@@ -353,7 +414,6 @@ void MultiRateEngine::lane3_yolo()
             yolo_result.priority_detections,
             yolo_result.num_filtered_out);
 
-        // YOLO metrics: count + Hz
         ++yolo_count_;
         const double prev = last_yolo_stamp_;
         last_yolo_stamp_  = t0;
@@ -365,8 +425,7 @@ void MultiRateEngine::lane3_yolo()
             }
         }
 
-        // Semantic state: last YOLO time and frame (for age)
-        SemanticState* s = new SemanticState{};
+        auto* s = new SemanticState{};
         s->frame_id     = job.frame_id;
         s->timestamp_ms = t0;
         s->latency_ms   = 0.0;
@@ -378,7 +437,7 @@ void MultiRateEngine::lane3_yolo()
 }
 
 // =============================================================================
-// Lane 4 — Uplink (real count + callback)
+// Lane 4 — Uplink
 // =============================================================================
 
 void MultiRateEngine::lane4_uplink()
@@ -386,7 +445,7 @@ void MultiRateEngine::lane4_uplink()
     while (running_.load(std::memory_order_relaxed))
     {
         UplinkPayload up;
-        if (!uplink_queue_.try_pop(up)) {
+        if (!uplink_queue_->try_pop(up)) {
             std::this_thread::yield();
             continue;
         }
@@ -400,7 +459,7 @@ void MultiRateEngine::lane4_uplink()
 }
 
 // =============================================================================
-// Lane 5 — Visualization: side-by-side original | crack-tinted + bitrate
+// Lane 5 — Visualization
 // =============================================================================
 
 void MultiRateEngine::lane5_visualize()
@@ -410,33 +469,30 @@ void MultiRateEngine::lane5_visualize()
     while (running_.load(std::memory_order_relaxed))
     {
         VisJob job;
-        if (!vis_queue_.try_pop(job)) {
+        if (!vis_queue_->try_pop(job)) {
             std::this_thread::sleep_for(std::chrono::milliseconds(5));
             continue;
         }
         if (job.frame_bgr.empty() || job.frame_h <= 0 || job.frame_w <= 0)
             continue;
 
-        // Wrap raw BGR buffer as Mat
         cv::Mat frame(job.frame_h, job.frame_w, CV_8UC3,
                       job.frame_bgr.data());
 
-        // Reconstructed view as crack-tinted copy
         recon = frame.clone();
         const float cs = std::max(0.0f, std::min(1.0f, job.crack_score));
         if (cs > 0.0f) {
-            cv::Mat tint(frame.size(), frame.type(), cv::Scalar(0, 0, 255)); // red tint
+            cv::Mat tint(frame.size(), frame.type(),
+                         cv::Scalar(0, 0, 255));
             cv::addWeighted(tint, cs, recon, 1.0 - cs, 0.0, recon);
         }
 
-        // Side-by-side composite: [original | recon]
         vis = cv::Mat(job.frame_h,
                       job.frame_w * 2,
                       CV_8UC3);
         frame.copyTo(vis(cv::Rect(0, 0, job.frame_w, job.frame_h)));
         recon.copyTo(vis(cv::Rect(job.frame_w, 0, job.frame_w, job.frame_h)));
 
-        // Overlay crack metrics
         const cv::Scalar box_color(0, 0, 0);
         const cv::Scalar text_color(200, 255, 200);
         const cv::Scalar warn_color(0, 255, 255);
@@ -489,7 +545,6 @@ void MultiRateEngine::lane5_visualize()
                     1,
                     cv::LINE_AA);
 
-        // Encode to JPEG and publish + compute spike bitrate
         std::vector<uint8_t> jpeg;
         if (cv::imencode(".jpg", vis, jpeg)) {
             {
@@ -523,10 +578,6 @@ double MultiRateEngine::semantic_age_ms() const
     return now_ms() - s->timestamp_ms;
 }
 
-// =============================================================================
-// Decision logic
-// =============================================================================
-
 ControlDecision MultiRateEngine::make_decision(
     const ControlOutput& rt_out,
     float                sig_conf,
@@ -534,14 +585,14 @@ ControlDecision MultiRateEngine::make_decision(
 {
     ControlDecision d{};
 
-    d.frame_id         = rt_out.frame_id;
-    d.timestamp        = now_ms();
-    d.throttle         = rt_out.throttle;
-    d.steer            = rt_out.steer;
-    d.crack_score      = rt_out.fused_crack_score;
-    d.sparsity         = rt_out.sparsity;
-    d.confidence       = sig_conf;
-    d.semantic_age_ms  = sem_age_ms;
+    d.frame_id        = rt_out.frame_id;
+    d.timestamp       = now_ms();
+    d.throttle        = rt_out.throttle;
+    d.steer           = rt_out.steer;
+    d.crack_score     = rt_out.fused_crack_score;
+    d.sparsity        = rt_out.sparsity;
+    d.confidence      = sig_conf;
+    d.semantic_age_ms = sem_age_ms;
 
     d.is_null_cycle        = rt_out.is_null_cycle;
     d.inference_suppressed = rt_out.inference_suppressed;
@@ -594,22 +645,14 @@ Metrics MultiRateEngine::get_metrics() const
         m.latency_p99_ms = tmp[static_cast<size_t>(n * 0.99)];
     }
 
-    m.window_crack_ratio = crack_stats_.window_crack_ratio();
-    m.global_crack_ratio = crack_stats_.global_crack_ratio();
+    m.window_crack_ratio = crack_stats_->window_crack_ratio();
+    m.global_crack_ratio = crack_stats_->global_crack_ratio();
 
     m.yolo_hz            = yolo_hz_.load(std::memory_order_relaxed);
-    m.yolo_age_ms        = semantic_age_ms();
+    m.yolo_age_ms        = static_cast<float>(semantic_age_ms());
     m.spike_bitrate_mbps = spike_bitrate_mbps_.load(std::memory_order_relaxed);
 
-    m.crack_alert_thr    = 0.0f;
-    m.yolo_conf_thr      = 0.0f;
-    m.avg_yolo_conf      = 0.0f;
-    m.avg_crack_score    = 0.0f;
-    m.avg_agreement      = 0.0f;
-
     m.px_to_mm_scale     = px_to_mm_.load(std::memory_order_relaxed);
-    m.vis_crack_width_mm = 0.0f;
-    m.vis_crack_length_mm= 0.0f;
 
     return m;
 }
@@ -630,10 +673,10 @@ void MultiRateEngine::print_stats() const
 {
     Metrics m = get_metrics();
     std::printf(
-        "[Engine] frame=%d fps=%.1f crack=%.3f sig_conf=%.3f\n"
+        "[Engine] frame=%llu fps=%.1f crack=%.3f sig_conf=%.3f\n"
         "         latency P50=%.2fms P95=%.2fms P99=%.2fms\n"
         "         violations=%llu yolo_count=%llu uplink=%llu\n",
-        m.frame_id, m.fps, m.last_crack, m.sig_conf,
+        (unsigned long long)m.frame_id, m.fps, m.last_crack, m.sig_conf,
         m.latency_p50_ms, m.latency_p95_ms, m.latency_p99_ms,
         (unsigned long long)m.latency_violations,
         (unsigned long long)m.yolo_count,
@@ -643,8 +686,8 @@ void MultiRateEngine::print_stats() const
 void MultiRateEngine::_emergency_stop()
 {
     std::fprintf(stderr,
-        "[Engine] EMERGENCY STOP triggered at frame %d\n",
-        frame_id_.load());
+        "[Engine] EMERGENCY STOP triggered at frame %llu\n",
+        (unsigned long long)frame_id_.load());
     if (ctrl_cb_) {
         ControlDecision d{};
         d.throttle      = 0.0f;

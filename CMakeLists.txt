@@ -6,11 +6,17 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-find_package(OpenCV REQUIRED)
+# ------------------------------------------------------------------------------
+# Dependencies
+# ------------------------------------------------------------------------------
 
-# ==============================================================================
-# Engine
-# ==============================================================================
+find_package(OpenCV REQUIRED)
+find_package(Boost REQUIRED)
+find_package(pybind11 REQUIRED)
+
+# ------------------------------------------------------------------------------
+# Engine Executable
+# ------------------------------------------------------------------------------
 
 set(ENGINE_SRC
     src/main.cpp
@@ -27,33 +33,27 @@ target_include_directories(engine PRIVATE
     ${CMAKE_SOURCE_DIR}/src
 )
 
-# If Boost is installed via MSYS2 and header-only System is used,
-# you don't need to link boost_system explicitly.
-# Beast/Asio are header-only; only platform libs are needed.
 target_link_libraries(engine PRIVATE
     ${OpenCV_LIBS}
-    ws2_32          # Windows sockets
-    wsock32         # (often optional but safe)
+    Boost::boost
+    pthread
 )
 
-if (WIN32)
-    target_link_libraries(engine PRIVATE
-        kernel32 user32 gdi32 winspool shell32
-        ole32 oleaut32 uuid comdlg32 advapi32
-    )
-endif()
-
-if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+# GCC / Clang optimization flags (Linux)
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(engine PRIVATE
-        -O3 -mavx2 -mfma -ffast-math -Wno-interference-size
+        -O3
+        -march=native
+        -mavx2
+        -mfma
+        -ffast-math
+        -Wno-interference-size
     )
 endif()
 
-# ==============================================================================
+# ------------------------------------------------------------------------------
 # Python Binding
-# ==============================================================================
-
-find_package(pybind11 REQUIRED)
+# ------------------------------------------------------------------------------
 
 add_library(rt_core_py MODULE
     src/rt_core_pybind.cpp
@@ -69,13 +69,19 @@ target_link_libraries(rt_core_py PRIVATE
     ${OpenCV_LIBS}
 )
 
-if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(rt_core_py PRIVATE
-        -O3 -mavx2 -mfma -ffast-math -Wno-interference-size
+        -O3
+        -march=native
+        -mavx2
+        -mfma
+        -ffast-math
+        -Wno-interference-size
     )
 endif()
 
+# On Linux, Python modules use .so
 set_target_properties(rt_core_py PROPERTIES
     PREFIX ""
-    SUFFIX ".pyd"
+    SUFFIX ".so"
 )

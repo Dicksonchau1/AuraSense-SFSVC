@@ -1,153 +1,208 @@
+// engine.h
 #pragma once
 
-#include <array>
 #include <atomic>
 #include <cstdint>
 #include <functional>
 #include <mutex>
 #include <thread>
 #include <vector>
+#include <array>
 
-#include <opencv2/core.hpp>
+// Forward declarations from other modules
+struct ControlOutput;      // from rt_core.h
+struct SignatureMatch;
+struct SemanticState;
+class SignatureBank;
+class GatingEngine;
+class FailsafeMonitor;
+class YoloManager;
+class CrackStatistics;
+class DetectionController;
 
-#include "types.h"
-#include "lockfree_queue.h"
-#include "failsafe.hpp"
-#include "adaptive_yolo.hpp"
-#include "gating_engine.hpp"
-#include "signature_bank.hpp"
+// =============================================================================
+// Public Data Structures
+// =============================================================================
 
-extern "C" {
-#include "rt_core.h"
-}
+struct ControlDecision {
+    uint64_t frame_id        = 0;
+    double   timestamp       = 0.0;
+    float    throttle        = 0.0f;
+    float    steer           = 0.0f;
+    float    crack_score     = 0.0f;
+    float    sparsity        = 0.0f;
+    float    confidence      = 0.0f;  // Signature confidence
+    double   semantic_age_ms = 0.0;
 
-static constexpr size_t CAMERA_QUEUE_CAP  = 64;
-static constexpr size_t SIG_QUEUE_CAP     = 64;
-static constexpr size_t YOLO_QUEUE_CAP    = 32;
-static constexpr size_t CTRL_QUEUE_CAP    = 64;
-static constexpr size_t UPLINK_QUEUE_CAP  = 128;
-static constexpr size_t VIS_QUEUE_CAP     = 32;
+    bool     is_null_cycle        = true;
+    bool     inference_suppressed = false;
+    bool     event_only_mode      = false;
 
-class MultiRateEngine
-{
+    double   reference_frame_age  = 0.0;
+    bool     yolo_active          = false;
+    double   yolo_age_ms          = 0.0;
+    double   encode_time_ms       = 0.0;
+};
+
+struct UplinkPayload {
+    uint64_t frame_id           = 0;
+    double   timestamp          = 0.0;
+    float    throttle           = 0.0f;
+    float    steer              = 0.0f;
+    float    crack_score        = 0.0f;
+    float    sparsity           = 0.0f;
+    double   control_latency_ms = 0.0;
+};
+
+struct Metrics {
+    uint64_t frame_id           = 0;
+    float    last_crack         = 0.0f;
+    float    fused_crack        = 0.0f;
+    float    sig_conf           = 0.0f;
+    uint64_t crack_frames       = 0;
+    uint64_t yolo_count         = 0;
+    uint64_t uplink_count       = 0;
+    uint64_t latency_violations = 0;
+
+    float    fps                = 0.0f;
+    double   latency_p50_ms     = 0.0;
+    double   latency_p95_ms     = 0.0;
+    double   latency_p99_ms     = 0.0;
+
+    float    window_crack_ratio = 0.0f;
+    float    global_crack_ratio = 0.0f;
+
+    float    yolo_hz            = 0.0f;
+    float    yolo_age_ms        = 0.0f;
+    float    spike_bitrate_mbps = 0.0f;
+
+    float    crack_alert_thr    = 0.0f;
+    float    yolo_conf_thr      = 0.0f;
+    float    avg_yolo_conf      = 0.0f;
+    float    avg_crack_score    = 0.0f;
+    float    avg_agreement      = 0.0f;
+
+    float    px_to_mm_scale     = 0.0f;
+    float    vis_crack_width_mm = 0.0f;
+    float    vis_crack_length_mm= 0.0f;
+};
+
+struct BenchmarkSuite {
+    double lane1_avg_ms = 0.0;
+    double lane2_avg_ms = 0.0;
+    double lane3_avg_ms = 0.0;
+    double lane4_avg_ms = 0.0;
+    double lane5_avg_ms = 0.0;
+};
+
+struct EngineConfig {
+    bool enable_lane1 = true;
+    bool enable_lane2 = true;
+    bool enable_lane3 = true;
+    bool enable_lane4 = true;
+    bool enable_lane5 = true;
+};
+
+using ControlCallback = std::function<void(const ControlDecision&)>;
+using UplinkCallback  = std::function<void(const UplinkPayload&)>;
+
+// Forward declare internal job structs
+struct Lane2Job;
+struct Lane3Job;
+struct VisJob;
+
+// Simple lock-free queue template (provided elsewhere)
+template<typename T> class LockFreeQueue;
+
+class MultiRateEngine {
 public:
-    using ControlCallback = std::function<void(const ControlDecision&)>;
-    using UplinkCallback  = std::function<void(const UplinkPayload&)>;
-
-    MultiRateEngine(ControlCallback ctrl_cb,
-                    UplinkCallback  uplink_cb);
-
-    MultiRateEngine(ControlCallback ctrl_cb,
-                    UplinkCallback  uplink_cb,
-                    int frame_height,
-                    int frame_width);
-
+    MultiRateEngine(ControlCallback ctrl_cb, UplinkCallback uplink_cb);
     ~MultiRateEngine();
 
-    void start();
+    void start();                     // default: all lanes
+    void start(const EngineConfig&);  // config-driven start
     void stop();
-    void push_frame(const uint8_t* bgr, int h, int w);
 
-    void set_px_to_mm(float px_to_mm);
+    void push_frame(const uint8_t* bgr, int h, int w);
 
     Metrics              get_metrics() const;
     BenchmarkSuite       get_benchmark_suite() const;
     std::vector<uint8_t> get_spike_frame_jpeg() const;
 
     void print_stats() const;
+    void _emergency_stop();
+
+    void set_px_to_mm(float px_to_mm);
 
 private:
+    // --- Threads ---
+    std::thread      t1_, t2_, t3_, t4_, t5_;
+    std::atomic<bool> running_{false};
+
+    // --- Queues ---
+    LockFreeQueue<Lane2Job>* camera_queue_ = nullptr;
+    LockFreeQueue<Lane2Job>* sig_queue_    = nullptr;
+    LockFreeQueue<Lane3Job>* yolo_queue_   = nullptr;
+    LockFreeQueue<UplinkPayload>* uplink_queue_ = nullptr;
+    LockFreeQueue<VisJob>*  vis_queue_     = nullptr;
+
+    // --- Core State ---
+    std::atomic<uint64_t> frame_id_{0};
+    std::atomic<float>    last_crack_score_{0.0f};
+    std::atomic<float>    latest_sig_conf_{0.0f};
+    std::atomic<float>    yolo_hz_{0.0f};
+    std::atomic<float>    spike_bitrate_mbps_{0.0f};
+    std::atomic<float>    px_to_mm_{0.1f};
+
+    SignatureBank*      signature_bank_  = nullptr;
+    GatingEngine*       gating_engine_   = nullptr;
+    FailsafeMonitor*    failsafe_        = nullptr;
+    CrackStatistics*    crack_stats_     = nullptr;
+    YoloManager*        yolo_manager_    = nullptr;
+    DetectionController* det_controller_ = nullptr;
+
+    // --- Atomic pointers for latest data ---
+    std::atomic<SemanticState*>  semantic_state_{nullptr};
+    std::atomic<SignatureMatch*> last_sig_match_{nullptr};
+
+    // --- Metrics & Timing ---
+    double start_time_      = 0.0;
+    double last_yolo_stamp_ = 0.0;
+    double last_vis_stamp_  = 0.0;
+    std::atomic<uint64_t> crack_frames_{0};
+    std::atomic<uint64_t> yolo_count_{0};
+    std::atomic<uint64_t> uplink_count_{0};
+    std::atomic<uint64_t> latency_violations_{0};
+
+    std::array<double, 1024> latency_ring_{};
+    size_t                   latency_head_  = 0;
+    std::atomic<size_t>      latency_count_{0};
+
+    // --- Visualization ---
+    mutable std::mutex   vis_mutex_;
+    std::vector<uint8_t> latest_spike_jpeg_;
+
+    // --- Benchmarking (simple placeholder struct) ---
+    mutable std::mutex benchmark_mutex_;
+    BenchmarkSuite      benchmark_{};
+
+    // --- Configuration ---
+    EngineConfig cfg_{};
+
+    // --- Callbacks ---
+    ControlCallback ctrl_cb_;
+    UplinkCallback  uplink_cb_;
+
+    // --- Lane Functions ---
     void lane1_control();
     void lane2_signature();
     void lane3_yolo();
     void lane4_uplink();
     void lane5_visualize();
 
+    // --- Helpers ---
+    ControlDecision make_decision(const ControlOutput& rt_out,
+                                  float sig_conf,
+                                  double sem_age_ms) const;
     double semantic_age_ms() const;
-
-    ControlDecision make_decision(
-        const ControlOutput& rt_out,
-        float sig_conf,
-        double sem_age_ms) const;
-
-    CrackMetrics convert_crack_metrics(float crack_score) const;
-
-    void add_detection_sample(double ts_ms,
-                              float yolo_conf,
-                              float crack_score,
-                              float agreement);
-
-    void record_benchmark_sample(const BenchmarkSample& sample);
-
-    void _emergency_stop();
-
-private:
-    std::atomic<bool> running_{false};
-    std::atomic<int>  frame_id_{0};
-
-    int frame_height_{0};
-    int frame_width_{0};
-
-    double start_time_{0.0};
-
-    ControlCallback ctrl_cb_;
-    UplinkCallback  uplink_cb_;
-
-    std::thread t1_, t2_, t3_, t4_, t5_;
-
-    LockFreeQueue<Lane2Job,        CAMERA_QUEUE_CAP> camera_queue_;
-    LockFreeQueue<Lane2Job,        SIG_QUEUE_CAP>    sig_queue_;
-    LockFreeQueue<Lane3Job,        YOLO_QUEUE_CAP>   yolo_queue_;
-    LockFreeQueue<ControlDecision, CTRL_QUEUE_CAP>   ctrl_queue_;
-    LockFreeQueue<UplinkPayload,   UPLINK_QUEUE_CAP> uplink_queue_;
-    LockFreeQueue<VisJob,          VIS_QUEUE_CAP>    vis_queue_;
-
-    CrackStats          crack_stats_;
-    DetectionController det_controller_;
-    DetectionScheduler  detection_scheduler_;
-
-    std::atomic<float> last_crack_score_{0.0f};
-    std::atomic<float> latest_sig_conf_{0.0f};
-
-    std::atomic<uint64_t> crack_frames_{0};
-    std::atomic<uint64_t> yolo_count_{0};
-    std::atomic<uint64_t> uplink_count_{0};
-    std::atomic<uint64_t> latency_violations_{0};
-    std::atomic<uint64_t> sig_updates_{0};
-
-    std::atomic<float> avg_yolo_conf_{0.0f};
-    std::atomic<float> avg_crack_score_{0.0f};
-    std::atomic<float> avg_agreement_{0.0f};
-
-    std::atomic<float> px_to_mm_{0.0f};
-    std::atomic<float> vis_crack_width_mm_{0.0f};
-    std::atomic<float> vis_crack_length_mm_{0.0f};
-
-    // Semantic and signature state
-    std::atomic<SemanticState*>  semantic_state_{nullptr};
-    std::atomic<SignatureMatch*> last_sig_match_{nullptr};
-
-    // YOLO / semantic metrics
-    std::atomic<float> yolo_hz_{0.0f};
-    double             last_yolo_stamp_{0.0};
-
-    // Spike / visualization metrics
-    std::atomic<float> spike_bitrate_mbps_{0.0f};
-    double             last_vis_stamp_{0.0};
-
-    std::array<double, 512> latency_ring_{};
-    size_t latency_head_{0};
-    size_t latency_count_{0};
-    double max_control_latency_ms_{50.0};
-
-    mutable std::mutex   vis_mutex_;
-    std::vector<uint8_t> latest_spike_jpeg_;
-
-    mutable std::mutex benchmark_mutex_;
-    BenchmarkSuite      benchmark_;
-
-    FailsafeMonitor     failsafe_;
-    AdaptiveYoloManager yolo_manager_;
-    SignatureBank*      signature_bank_;
-    GatingEngine        gating_engine_;
 };
