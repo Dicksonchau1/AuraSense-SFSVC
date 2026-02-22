@@ -101,7 +101,7 @@ struct SignatureMatch {
 };
 
 // =============================================================================
-// Public Configuration & Callback Types (Moved from engine.h)
+// Public Configuration & Callback Types
 // =============================================================================
 
 struct EngineConfig {
@@ -164,10 +164,3 @@ struct BenchmarkSuite {
     double lane4_avg_ms = 0.0;
     double lane5_avg_ms = 0.0;
 };
-
-// =============================================================================
-// Forward Declarations for Classes
-// =============================================================================
-class CrackStats;
-class DetectionController;
-class DetectionScheduler;

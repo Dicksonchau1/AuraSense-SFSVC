@@ -4,9 +4,6 @@
 #include <deque>
 #include <mutex>
 
-// Forward declare struct used in the class
-struct MatchResult;
-
 class DetectionController {
 public:
     explicit DetectionController(double window_ms = 5000.0);

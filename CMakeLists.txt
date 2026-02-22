@@ -3,26 +3,27 @@
 # =============================================================================
 
 cmake_minimum_required(VERSION 3.16)
+
+# Define the project name and language
 project(AuraSenseRT LANGUAGES CXX)
 
 # =============================================================================
 # Build Configuration & Compiler Options
 # =============================================================================
 
-# Default to Release build if not specified
+# Default to a Release build if not specified
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
 endif()
 
-message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
+message(STATUS "Configuring for build type: ${CMAKE_BUILD_TYPE}")
 
-# Set C++ standard
+# Set the C++ standard to C++17
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Compiler-specific flags
-# Use generator expressions for per-configuration flags
+# --- Compiler-specific flags ---
 set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
 
@@ -48,16 +49,14 @@ elseif(MSVC)
     message(STATUS "Enabled MSVC compiler warnings.")
 endif()
 
-
 # =============================================================================
 # Find Dependencies
 # =============================================================================
 
-# Find OpenCV
+# Find OpenCV and its required components
 find_package(OpenCV REQUIRED COMPONENTS core imgproc imgcodecs highgui)
 if(OpenCV_FOUND)
     message(STATUS "Found OpenCV version: ${OpenCV_VERSION}")
-    message(STATUS "OpenCV include dirs: ${OpenCV_INCLUDE_DIRS}")
 else()
     message(FATAL_ERROR "OpenCV not found. Please install it or set CMAKE_PREFIX_PATH.")
 endif()
@@ -65,62 +64,67 @@ endif()
 # Find Threads (required for std::thread)
 find_package(Threads REQUIRED)
 
-
 # =============================================================================
 # Source File Organization
 # =============================================================================
 
-# Automatically collect all .cpp files in the 'src' directory
-# This is more maintainable than a static list
-file(GLOB_RECURSE AURA_SOURCES CONFIGURE_DEPENDS
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
+# Explicitly list all C++ source files for reliability and IDE support.
+set(AURA_SOURCES
+    src/rt_core.cpp
+    src/engine.cpp
+    src/encoder.cpp
+    src/gating_engine.cpp
+    src/signature_bank.cpp
+    src/failsafe.cpp
+    src/crack_statistics.cpp
+    src/yolo_bridge.cpp
+    src/detection_controller.cpp
+    src/main.cpp
 )
 
-message(STATUS "Source files found:")
+message(STATUS "Source files configured:")
 foreach(src ${AURA_SOURCES})
     message(STATUS "  ${src}")
 endforeach()
-
 
 # =============================================================================
 # Executable Target
 # =============================================================================
 
+# Define the executable target
 add_executable(aura_sense ${AURA_SOURCES})
 
-# Set the include directories for the target
-# PRIVATE means these directories are only used when compiling aura_sense itself
+# Set include directories for the target
 target_include_directories(aura_sense
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src # For local includes like "engine.h"
         ${OpenCV_INCLUDE_DIRS}        # For OpenCV headers
 )
 
-# Link libraries to the executable
-# PRIVATE means these libraries are only needed by aura_sense
+# Link required libraries using modern CMake targets
 target_link_libraries(aura_sense
     PRIVATE
-        ${OpenCV_LIBS} # All OpenCV libraries
-        Threads::Threads # CMake's standard way to link pthreads
+        OpenCV::opencv_core
+        OpenCV::opencv_imgproc
+        OpenCV::opencv_imgcodecs
+        OpenCV::opencv_highgui
+        Threads::Threads
 )
 
-# On Linux, link against the 'rt' library for real-time extensions (clock_gettime)
+# On Linux, link against the 'rt' library for real-time extensions
 if(UNIX AND NOT APPLE)
     target_link_libraries(aura_sense PRIVATE rt)
     message(STATUS "Linking with 'rt' library on Linux.")
 endif()
 
-
 # =============================================================================
 # Optional: Installation and Packaging
 # =============================================================================
 
-# Define where to install the binary
 install(TARGETS aura_sense
     RUNTIME DESTINATION bin
 )
 
-# Optional: Create a package (e.g., a .tar.gz file)
 include(CPack)
 set(CPACK_PACKAGE_NAME "AuraSenseRT")
 set(CPACK_PACKAGE_VERSION "1.0.0")
