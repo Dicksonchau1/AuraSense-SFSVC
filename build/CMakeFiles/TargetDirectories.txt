@@ -1,0 +1,4 @@
+C:/Users/milky/Desktop/aurasense-backend/build/CMakeFiles/engine.dir
+C:/Users/milky/Desktop/aurasense-backend/build/CMakeFiles/rt_core_py.dir
+C:/Users/milky/Desktop/aurasense-backend/build/CMakeFiles/edit_cache.dir
+C:/Users/milky/Desktop/aurasense-backend/build/CMakeFiles/rebuild_cache.dir
