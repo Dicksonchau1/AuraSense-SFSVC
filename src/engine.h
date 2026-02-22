@@ -16,15 +16,15 @@
 // Advanced inference & statistics
 #include "crack_inference.hpp"
 #include "crack_statistics.hpp"
+#include "lockfree_queue.h"   // ✅ REQUIRED (no forward declare)
 
-// Forward declarations from other modules
+// Forward declarations
 struct SignatureMatch;
 struct SemanticState;
 class SignatureBank;
 class GatingEngine;
 class FailsafeMonitor;
 class YoloManager;
-class CrackStatistics;
 class DetectionController;
 
 // =============================================================================
@@ -38,7 +38,7 @@ struct ControlDecision {
     float    steer           = 0.0f;
     float    crack_score     = 0.0f;
     float    sparsity        = 0.0f;
-    float    confidence      = 0.0f;  // Signature confidence
+    float    confidence      = 0.0f;
     double   semantic_age_ms = 0.0;
 
     bool     is_null_cycle        = true;
@@ -102,7 +102,6 @@ struct BenchmarkSuite {
     double lane5_avg_ms = 0.0;
 };
 
-// Non-blocking callback dispatch jobs
 struct CallbackJob {
     ControlDecision ctrl_dec;
     UplinkPayload   uplink_payload;
@@ -115,7 +114,7 @@ struct EngineConfig {
     bool  enable_lane3           = true;
     bool  enable_lane4           = true;
     bool  enable_lane5           = true;
-    float max_control_latency_ms = 50.0f; // Configurable latency threshold
+    float max_control_latency_ms = 50.0f;
     float px_to_mm_scale         = 0.1f;
 };
 
@@ -127,16 +126,14 @@ struct Lane2Job;
 struct Lane3Job;
 struct VisJob;
 
-// Simple lock-free queue template (provided elsewhere)
-template<typename T> class LockFreeQueue;
-
 class MultiRateEngine {
 public:
-    MultiRateEngine(ControlCallback ctrl_cb, UplinkCallback uplink_cb);
+    MultiRateEngine(ControlCallback ctrl_cb,
+                    UplinkCallback  uplink_cb);
     ~MultiRateEngine();
 
-    void start();                     // default: all lanes
-    void start(const EngineConfig&);  // config-driven start
+    void start();
+    void start(const EngineConfig&);
     void stop();
 
     void push_frame(const uint8_t* bgr, int h, int w);
@@ -147,23 +144,23 @@ public:
 
     void print_stats() const;
     void _emergency_stop();
-
     void set_px_to_mm(float px_to_mm);
 
 private:
-    // --- Threads ---
-    std::thread       t1_, t2_, t3_, t4_, t5_, callback_thread_;
+
+    // Threads
+    std::thread t1_, t2_, t3_, t4_, t5_, callback_thread_;
     std::atomic<bool> running_{false};
 
-    // --- Queues ---
-    LockFreeQueue<Lane2Job>*      camera_queue_   = nullptr;
-    LockFreeQueue<Lane2Job>*      sig_queue_      = nullptr;
-    LockFreeQueue<Lane3Job>*      yolo_queue_     = nullptr;
-    LockFreeQueue<UplinkPayload>* uplink_queue_   = nullptr;
-    LockFreeQueue<VisJob>*        vis_queue_      = nullptr;
-    LockFreeQueue<CallbackJob>*   callback_queue_ = nullptr;
+    // Queues (✅ now valid template)
+    LockFreeQueue<Lane2Job, 64>*      camera_queue_   = nullptr;
+    LockFreeQueue<Lane2Job, 64>*      sig_queue_      = nullptr;
+    LockFreeQueue<Lane3Job, 32>*      yolo_queue_     = nullptr;
+    LockFreeQueue<UplinkPayload,128>* uplink_queue_   = nullptr;
+    LockFreeQueue<VisJob, 32>*        vis_queue_      = nullptr;
+    LockFreeQueue<CallbackJob, 64>*   callback_queue_ = nullptr;
 
-    // --- Core State ---
+    // Core state
     std::atomic<uint64_t> frame_id_{0};
     std::atomic<float>    last_crack_score_{0.0f};
     std::atomic<float>    latest_sig_conf_{0.0f};
@@ -174,19 +171,17 @@ private:
     std::unique_ptr<SignatureBank>     signature_bank_;
     std::unique_ptr<GatingEngine>      gating_engine_;
     std::unique_ptr<FailsafeMonitor>   failsafe_;
-    std::unique_ptr<CrackStatistics>   crack_stats_;
     std::unique_ptr<YoloManager>       yolo_manager_;
     std::unique_ptr<DetectionController> det_controller_;
 
-    // --- NEW: Advanced Inference & Statistics ---
-    CrackInferenceEngine   crack_inference_engine_;
-    CrackStatisticsTracker crack_statistics_tracker_;
+    // ✅ Use ONLY tracker (no duplicate CrackStatistics ptr)
+    std::unique_ptr<CrackStatisticsTracker> crack_stats_;
 
-    // --- Atomic pointers for latest data ---
+    // Atomic semantic state
     std::atomic<SemanticState*>  semantic_state_{nullptr};
     std::atomic<SignatureMatch*> last_sig_match_{nullptr};
 
-    // --- Metrics & Timing ---
+    // Metrics
     double              start_time_      = 0.0;
     double              last_yolo_stamp_ = 0.0;
     double              last_vis_stamp_  = 0.0;
@@ -195,26 +190,24 @@ private:
     std::atomic<uint64_t> uplink_count_{0};
     std::atomic<uint64_t> latency_violations_{0};
 
-    std::array<double, 1024> latency_ring_{};
-    size_t                   latency_head_  = 0;
-    std::atomic<size_t>      latency_count_{0};
+    std::array<double,1024> latency_ring_{};
+    size_t latency_head_ = 0;
+    std::atomic<size_t> latency_count_{0};
 
-    // --- Visualization ---
-    mutable std::mutex   vis_mutex_;
+    // Visualization
+    mutable std::mutex vis_mutex_;
     std::vector<uint8_t> latest_spike_jpeg_;
 
-    // --- Benchmarking ---
+    // Benchmark
     mutable std::mutex benchmark_mutex_;
-    BenchmarkSuite      benchmark_{};
+    BenchmarkSuite benchmark_{};
 
-    // --- Configuration ---
     EngineConfig cfg_{};
 
-    // --- Callbacks ---
     ControlCallback ctrl_cb_;
     UplinkCallback  uplink_cb_;
 
-    // --- Lane Functions ---
+    // Lanes
     void lane1_control();
     void lane2_signature();
     void lane3_yolo();
@@ -222,10 +215,9 @@ private:
     void lane5_visualize();
     void lane6_callback_dispatcher();
 
-    // --- Helpers ---
-    ControlDecision make_decision(const ControlOutput& rt_out,
-                                  float sig_conf,
-                                  double sem_age_ms) const;
+    ControlDecision make_decision(const ControlOutput&,
+                                  float,
+                                  double) const;
     double semantic_age_ms() const;
     void   update_benchmark(int lane_id, double duration_ms);
 };
