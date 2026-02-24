@@ -18,8 +18,8 @@
 | **Category** | ☒ AI start-ups |
 | **Entity Name (Eng)** | AuraSense Limited |
 | **Entity Name (Chi)** | 歐雅生物科技有限公司 |
-| **Address (Eng)** | *(To be filled — company registered address)* |
-| **Address (Chi)** | *(To be filled — company registered address in Chinese)* |
+| **Address (Eng)** | Hong Kong *(full registered address to be confirmed upon submission)* |
+| **Address (Chi)** | 香港 *(提交時確認完整註冊地址)* |
 
 ### Entity Description
 

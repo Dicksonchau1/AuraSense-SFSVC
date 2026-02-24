@@ -73,7 +73,7 @@ CI/CD:           GitHub Actions (planned)
 
 ### Key Publications & Recognition
 
-- *(To be added upon publication — 1–2 papers planned as part of this project)*
+- Research papers in preparation — targeting publication in IEEE/ACM conferences on neuromorphic computing and edge AI as part of this project
 
 ### Open Source Engagement
 
