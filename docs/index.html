@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AuraSense SFSVC — Neuromorphic crack detection for infrastructure inspection. Sub-millisecond latency, 94% bandwidth savings, zero GPU required.">
+    <meta name="keywords" content="AuraSense, SFSVC, crack detection, neuromorphic, drone inspection, infrastructure, tunnel inspection, bridge inspection">
+    <meta name="author" content="AuraSense HK">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="AuraSense SFSVC — Crack Detection at the Edge">
+    <meta property="og:description" content="Reduce cellular data costs by 94% while maintaining real-time crack detection. Sub-millisecond latency, zero GPU required.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.aurasensehk.com">
+    <meta property="og:image" content="https://www.aurasensehk.com/assets/og-image.png">
+
+    <title>AuraSense SFSVC — Crack Detection at the Edge</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     NAVIGATION
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<nav class="navbar" id="navbar">
+    <div class="nav-container">
+        <a href="#" class="nav-logo">
+            <span class="logo-icon">⚡</span>
+            <span class="logo-text">AuraSense</span>
+        </a>
+        <div class="nav-links" id="navLinks">
+            <a href="#features">Features</a>
+            <a href="#technology">Technology</a>
+            <a href="#use-cases">Use Cases</a>
+            <a href="#demo">Demo</a>
+            <a href="#roi">ROI Calculator</a>
+            <a href="#contact" class="nav-cta">Request Demo</a>
+        </div>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     HERO SECTION
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<section class="hero" id="hero">
+    <div class="hero-bg-grid"></div>
+    <div class="hero-glow hero-glow-1"></div>
+    <div class="hero-glow hero-glow-2"></div>
+    <div class="hero-particles" id="heroParticles"></div>
+    <div class="container hero-content">
+        <div class="hero-badge">
+            <span class="badge-dot"></span>
+            Now Available — SFSVC v1.0
+        </div>
+        <h1 class="hero-title">
+            Crack Detection<br>
+            <span class="gradient-text">at the Edge.</span>
+        </h1>
+        <p class="hero-subtitle">
+            Neuromorphic spike-based codec sees cracks in <strong>&lt;1 ms</strong>,
+            cuts bandwidth by <strong>94%</strong>, and works offline — no GPU, no cloud, no hallucinations.
+        </p>
+        <div class="hero-actions">
+            <a href="#contact" class="btn btn-primary btn-lg">
+                Request a Demo
+                <i data-lucide="arrow-right"></i>
+            </a>
+            <a href="#demo" class="btn btn-outline btn-lg">
+                <i data-lucide="play-circle"></i>
+                Watch It Work
+            </a>
+        </div>
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <span class="hero-stat-value" data-count="0.4">0</span><span class="hero-stat-unit">ms</span>
+                <span class="hero-stat-label">P50 Latency</span>
+            </div>
+            <div class="hero-stat-divider"></div>
+            <div class="hero-stat">
+                <span class="hero-stat-value" data-count="94">0</span><span class="hero-stat-unit">%</span>
+                <span class="hero-stat-label">Bandwidth Saved</span>
+            </div>
+            <div class="hero-stat-divider"></div>
+            <div class="hero-stat">
+                <span class="hero-stat-value" data-count="98.7">0</span><span class="hero-stat-unit">%</span>
+                <span class="hero-stat-label">Detection Accuracy</span>
+            </div>
+            <div class="hero-stat-divider"></div>
+            <div class="hero-stat">
+                <span class="hero-stat-value" data-count="0">0</span>
+                <span class="hero-stat-label">GPU Required</span>
+            </div>
+        </div>
+    </div>
+    <div class="hero-scroll">
+        <a href="#features"><i data-lucide="chevron-down"></i></a>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     FEATURES SECTION
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<section class="section" id="features">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-badge">Features</span>
+            <h2 class="section-title">Six pillars of<br><span class="gradient-text">edge intelligence</span></h2>
+            <p class="section-subtitle">Purpose-built for autonomous drone inspection at scale — no compromises.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card" data-aos>
+                <div class="feature-icon" style="--accent: #ff6b6b">
+                    <i data-lucide="zap"></i>
+                </div>
+                <h3>Sub-Millisecond Detection</h3>
+                <p>P50 latency of <strong>0.40 ms</strong>, P95 under 0.56 ms. Cracks are flagged before the next frame arrives.</p>
+                <span class="feature-metric">&lt;1ms P95</span>
+            </div>
+            <div class="feature-card" data-aos>
+                <div class="feature-icon" style="--accent: #4ecdc4">
+                    <i data-lucide="signal"></i>
+                </div>
+                <h3>94% Bandwidth Reduction</h3>
+                <p>Sparse events replace full video. From 5.2 Mbps to 0.32 Mbps — saving <strong>$976/month per drone</strong>.</p>
+                <span class="feature-metric">0.32 Mbps</span>
+            </div>
+            <div class="feature-card" data-aos>
+                <div class="feature-icon" style="--accent: #a78bfa">
+                    <i data-lucide="shield-check"></i>
+                </div>
+                <h3>Production-Ready</h3>
+                <p>SIMD AVX2 optimized, lock-free 6-lane pipeline, zero frame drops in 72-hour tests. 99.9% uptime.</p>
+                <span class="feature-metric">Zero Drops</span>
+            </div>
+            <div class="feature-card" data-aos>
+                <div class="feature-icon" style="--accent: #f093fb">
+                    <i data-lucide="cpu"></i>
+                </div>
+                <h3>Hardware-Agnostic</h3>
+                <p>Any x86-64 CPU with AVX2. No GPU, no TPU — just plug into your existing fleet hardware.</p>
+                <span class="feature-metric">CPU Only</span>
+            </div>
+            <div class="feature-card" data-aos>
+                <div class="feature-icon" style="--accent: #feca57">
+                    <i data-lucide="puzzle"></i>
+                </div>
+                <h3>Easy Integration</h3>
+                <p>Docker, ROS/ROS2, Python ctypes, native C++. Up and running in <strong>15 minutes</strong>.</p>
+                <span class="feature-metric">15 min setup</span>
+            </div>
+            <div class="feature-card" data-aos>
+                <div class="feature-icon" style="--accent: #48dbfb">
+                    <i data-lucide="wifi-off"></i>
+                </div>
+                <h3>Autonomous Operation</h3>
+                <p>Works offline in tunnels and subways. Zero network dependency — edge-first by design.</p>
+                <span class="feature-metric">Offline-First</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     TECHNOLOGY / HOW IT WORKS
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<section class="section section-dark" id="technology">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-badge">Technology</span>
+            <h2 class="section-title">How <span class="gradient-text">SFSVC</span> works</h2>
+            <p class="section-subtitle">Physics-based neuromorphic detection — deterministic, reproducible, and auditable.</p>
+        </div>
+
+        <!-- Pipeline Steps -->
+        <div class="pipeline">
+            <div class="pipeline-step" data-aos>
+                <div class="pipeline-num">01</div>
+                <div class="pipeline-content">
+                    <h3>Ingest Any Video Feed</h3>
+                    <p>H.264, H.265, VP9, or AV1 — from any camera or drone. Hardware-agnostic input layer decodes frames at up to <strong>125 fps</strong> (1080p).</p>
+                </div>
+                <div class="pipeline-icon"><i data-lucide="video"></i></div>
+            </div>
+            <div class="pipeline-step" data-aos>
+                <div class="pipeline-num">02</div>
+                <div class="pipeline-content">
+                    <h3>Neuromorphic Spike Encoding</h3>
+                    <p>Delta-spike encoder converts pixel changes into sparse events — only significant temporal differences survive. <strong>93.8% sparsity</strong>.</p>
+                </div>
+                <div class="pipeline-icon"><i data-lucide="activity"></i></div>
+            </div>
+            <div class="pipeline-step" data-aos>
+                <div class="pipeline-num">03</div>
+                <div class="pipeline-content">
+                    <h3>Physics-Based Crack Detection</h3>
+                    <p>Vertical band scoring with center-vs-edge ratio analysis. Deterministic — <strong>bit-for-bit identical</strong> across runs. No ML hallucinations.</p>
+                </div>
+                <div class="pipeline-icon"><i data-lucide="scan-line"></i></div>
+            </div>
+            <div class="pipeline-step" data-aos>
+                <div class="pipeline-num">04</div>
+                <div class="pipeline-content">
+                    <h3>6-Lane Parallel Pipeline</h3>
+                    <p>Lock-free queues route data across RT control, signature extraction, YOLO inference, uplink, visualization, and event callbacks — all concurrent.</p>
+                </div>
+                <div class="pipeline-icon"><i data-lucide="git-branch"></i></div>
+            </div>
+            <div class="pipeline-step" data-aos>
+                <div class="pipeline-num">05</div>
+                <div class="pipeline-content">
+                    <h3>Sparse Event Transmission</h3>
+                    <p>Only crack events are transmitted — not full video. <strong>5.2 Mbps → 0.32 Mbps</strong>. Works even on 2G connections underground.</p>
+                </div>
+                <div class="pipeline-icon"><i data-lucide="send"></i></div>
+            </div>
+        </div>
+
+        <!-- Tech Comparison -->
+        <div class="comparison-table-wrapper" data-aos>
+            <h3 class="comparison-title">Why Not Cloud ML?</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th class="highlight-col">AuraSense SFSVC</th>
+                        <th>Cloud ML Models</th>
+                        <th>Manual Inspection</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Latency</td>
+                        <td class="highlight-col"><strong>&lt;1 ms</strong></td>
+                        <td>100–500 ms</td>
+                        <td>Days–Weeks</td>
+                    </tr>
+                    <tr>
+                        <td>Bandwidth</td>
+                        <td class="highlight-col"><strong>0.32 Mbps</strong></td>
+                        <td>5+ Mbps</td>
+                        <td>N/A</td>
+                    </tr>
+                    <tr>
+                        <td>Works Offline</td>
+                        <td class="highlight-col"><strong>✓ Yes</strong></td>
+                        <td>✗ No</td>
+                        <td>✓ Yes</td>
+                    </tr>
+                    <tr>
+                        <td>GPU Required</td>
+                        <td class="highlight-col"><strong>✗ No</strong></td>
+                        <td>✓ Yes ($$$)</td>
+                        <td>✗ No</td>
+                    </tr>
+                    <tr>
+                        <td>Deterministic</td>
+                        <td class="highlight-col"><strong>✓ Bit-exact</strong></td>
+                        <td>✗ Probabilistic</td>
+                        <td>✗ Human error</td>
+                    </tr>
+                    <tr>
+                        <td>Accuracy</td>
+                        <td class="highlight-col"><strong>98.7%</strong></td>
+                        <td>85–95%</td>
+                        <td>70–90%</td>
+                    </tr>
+                    <tr>
+                        <td>Dark/Wet Tunnels</td>
+                        <td class="highlight-col"><strong>✓ Works</strong></td>
+                        <td>✗ Degrades</td>
+                        <td>⚠ Dangerous</td>
+                    </tr>
+                    <tr>
+                        <td>Cost / drone / month</td>
+                        <td class="highlight-col"><strong>$64</strong></td>
+                        <td>$1,040+</td>
+                        <td>$4,500+</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     USE CASES
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<section class="section" id="use-cases">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-badge">Use Cases</span>
+            <h2 class="section-title">Built for the <span class="gradient-text">hardest environments</span></h2>
+            <p class="section-subtitle">Where cloud ML fails, SFSVC thrives.</p>
+        </div>
+        <div class="use-cases-grid">
+            <div class="use-case-card" data-aos>
+                <div class="use-case-visual">
+                    <div class="use-case-icon-bg">
+                        <i data-lucide="train-track"></i>
+                    </div>
+                </div>
+                <div class="use-case-content">
+                    <h3>Tunnel & Subway Inspection</h3>
+                    <p>Zero 4G coverage? No problem. SFSVC runs entirely on-edge, detecting cracks in dark, wet tunnels that blind traditional cameras and ML models.</p>
+                    <ul class="use-case-stats">
+                        <li><strong>$37K/year</strong> saved per 2 km section</li>
+                        <li><strong>40 hrs/year → 1 hr/week</strong> inspection time</li>
+                        <li><strong>3 extra early-stage</strong> cracks found vs. manual</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="use-case-card" data-aos>
+                <div class="use-case-visual">
+                    <div class="use-case-icon-bg">
+                        <i data-lucide="landmark"></i>
+                    </div>
+                </div>
+                <div class="use-case-content">
+                    <h3>Bridge & Road Infrastructure</h3>
+                    <p>Continuous monitoring of concrete surfaces on bridges, overpasses, and highways. Sub-millimeter crack detection at highway speeds.</p>
+                    <ul class="use-case-stats">
+                        <li><strong>$116K/year</strong> saved per 1,000 km</li>
+                        <li><strong>98.7% accuracy</strong> vs. manual labeling</li>
+                        <li><strong>&lt;0.3%</strong> false positive rate</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="use-case-card" data-aos>
+                <div class="use-case-visual">
+                    <div class="use-case-icon-bg">
+                        <i data-lucide="plane"></i>
+                    </div>
+                </div>
+                <div class="use-case-content">
+                    <h3>Autonomous Drone Fleets</h3>
+                    <p>Deploy across your entire fleet — 94% less data means longer flights, lower battery drain, and cheaper cellular plans.</p>
+                    <ul class="use-case-stats">
+                        <li><strong>$29,280/month</strong> saved (30-drone fleet)</li>
+                        <li><strong>377 GB/month</strong> less data transmitted</li>
+                        <li><strong>6-month</strong> payback period</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="use-case-card" data-aos>
+                <div class="use-case-visual">
+                    <div class="use-case-icon-bg">
+                        <i data-lucide="building-2"></i>
+                    </div>
+                </div>
+                <div class="use-case-content">
+                    <h3>Industrial & Building Facades</h3>
+                    <p>Runway inspection, factory floors, building exteriors. Insurance-grade reproducibility for regulatory compliance.</p>
+                    <ul class="use-case-stats">
+                        <li><strong>Bit-exact</strong> reproducible results</li>
+                        <li><strong>Zero frame drops</strong> in 72-hr tests</li>
+                        <li><strong>Insurance-auditable</strong> deterministic output</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     LIVE DEMO
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<section class="section section-dark" id="demo">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-badge">Live Demo</span>
+            <h2 class="section-title">See SFSVC <span class="gradient-text">in action</span></h2>
+            <p class="section-subtitle">Real-time crack detection on concrete surface video — simulated pipeline output.</p>
+        </div>
+        <div class="demo-wrapper" data-aos>
+            <div class="demo-screen">
+                <div class="demo-header">
+                    <div class="demo-dots">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <span class="demo-title">AuraSense SFSVC — Live Detection</span>
+                    <span class="demo-status" id="demoStatus">● READY</span>
+                </div>
+                <div class="demo-body">
+                    <div class="demo-canvas-wrapper">
+                        <canvas id="demoCanvas" width="800" height="400"></canvas>
+                        <div class="demo-overlay" id="demoOverlay">
+                            <button class="demo-play-btn" id="demoPlayBtn">
+                                <i data-lucide="play"></i>
+                                <span>Launch Demo</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="demo-metrics">
+                        <div class="demo-metric">
+                            <span class="demo-metric-label">Cracks Found</span>
+                            <span class="demo-metric-value" id="dmCracks">—</span>
+                        </div>
+                        <div class="demo-metric">
+                            <span class="demo-metric-label">Latency</span>
+                            <span class="demo-metric-value" id="dmLatency">—</span>
+                        </div>
+                        <div class="demo-metric">
+                            <span class="demo-metric-label">Spikes/Frame</span>
+                            <span class="demo-metric-value" id="dmSpikes">—</span>
+                        </div>
+                        <div class="demo-metric">
+                            <span class="demo-metric-label">Bandwidth</span>
+                            <span class="demo-metric-value" id="dmBandwidth">—</span>
+                        </div>
+                        <div class="demo-metric">
+                            <span class="demo-metric-label">FPS</span>
+                            <span class="demo-metric-value" id="dmFPS">—</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     ROI CALCULATOR
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<section class="section" id="roi">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-badge">ROI Calculator</span>
+            <h2 class="section-title">Calculate your <span class="gradient-text">savings</span></h2>
+            <p class="section-subtitle">See the financial impact of SFSVC on your inspection fleet.</p>
+        </div>
+        <div class="roi-calculator" data-aos>
+            <div class="roi-inputs">
+                <div class="roi-input-group">
+                    <label for="roiDrones">Fleet Size</label>
+                    <div class="roi-slider-wrapper">
+                        <input type="range" id="roiDrones" min="1" max="200" value="30" class="roi-slider">
+                        <span class="roi-slider-value" id="roiDronesVal">30 drones</span>
+                    </div>
+                </div>
+                <div class="roi-input-group">
+                    <label for="roiHours">Flight Hours / Drone / Month</label>
+                    <div class="roi-slider-wrapper">
+                        <input type="range" id="roiHours" min="10" max="200" value="80" class="roi-slider">
+                        <span class="roi-slider-value" id="roiHoursVal">80 hrs</span>
+                    </div>
+                </div>
+                <div class="roi-input-group">
+                    <label for="roiCellRate">Cellular Cost ($/GB)</label>
+                    <div class="roi-slider-wrapper">
+                        <input type="range" id="roiCellRate" min="1" max="20" value="8" step="0.5" class="roi-slider">
+                        <span class="roi-slider-value" id="roiCellRateVal">$8/GB</span>
+                    </div>
+                </div>
+                <div class="roi-input-group">
+                    <label for="roiResolution">Video Resolution</label>
+                    <select id="roiResolution" class="roi-select">
+                        <option value="5.2">1080p @ 30fps (5.2 Mbps)</option>
+                        <option value="8.5">1080p @ 60fps (8.5 Mbps)</option>
+                        <option value="12.5">4K @ 30fps (12.5 Mbps)</option>
+                        <option value="3.0">720p @ 30fps (3.0 Mbps)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="roi-results">
+                <div class="roi-result-card roi-before">
+                    <h4>Without SFSVC</h4>
+                    <div class="roi-big-number" id="roiBefore">$31,200</div>
+                    <span class="roi-label">per month</span>
+                    <div class="roi-detail" id="roiBeforeData">402 GB/month · 5.2 Mbps</div>
+                </div>
+                <div class="roi-result-arrow">
+                    <i data-lucide="arrow-right"></i>
+                </div>
+                <div class="roi-result-card roi-after">
+                    <h4>With SFSVC</h4>
+                    <div class="roi-big-number" id="roiAfter">$1,920</div>
+                    <span class="roi-label">per month</span>
+                    <div class="roi-detail" id="roiAfterData">25 GB/month · 0.32 Mbps</div>
+                </div>
+            </div>
+            <div class="roi-summary">
+                <div class="roi-summary-item">
+                    <span class="roi-summary-label">Monthly Savings</span>
+                    <span class="roi-summary-value" id="roiMonthlySavings">$29,280</span>
+                </div>
+                <div class="roi-summary-item">
+                    <span class="roi-summary-label">Annual Savings</span>
+                    <span class="roi-summary-value" id="roiAnnualSavings">$351,360</span>
+                </div>
+                <div class="roi-summary-item">
+                    <span class="roi-summary-label">Payback Period</span>
+                    <span class="roi-summary-value" id="roiPayback">6 months</span>
+                </div>
+                <div class="roi-summary-item highlight">
+                    <span class="roi-summary-label">Year 1 ROI</span>
+                    <span class="roi-summary-value" id="roiReturn">95%</span>
+                </div>
+            </div>
+            <div class="roi-cta">
+                <a href="#contact" class="btn btn-primary">Get Custom Quote</a>
+                <button class="btn btn-outline" id="roiDownload">
+                    <i data-lucide="download"></i>
+                    Download Report
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     PERFORMANCE NUMBERS
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<section class="section section-dark" id="performance">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-badge">Performance</span>
+            <h2 class="section-title">Numbers that <span class="gradient-text">speak</span></h2>
+        </div>
+        <div class="perf-grid">
+            <div class="perf-card" data-aos>
+                <div class="perf-value"><span data-count="125">0</span></div>
+                <div class="perf-unit">fps</div>
+                <div class="perf-label">Throughput @ 1080p</div>
+            </div>
+            <div class="perf-card" data-aos>
+                <div class="perf-value"><span data-count="0.40">0</span></div>
+                <div class="perf-unit">ms</div>
+                <div class="perf-label">P50 Latency</div>
+            </div>
+            <div class="perf-card" data-aos>
+                <div class="perf-value"><span data-count="681">0</span></div>
+                <div class="perf-unit">GB/day</div>
+                <div class="perf-label">Storage Saved</div>
+            </div>
+            <div class="perf-card" data-aos>
+                <div class="perf-value"><span data-count="99.9">0</span></div>
+                <div class="perf-unit">%</div>
+                <div class="perf-label">Uptime</div>
+            </div>
+            <div class="perf-card" data-aos>
+                <div class="perf-value"><span data-count="0">0</span></div>
+                <div class="perf-unit"></div>
+                <div class="perf-label">SLA Violations</div>
+            </div>
+            <div class="perf-card" data-aos>
+                <div class="perf-value"><span data-count="106">0</span></div>
+                <div class="perf-unit">Hz</div>
+                <div class="perf-label">Control Rate</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     PILOT PROGRAM
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<section class="section" id="pilot">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-badge">Get Started</span>
+            <h2 class="section-title">From zero to <span class="gradient-text">production</span> in 2 weeks</h2>
+            <p class="section-subtitle">Our pilot program de-risks your evaluation with measurable success criteria.</p>
+        </div>
+        <div class="timeline">
+            <div class="timeline-item" data-aos>
+                <div class="timeline-marker">1</div>
+                <div class="timeline-content">
+                    <div class="timeline-days">Days 1–2</div>
+                    <h3>Setup & Validation</h3>
+                    <p>Docker deploy, basic integration, validation report generated automatically.</p>
+                </div>
+            </div>
+            <div class="timeline-item" data-aos>
+                <div class="timeline-marker">2</div>
+                <div class="timeline-content">
+                    <div class="timeline-days">Days 3–10</div>
+                    <h3>Integration & Testing</h3>
+                    <p>Connect to your camera feeds, tune thresholds, run against your infrastructure data.</p>
+                </div>
+            </div>
+            <div class="timeline-item" data-aos>
+                <div class="timeline-marker">3</div>
+                <div class="timeline-content">
+                    <div class="timeline-days">Days 11–14</div>
+                    <h3>Performance Monitoring</h3>
+                    <p>72-hour continuous run. Verify zero frame drops, latency SLA, and detection accuracy.</p>
+                </div>
+            </div>
+            <div class="timeline-item" data-aos>
+                <div class="timeline-marker">4</div>
+                <div class="timeline-content">
+                    <div class="timeline-days">Week 3+</div>
+                    <h3>Fleet Rollout</h3>
+                    <p>5% → 20% → 100% of your fleet. Graduated deployment with monitoring at each stage.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     CONTACT / REQUEST DEMO
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<section class="section section-dark" id="contact">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-badge">Contact</span>
+            <h2 class="section-title">Ready to <span class="gradient-text">get started?</span></h2>
+            <p class="section-subtitle">Request a live demo or start your 2-week pilot program.</p>
+        </div>
+        <div class="contact-grid">
+            <div class="contact-form-wrapper" data-aos>
+                <form class="contact-form" id="contactForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="contactName">Name *</label>
+                            <input type="text" id="contactName" name="name" required placeholder="Your name">
+                        </div>
+                        <div class="form-group">
+                            <label for="contactEmail">Work Email *</label>
+                            <input type="email" id="contactEmail" name="email" required placeholder="you@company.com">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="contactCompany">Company *</label>
+                            <input type="text" id="contactCompany" name="company" required placeholder="Company name">
+                        </div>
+                        <div class="form-group">
+                            <label for="contactFleet">Fleet Size</label>
+                            <select id="contactFleet" name="fleet">
+                                <option value="">Select range</option>
+                                <option value="1-10">1–10 drones</option>
+                                <option value="11-50">11–50 drones</option>
+                                <option value="51-200">51–200 drones</option>
+                                <option value="200+">200+ drones</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactInterest">I'm interested in…</label>
+                        <select id="contactInterest" name="interest">
+                            <option value="demo">Live demo</option>
+                            <option value="pilot">2-week pilot program</option>
+                            <option value="pricing">Pricing & ROI analysis</option>
+                            <option value="technical">Technical deep-dive</option>
+                            <option value="partnership">Partnership / reseller</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactMessage">Message</label>
+                        <textarea id="contactMessage" name="message" rows="4" placeholder="Tell us about your use case…"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg btn-full">
+                        Send Request
+                        <i data-lucide="send"></i>
+                    </button>
+                </form>
+                <div class="form-success" id="formSuccess" style="display:none">
+                    <div class="success-icon">✓</div>
+                    <h3>Message Sent!</h3>
+                    <p>We'll get back to you within 24 hours.</p>
+                </div>
+            </div>
+            <div class="contact-info" data-aos>
+                <div class="contact-info-card">
+                    <i data-lucide="mail"></i>
+                    <h4>Email</h4>
+                    <a href="mailto:DicksonChau@aurasensehk.com">DicksonChau@aurasensehk.com</a>
+                </div>
+                <div class="contact-info-card">
+                    <i data-lucide="globe"></i>
+                    <h4>Website</h4>
+                    <a href="https://www.aurasensehk.com">www.aurasensehk.com</a>
+                </div>
+                <div class="contact-info-card">
+                    <i data-lucide="github"></i>
+                    <h4>GitHub</h4>
+                    <a href="https://github.com/Dicksonchau1/AuraSense-SFSVC" target="_blank">AuraSense-SFSVC</a>
+                </div>
+                <div class="contact-info-card">
+                    <i data-lucide="clock"></i>
+                    <h4>Response Time</h4>
+                    <p>Within 24 hours</p>
+                </div>
+                <div class="contact-quick-stats">
+                    <h4>Quick Facts</h4>
+                    <ul>
+                        <li>🚀 15-minute setup</li>
+                        <li>📋 2-week pilot program</li>
+                        <li>💰 6-month payback</li>
+                        <li>📊 95% Year-1 ROI</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     FOOTER
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <a href="#" class="nav-logo">
+                    <span class="logo-icon">⚡</span>
+                    <span class="logo-text">AuraSense</span>
+                </a>
+                <p>Crack detection at the edge.<br>Bandwidth savings at scale.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Product</h4>
+                <a href="#features">Features</a>
+                <a href="#technology">Technology</a>
+                <a href="#demo">Demo</a>
+                <a href="#roi">ROI Calculator</a>
+            </div>
+            <div class="footer-links">
+                <h4>Company</h4>
+                <a href="#use-cases">Use Cases</a>
+                <a href="#pilot">Pilot Program</a>
+                <a href="#contact">Contact</a>
+                <a href="https://github.com/Dicksonchau1/AuraSense-SFSVC" target="_blank">GitHub</a>
+            </div>
+            <div class="footer-links">
+                <h4>Resources</h4>
+                <a href="#">Documentation</a>
+                <a href="#">Datasheet (PDF)</a>
+                <a href="#">API Reference</a>
+                <a href="#">Support</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 AuraSense HK. All rights reserved.</p>
+            <div class="footer-bottom-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>
