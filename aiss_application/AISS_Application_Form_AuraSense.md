@@ -18,8 +18,8 @@
 | **Category** | ☒ AI start-ups |
 | **Entity Name (Eng)** | AuraSense Limited |
 | **Entity Name (Chi)** | 歐雅生物科技有限公司 |
-| **Address (Eng)** | Hong Kong *(full registered address to be confirmed upon submission)* |
-| **Address (Chi)** | 香港 *(提交時確認完整註冊地址)* |
+| **Address (Eng)** | Room 1505, 15/F, Yu Sung Boon Building, 107–111 Des Voeux Road Central, Hong Kong |
+| **Address (Chi)** | 香港德輔道中107–111號余崇本行15樓1505室 |
 
 ### Entity Description
 
