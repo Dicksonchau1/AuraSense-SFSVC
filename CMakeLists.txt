@@ -1,47 +1,41 @@
 ﻿# =============================================================================
-# CMakeLists.txt — AuraSense SFSVC Production Build System
+# CMakeLists.txt — AuraSense SFSVC + Failsafe Integrated Build
 # =============================================================================
 
 cmake_minimum_required(VERSION 3.16)
 
-# Define the project name and language
 project(AuraSenseRT LANGUAGES CXX)
 
 # =============================================================================
 # Build Configuration & Compiler Options
 # =============================================================================
 
-# Default to a Release build if not specified
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
 endif()
 
 message(STATUS "Configuring for build type: ${CMAKE_BUILD_TYPE}")
 
-# Set the C++ standard to C++17
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# --- Compiler-specific flags ---
-set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
+set(CMAKE_CXX_FLAGS_DEBUG   "-g -O0 -fsanitize=address,undefined")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
 
-# Add architecture-specific optimization for release builds
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
     if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-        list(APPEND CMAKE_CXX_FLAGS_RELEASE "-march=native")
-        message(STATUS "Release build: enabling -march=native for host optimization.")
+        list(APPEND CMAKE_CXX_FLAGS_RELEASE "-march=native" "-ffast-math")
+        message(STATUS "Release build: enabling -march=native -ffast-math.")
     endif()
 endif()
 
-# Enable strong compiler warnings for better code quality
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     add_compile_options(
         -Wall
         -Wextra
         -Wpedantic
-        -Wno-unused-parameter # Suppress common warning for callback parameters
+        -Wno-unused-parameter
     )
     message(STATUS "Enabled GCC/Clang compiler warnings.")
 elseif(MSVC)
@@ -50,10 +44,9 @@ elseif(MSVC)
 endif()
 
 # =============================================================================
-# Find Dependencies
+# Dependencies
 # =============================================================================
 
-# Find OpenCV and its required components
 find_package(OpenCV REQUIRED COMPONENTS core imgproc imgcodecs highgui)
 if(OpenCV_FOUND)
     message(STATUS "Found OpenCV version: ${OpenCV_VERSION}")
@@ -61,47 +54,79 @@ else()
     message(FATAL_ERROR "OpenCV not found. Please install it or set CMAKE_PREFIX_PATH.")
 endif()
 
-# Find Threads (required for std::thread)
 find_package(Threads REQUIRED)
 
 # =============================================================================
-# Source File Organization
+# Failsafe / Policy / Middleware Libraries
 # =============================================================================
 
-# Explicitly list all C++ source files for reliability and IDE support.
+# Failsafe core
+add_library(failsafe STATIC
+    src/failsafe.cpp
+)
+
+target_include_directories(failsafe PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+
+# Degraded mode policy
+add_library(degraded_mode_policy STATIC
+    src/degraded_mode_policy.cpp
+)
+
+target_include_directories(degraded_mode_policy PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+
+target_link_libraries(degraded_mode_policy
+    PUBLIC
+        failsafe
+)
+
+# Drone middleware
+add_library(drone_middleware STATIC
+    src/drone_middleware.cpp
+)
+
+target_include_directories(drone_middleware PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+
+target_link_libraries(drone_middleware
+    PUBLIC
+        failsafe
+        degraded_mode_policy
+        Threads::Threads
+)
+
+# =============================================================================
+# Core AuraSense Multi-Lane Engine
+# =============================================================================
+
 set(AURA_SOURCES
     src/rt_core.cpp
     src/engine.cpp
     src/encoder.cpp
     src/gating_engine.cpp
     src/signature_bank.cpp
-    src/failsafe.cpp
     src/crack_statistics.cpp
     src/yolo_bridge.cpp
     src/detection_controller.cpp
     src/main.cpp
 )
 
-message(STATUS "Source files configured:")
-foreach(src ${AURA_SOURCES})
-    message(STATUS "  ${src}")
-endforeach()
-
-# =============================================================================
-# Executable Target
-# =============================================================================
-
-# Define the executable target
 add_executable(aura_sense ${AURA_SOURCES})
 
-# Set include directories for the target
 target_include_directories(aura_sense
     PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src # For local includes like "engine.h"
-        ${OpenCV_INCLUDE_DIRS}        # For OpenCV headers
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
+        ${OpenCV_INCLUDE_DIRS}
 )
 
-# Link required libraries using modern CMake targets
 target_link_libraries(aura_sense
     PRIVATE
         OpenCV::opencv_core
@@ -109,24 +134,78 @@ target_link_libraries(aura_sense
         OpenCV::opencv_imgcodecs
         OpenCV::opencv_highgui
         Threads::Threads
+        drone_middleware
+        degraded_mode_policy
+        failsafe
 )
 
-# On Linux, link against the 'rt' library for real-time extensions
 if(UNIX AND NOT APPLE)
     target_link_libraries(aura_sense PRIVATE rt)
-    message(STATUS "Linking with 'rt' library on Linux.")
+    message(STATUS "Linking with 'rt' on Linux.")
 endif()
 
 # =============================================================================
-# Optional: Installation and Packaging
+# Optional: Failsafe Demo Executable
 # =============================================================================
 
-install(TARGETS aura_sense
-    RUNTIME DESTINATION bin
+add_executable(failsafe_demo
+    src/failsafe_example.cpp
 )
 
-include(CPack)
-set(CPACK_PACKAGE_NAME "AuraSenseRT")
-set(CPACK_PACKAGE_VERSION "1.0.0")
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "AuraSense Real-Time Crack Detection System")
-set(CPACK_PACKAGE_VENDOR "AuraSense")
+target_include_directories(failsafe_demo
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+
+target_link_libraries(failsafe_demo
+    PRIVATE
+        drone_middleware
+        degraded_mode_policy
+        failsafe
+        Threads::Threads
+)
+
+# =============================================================================
+# Installation
+# =============================================================================
+
+install(TARGETS aura_sense failsafe degraded_mode_policy drone_middleware failsafe_demo
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+)
+
+install(DIRECTORY include/ DESTINATION include)
+
+# =============================================================================
+# Testing (optional)
+# =============================================================================
+
+enable_testing()
+
+add_test(NAME failsafe_demo_test
+    COMMAND failsafe_demo
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+)
+
+# =============================================================================
+# Build Info
+# =============================================================================
+
+message(STATUS "")
+message(STATUS "=============================================================")
+message(STATUS "AuraSense RT + Failsafe - Build Configuration")
+message(STATUS "=============================================================")
+message(STATUS "Build Type:        ${CMAKE_BUILD_TYPE}")
+message(STATUS "C++ Compiler:      ${CMAKE_CXX_COMPILER}")
+message(STATUS "C++ Standard:      ${CMAKE_CXX_STANDARD}")
+message(STATUS "Install Prefix:    ${CMAKE_INSTALL_PREFIX}")
+message(STATUS "")
+message(STATUS "Build Instructions:")
+message(STATUS "  mkdir build && cd build")
+message(STATUS "  cmake .. -DCMAKE_BUILD_TYPE=Release")
+message(STATUS "  make -j\$(nproc)")
+message(STATUS "  ./aura_sense")
+message(STATUS "=============================================================")
+message(STATUS "")
