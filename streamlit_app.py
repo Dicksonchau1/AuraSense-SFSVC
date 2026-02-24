@@ -7,6 +7,7 @@ import streamlit as st
 import cv2
 import numpy as np
 import random
+import tempfile
 from pathlib import Path
 
 # ── Page config ──────────────────────────────────────────────────────────────
@@ -27,14 +28,34 @@ st.markdown("**Real-time neuromorphic spike-based crack detection on video** · 
             "[aurasensehk.com](https://www.aurasensehk.com) · dickson@aurasense.ai")
 st.divider()
 
-# ── Locate video ─────────────────────────────────────────────────────────────
+# ── Video source ─────────────────────────────────────────────────────────────
+st.sidebar.header("📹 Video Source")
+source_mode = st.sidebar.radio("Input method", ["Built-in demo", "Upload file"],
+                                index=0, horizontal=True)
+
 VIDEO = None
-for p in [Path(__file__).parent / "demo.mp4", Path("demo.mp4")]:
-    if p.exists():
-        VIDEO = str(p)
-        break
+if source_mode == "Upload file":
+    uploaded = st.sidebar.file_uploader("Upload video", type=["mp4", "avi", "mov", "mkv"])
+    if uploaded is not None:
+        # Save to temp so OpenCV can seek
+        suffix = Path(uploaded.name).suffix
+        tmp = tempfile.NamedTemporaryFile(delete=False, suffix=suffix)
+        tmp.write(uploaded.read())
+        tmp.flush()
+        VIDEO = tmp.name
+        st.sidebar.success(f"✅ Loaded **{uploaded.name}**")
+    else:
+        st.sidebar.info("Upload a video file to begin")
+else:
+    for p in [Path(__file__).parent / "demo.mp4", Path("demo.mp4")]:
+        if p.exists():
+            VIDEO = str(p)
+            break
+    if VIDEO is None:
+        st.sidebar.warning("demo.mp4 not found — upload a file instead")
+
 if VIDEO is None:
-    st.error("❌ demo.mp4 not found")
+    st.info("👈 Choose a video source from the sidebar to begin")
     st.stop()
 
 # ── Cache video metadata ────────────────────────────────────────────────────
@@ -126,6 +147,14 @@ def mbox(label, value):
     return (f'<div class="metric-box"><div>{label}</div>'
             f'<div class="metric-value">{value}</div></div>')
 
+def frame_to_jpeg_bytes(frame_bgr):
+    """Encode BGR frame → JPEG bytes.  Passing bytes to st.image()
+    avoids Streamlit's MemoryMediaFileStorage churn that causes
+    'MediaFileStorageError: Missing file' when fragments refresh fast."""
+    rgb = cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2RGB)
+    ok, buf = cv2.imencode(".jpg", rgb, [cv2.IMWRITE_JPEG_QUALITY, 85])
+    return buf.tobytes() if ok else None
+
 def read_frame(path, idx):
     cap = cv2.VideoCapture(path)
     cap.set(cv2.CAP_PROP_POS_FRAMES, idx)
@@ -168,8 +197,8 @@ def video_stream():
                 f"Frame {fidx}/{TOTAL} | {int(fidx/FPS*1000)}ms | "
                 f"Det: {len(cracks)} | Spikes: {sp}",
                 (10, 28), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
-            st.image(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB),
-                     channels="RGB", use_container_width=True)
+            st.image(frame_to_jpeg_bytes(frame),
+                     use_container_width=True)
             st.progress(fidx / max(TOTAL, 1), text=f"Frame {fidx}/{TOTAL}")
         else:
             if fidx == 0:
