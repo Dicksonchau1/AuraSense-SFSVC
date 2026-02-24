@@ -377,6 +377,7 @@ function initHeroCanvas() {
 function initDemo() {
     const rawCanvas = document.getElementById('demoCanvasRaw');
     const detCanvas = document.getElementById('demoCanvasDet');
+    if (!rawCanvas || !detCanvas) return;
     const rawCtx    = rawCanvas.getContext('2d');
     const detCtx    = detCanvas.getContext('2d');
     const playBtn   = document.getElementById('demoPlayBtn');
@@ -600,7 +601,11 @@ function initDemo() {
             const tw = ctx.measureText(label).width + 10;
             ctx.fillStyle = c.color;
             ctx.beginPath();
-            ctx.roundRect(c.x, c.y - 18, tw, 16, [3]);
+            if (ctx.roundRect) {
+                ctx.roundRect(c.x, c.y - 18, tw, 16, [3]);
+            } else {
+                ctx.rect(c.x, c.y - 18, tw, 16);
+            }
             ctx.fill();
             ctx.shadowBlur = 0;
             ctx.fillStyle = '#fff';
@@ -647,8 +652,8 @@ function initDemo() {
     function resizeCanvases() {
         [rawCanvas, detCanvas].forEach(cvs => {
             const rect = cvs.parentElement.getBoundingClientRect();
-            cvs.width = Math.round(rect.width);
-            cvs.height = Math.round(rect.height || 300);
+            cvs.width = Math.round(rect.width) || 400;
+            cvs.height = 320;
         });
     }
     window.addEventListener('resize', () => { if (!running) resizeCanvases(); });
