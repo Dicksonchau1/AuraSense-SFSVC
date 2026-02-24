@@ -174,77 +174,92 @@ with b2:
         st.session_state.total_high = 0
         st.session_state.confs = []
 
-# ── Fragment: auto-refreshes every 100 ms while playing ─────────────────────
+# ── Fragment: auto-refreshes every 150 ms while playing ─────────────────────
 # Only the fragment re-executes — the rest of the page (header, sidebar,
 # buttons, footer) stays intact.  Sidebar toggles take effect instantly.
-@st.fragment(run_every=0.1 if st.session_state.playing else None)
+@st.fragment(run_every=0.15 if st.session_state.playing else None)
 def video_stream():
     fidx = st.session_state.fidx
-    frame = read_frame(VIDEO, fidx) if fidx < TOTAL else None
+    frame_raw = read_frame(VIDEO, fidx) if fidx < TOTAL else None
 
-    col_vid, col_met = st.columns([3, 2])
+    # ── Side-by-side: Original | Detection ───────────────────────────────
+    col_orig, col_det = st.columns(2)
 
-    with col_vid:
-        st.markdown("### 📺 Live Detection Stream")
-        if frame is not None:
-            h, w = frame.shape[:2]
-            cracks = simulate_cracks(w, h, fidx, conf_thr)
-            draw_boxes(frame, cracks)
-            if enable_spikes:
-                draw_spikes(frame, cracks, fidx)
-            sp = "ON" if enable_spikes else "OFF"
-            cv2.putText(frame,
-                f"Frame {fidx}/{TOTAL} | {int(fidx/FPS*1000)}ms | "
-                f"Det: {len(cracks)} | Spikes: {sp}",
-                (10, 28), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
-            st.image(frame_to_jpeg_bytes(frame),
+    with col_orig:
+        st.markdown("### 📷 Original")
+        if frame_raw is not None:
+            # Label the original frame
+            orig_display = frame_raw.copy()
+            cv2.putText(orig_display,
+                f"Original  Frame {fidx}/{TOTAL}",
+                (10, 28), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+            st.image(frame_to_jpeg_bytes(orig_display),
                      use_container_width=True)
-            st.progress(fidx / max(TOTAL, 1), text=f"Frame {fidx}/{TOTAL}")
         else:
             if fidx == 0:
                 st.warning("Press **▶️ Start / Resume** to begin")
             else:
                 st.success("✅ Stream complete!")
+
+    with col_det:
+        st.markdown("### 🔍 AuraSense Detection")
+        if frame_raw is not None:
+            h, w = frame_raw.shape[:2]
+            frame_det = frame_raw.copy()
+            cracks = simulate_cracks(w, h, fidx, conf_thr)
+            draw_boxes(frame_det, cracks)
+            if enable_spikes:
+                draw_spikes(frame_det, cracks, fidx)
+            sp = "ON" if enable_spikes else "OFF"
+            cv2.putText(frame_det,
+                f"Det: {len(cracks)} | Spikes: {sp} | Frame {fidx}/{TOTAL}",
+                (10, 28), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+            st.image(frame_to_jpeg_bytes(frame_det),
+                     use_container_width=True)
+        else:
+            if fidx >= TOTAL:
                 st.session_state.playing = False
 
-    with col_met:
-        st.markdown("### 📊 Real-Time Metrics")
-        n_cracks = 0
-        if frame is not None and st.session_state.playing:
-            n_cracks = len(cracks)
-            st.session_state.total_high += sum(
-                1 for c in cracks if c["severity"] == "High")
-            st.session_state.confs.extend(
-                [c["confidence"] for c in cracks])
-        avg_c = np.mean(st.session_state.confs) if st.session_state.confs else 0
-        rng_m = random.Random(fidx)
-        st.markdown(mbox("Cracks (this frame)", n_cracks), unsafe_allow_html=True)
-        st.markdown(mbox("Avg Confidence", f"{avg_c*100:.1f}%"),
-                    unsafe_allow_html=True)
-        st.markdown(mbox("High Severity Total", st.session_state.total_high),
-                    unsafe_allow_html=True)
-        st.markdown(mbox("Latency", f"{rng_m.uniform(0.65,0.95):.2f} ms"),
-                    unsafe_allow_html=True)
-        st.markdown(mbox("Data Reduction",
-                    f"{94.0 - rng_m.uniform(0,2):.1f}%"), unsafe_allow_html=True)
-        st.markdown("---")
-        st.markdown("### 🔴 Detected Defects")
-        if frame is not None and n_cracks > 0:
-            parts = []
-            for i, c in enumerate(cracks[:5], 1):
-                l = ((c["x2"]-c["x1"])**2+(c["y2"]-c["y1"])**2)**0.5*0.05
-                b = f'badge-{c["severity"].lower()}'
-                parts.append(
-                    f'<div style="padding:4px 8px;background:#f5f5f5;'
-                    f'border-radius:4px;margin:3px 0;font-size:.85rem">'
-                    f'<b>#{i}</b> <span class="{b}">{c["severity"]}</span>'
-                    f' {l:.1f}mm {c["confidence"]*100:.1f}%</div>')
-            st.markdown("".join(parts), unsafe_allow_html=True)
-        else:
-            st.success("✅ No cracks this frame")
+    # ── Progress bar ─────────────────────────────────────────────────────
+    if frame_raw is not None:
+        st.progress(fidx / max(TOTAL, 1), text=f"Frame {fidx}/{TOTAL}")
+
+    # ── Metrics row (compact) ────────────────────────────────────────────
+    n_cracks = 0
+    if frame_raw is not None and st.session_state.playing:
+        n_cracks = len(cracks)
+        st.session_state.total_high += sum(
+            1 for c in cracks if c["severity"] == "High")
+        st.session_state.confs.extend(
+            [c["confidence"] for c in cracks])
+    avg_c = np.mean(st.session_state.confs) if st.session_state.confs else 0
+    rng_m = random.Random(fidx)
+
+    m1, m2, m3, m4, m5 = st.columns(5)
+    m1.markdown(mbox("Cracks", n_cracks), unsafe_allow_html=True)
+    m2.markdown(mbox("Avg Conf", f"{avg_c*100:.1f}%"), unsafe_allow_html=True)
+    m3.markdown(mbox("High Sev", st.session_state.total_high),
+                unsafe_allow_html=True)
+    m4.markdown(mbox("Latency", f"{rng_m.uniform(0.65,0.95):.2f}ms"),
+                unsafe_allow_html=True)
+    m5.markdown(mbox("Data Red", f"{94.0-rng_m.uniform(0,2):.1f}%"),
+                unsafe_allow_html=True)
+
+    # ── Defect list ──────────────────────────────────────────────────────
+    if frame_raw is not None and n_cracks > 0:
+        parts = []
+        for i, c in enumerate(cracks[:5], 1):
+            l = ((c["x2"]-c["x1"])**2+(c["y2"]-c["y1"])**2)**0.5*0.05
+            b = f'badge-{c["severity"].lower()}'
+            parts.append(
+                f'<span style="padding:3px 8px;background:#f5f5f5;'
+                f'border-radius:4px;margin:2px;font-size:.85rem;display:inline-block">'
+                f'<b>#{i}</b> <span class="{b}">{c["severity"]}</span>'
+                f' {l:.1f}mm {c["confidence"]*100:.0f}%</span>')
+        st.markdown(" ".join(parts), unsafe_allow_html=True)
 
     # Advance frame
-    if st.session_state.playing and frame is not None:
+    if st.session_state.playing and frame_raw is not None:
         st.session_state.fidx = fidx + skip
         if st.session_state.fidx >= TOTAL:
             st.session_state.playing = False
