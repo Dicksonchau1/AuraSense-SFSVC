@@ -79,12 +79,25 @@ st.markdown("## 📹 Video Input & Processing Controls")
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
-    # Check if demo.mp4 exists
-    demo_video_path = "/workspaces/AuraSense-SFSVC/demo.mp4"
-    if Path(demo_video_path).exists():
-        st.info(f"✅ Video loaded: demo.mp4")
-    else:
-        st.warning("⚠️ demo.mp4 not found")
+    # Check if demo.mp4 exists (works both locally and on Streamlit Cloud)
+    # Try multiple possible locations
+    possible_paths = [
+        "demo.mp4",
+        "./demo.mp4",
+        Path(__file__).parent / "demo.mp4",
+        Path(__file__).parent.parent / "demo.mp4",
+    ]
+
+    demo_video_path = None
+    for path in possible_paths:
+        if Path(path).exists():
+            demo_video_path = str(path)
+            st.info(f"✅ Video loaded: {path}")
+            break
+
+    if not demo_video_path:
+        st.warning("⚠️ demo.mp4 not found in expected locations")
+        st.info("Looking in: current dir, parent dir")
         demo_video_path = None
 
 with col2:
@@ -402,5 +415,10 @@ if demo_video_path:
     cap.release()
 
 else:
-    st.error("❌ Video file not found at /workspaces/AuraSense-SFSVC/demo.mp4")
-    st.info("Make sure demo.mp4 exists in the repository root")
+    st.error("❌ Video file not found")
+    st.info("Make sure demo.mp4 exists in the repository root or same directory as streamlit_app.py")
+
+    # Debug: Show what directory we're in
+    import os
+    st.code(f"Current working directory: {os.getcwd()}")
+    st.code(f"Files in current directory:\n" + "\n".join(os.listdir(".")[:20]))
