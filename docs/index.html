@@ -29,6 +29,9 @@
 </head>
 <body>
 
+<!-- Starfield background -->
+<canvas id="starfield"></canvas>
+
 <!-- ═══════════════════════════════════════════════════════════════════════════
      NAVIGATION
      ═══════════════════════════════════════════════════════════════════════════ -->
@@ -42,6 +45,7 @@
             <a href="#features">Features</a>
             <a href="#technology">Technology</a>
             <a href="#use-cases">Use Cases</a>
+            <a href="#about">About Us</a>
             <a href="#demo">Demo</a>
             <a href="#roi">ROI Calculator</a>
             <a href="#contact" class="nav-cta">Request Demo</a>
@@ -53,76 +57,64 @@
 </nav>
 
 <!-- ═══════════════════════════════════════════════════════════════════════════
-     HERO SECTION
+     HERO SECTION — Clean Minimalist
      ═══════════════════════════════════════════════════════════════════════════ -->
 <section class="hero" id="hero">
-    <div class="hero-bg-grid"></div>
-    <canvas class="hero-canvas" id="heroCanvas"></canvas>
-    <div class="hero-orb hero-orb-1"></div>
-    <div class="hero-orb hero-orb-2"></div>
-    <div class="hero-orb hero-orb-3"></div>
     <div class="container hero-content">
-        <div class="hero-badge hero-fade-up" style="--delay: 0s">
-            <span class="badge-dot"></span>
-            <span class="badge-text">Deployed on 3 continents · Zero downtime</span>
-        </div>
+        <p class="hero-eyebrow hero-fade-up" style="--delay: 0s">NEUROMORPHIC PROCESSING FOR AUTONOMOUS INSPECTION</p>
         <h1 class="hero-title hero-fade-up" style="--delay: 0.15s">
-            Your drones fly.
-            <br>
-            <span class="hero-typed-wrapper">
-                We <span class="hero-typed" id="heroTyped"></span><span class="typed-cursor">|</span>
-            </span>
+            Cloud ML fails in elevator shafts.<br>
+            <span class="hero-highlight">SFSVC doesn't.</span>
         </h1>
-        <p class="hero-subtitle hero-fade-up" style="--delay: 0.4s">
-            AuraSense finds cracks in real time, transmits <strong>94% less data</strong>, 
-            and works in places where cloud AI can't — tunnels, subways, offshore.
-            No GPU. No internet. No guesswork.
+        <p class="hero-subtitle hero-fade-up" style="--delay: 0.35s">
+            100% offline edge processing for building inspection drones.<br>
+            See defects in real-time — no WiFi required.
         </p>
-        <div class="hero-actions hero-fade-up" style="--delay: 0.55s">
-            <a href="#contact" class="btn btn-primary btn-lg btn-glow">
-                Start Your Free Pilot
-                <i data-lucide="arrow-right"></i>
-            </a>
-            <a href="#roi" class="btn btn-outline btn-lg">
-                <i data-lucide="calculator"></i>
-                Calculate Your Savings
-            </a>
-        </div>
-        <div class="hero-stats hero-fade-up" style="--delay: 0.7s">
-            <div class="hero-stat">
-                <span class="hero-stat-value" data-count="0.4">0</span><span class="hero-stat-unit">ms</span>
-                <span class="hero-stat-label">Detection Speed</span>
+
+        <!-- Split comparison -->
+        <div class="hero-comparison hero-fade-up" style="--delay: 0.5s">
+            <div class="comparison-card comparison-cloud">
+                <div class="comparison-header comparison-header--bad">
+                    <span class="comparison-icon">❌</span>
+                    <span>CLOUD ML</span>
+                </div>
+                <ul class="comparison-list">
+                    <li>WiFi required</li>
+                    <li>50–200 ms latency</li>
+                    <li>GPU hardware ($500+)</li>
+                    <li>Post-flight analysis</li>
+                    <li>Fails in confined spaces</li>
+                </ul>
             </div>
-            <div class="hero-stat-divider"></div>
-            <div class="hero-stat">
-                <span class="hero-stat-value" data-count="94">0</span><span class="hero-stat-unit">%</span>
-                <span class="hero-stat-label">Less Data Sent</span>
-            </div>
-            <div class="hero-stat-divider"></div>
-            <div class="hero-stat">
-                <span class="hero-stat-value" data-count="98.7">0</span><span class="hero-stat-unit">%</span>
-                <span class="hero-stat-label">Accuracy</span>
-            </div>
-            <div class="hero-stat-divider"></div>
-            <div class="hero-stat">
-                <span class="hero-stat-value">6</span><span class="hero-stat-unit">mo</span>
-                <span class="hero-stat-label">Payback</span>
+            <div class="comparison-card comparison-sfsvc">
+                <div class="comparison-header comparison-header--good">
+                    <span class="comparison-icon">✅</span>
+                    <span>SFSVC (AuraSense)</span>
+                </div>
+                <ul class="comparison-list">
+                    <li>100% offline</li>
+                    <li>0.4 ms latency</li>
+                    <li>CPU-only ($50)</li>
+                    <li>Real-time detection</li>
+                    <li>Works anywhere</li>
+                </ul>
             </div>
         </div>
 
-        <!-- Trust logos placeholder -->
-        <div class="hero-trust hero-fade-up" style="--delay: 0.9s">
-            <span class="hero-trust-label">Built for</span>
-            <div class="hero-trust-items">
-                <span class="trust-tag">🚇 Metro Operators</span>
-                <span class="trust-tag">🌉 Highway Authorities</span>
-                <span class="trust-tag">🛩️ Drone Fleets</span>
-                <span class="trust-tag">🏗️ Construction</span>
-            </div>
+        <div class="hero-actions hero-fade-up" style="--delay: 0.65s">
+            <a href="#contact" class="btn btn-primary btn-lg btn-glow">
+                <i data-lucide="rocket"></i>
+                Request Pilot Demo
+            </a>
+            <a href="#use-cases" class="btn btn-link btn-lg">
+                View case study →
+            </a>
         </div>
-    </div>
-    <div class="hero-scroll">
-        <a href="#features"><i data-lucide="chevron-down"></i></a>
+
+        <div class="hero-proof hero-fade-up" style="--delay: 0.8s">
+            <span class="proof-check">✓</span>
+            <span>Validated by RaSpect Intelligence (Meeting Feb 2026)</span>
+        </div>
     </div>
 </section>
 
@@ -397,31 +389,67 @@
     <div class="container">
         <div class="section-header">
             <span class="section-badge">Live Demo</span>
-            <h2 class="section-title">See SFSVC <span class="gradient-text">in action</span></h2>
-            <p class="section-subtitle">Real-time crack detection on concrete surface video — simulated pipeline output.</p>
+            <h2 class="section-title">Watch it <span class="gradient-text">detect in real time</span></h2>
+            <p class="section-subtitle">Pick a scenario. See cracks appear. Watch the data shrink.</p>
         </div>
+
+        <!-- Scenario Picker -->
+        <div class="demo-scenarios" data-aos>
+            <button class="demo-scenario active" data-scenario="tunnel">
+                <i data-lucide="train-track"></i>
+                <span>Tunnel</span>
+            </button>
+            <button class="demo-scenario" data-scenario="bridge">
+                <i data-lucide="landmark"></i>
+                <span>Bridge</span>
+            </button>
+            <button class="demo-scenario" data-scenario="runway">
+                <i data-lucide="plane"></i>
+                <span>Runway</span>
+            </button>
+            <button class="demo-scenario" data-scenario="facade">
+                <i data-lucide="building-2"></i>
+                <span>Facade</span>
+            </button>
+        </div>
+
         <div class="demo-wrapper" data-aos>
             <div class="demo-screen">
                 <div class="demo-header">
                     <div class="demo-dots">
                         <span></span><span></span><span></span>
                     </div>
-                    <span class="demo-title">AuraSense SFSVC — Live Detection</span>
+                    <span class="demo-title">AuraSense SFSVC — <span id="demoScenarioLabel">Tunnel Inspection</span></span>
                     <span class="demo-status" id="demoStatus">● READY</span>
                 </div>
                 <div class="demo-body">
-                    <div class="demo-canvas-wrapper">
-                        <canvas id="demoCanvas" width="800" height="400"></canvas>
-                        <div class="demo-overlay" id="demoOverlay">
-                            <button class="demo-play-btn" id="demoPlayBtn">
-                                <i data-lucide="play"></i>
-                                <span>Launch Demo</span>
-                            </button>
+                    <div class="demo-split">
+                        <div class="demo-pane">
+                            <div class="demo-pane-label">Raw Feed</div>
+                            <canvas id="demoCanvasRaw" width="400" height="360"></canvas>
+                        </div>
+                        <div class="demo-pane-divider">
+                            <div class="demo-pane-divider-line"></div>
+                            <span class="demo-pane-divider-badge">SFSVC</span>
+                            <div class="demo-pane-divider-line"></div>
+                        </div>
+                        <div class="demo-pane">
+                            <div class="demo-pane-label">Detection Output</div>
+                            <canvas id="demoCanvasDet" width="400" height="360"></canvas>
+                        </div>
+                    </div>
+                    <div class="demo-controls">
+                        <button class="demo-play-btn" id="demoPlayBtn">
+                            <i data-lucide="play"></i>
+                            <span>Run Inspection</span>
+                        </button>
+                        <div class="demo-progress-bar">
+                            <div class="demo-progress-fill" id="demoProgress"></div>
                         </div>
                     </div>
                     <div class="demo-metrics">
                         <div class="demo-metric">
-                            <span class="demo-metric-label">Cracks Found</span>
+                            <span class="demo-metric-label">Cracks</span>
                             <span class="demo-metric-value" id="dmCracks">—</span>
                         </div>
                         <div class="demo-metric">
@@ -429,11 +457,11 @@
                             <span class="demo-metric-value" id="dmLatency">—</span>
                         </div>
                         <div class="demo-metric">
-                            <span class="demo-metric-label">Spikes/Frame</span>
+                            <span class="demo-metric-label">Spikes</span>
                             <span class="demo-metric-value" id="dmSpikes">—</span>
                         </div>
                         <div class="demo-metric">
-                            <span class="demo-metric-label">Bandwidth</span>
+                            <span class="demo-metric-label">Data Saved</span>
                             <span class="demo-metric-value" id="dmBandwidth">—</span>
                         </div>
                         <div class="demo-metric">
@@ -628,6 +656,41 @@
 </section>
 
 <!-- ═══════════════════════════════════════════════════════════════════════════
+     ABOUT US
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<section class="section section-dark" id="about">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-badge">About Us</span>
+            <h2 class="section-title">Hong Kong <span class="gradient-text">AI Hub</span></h2>
+            <p class="section-subtitle">Pioneering neuromorphic edge intelligence from Asia's innovation capital.</p>
+        </div>
+        <div class="about-grid">
+            <div class="about-card" data-aos>
+                <div class="about-icon"><i data-lucide="brain"></i></div>
+                <h3>Neuromorphic Codec</h3>
+                <p>SFSVC is a proprietary neuromorphic video codec — not a neural network. It converts temporal pixel changes into sparse spike events, mimicking the biological spiking behaviour of retinal ganglion cells and the lateral geniculate nucleus.</p>
+            </div>
+            <div class="about-card" data-aos>
+                <div class="about-icon"><i data-lucide="eye"></i></div>
+                <h3>Biological Visual Processing</h3>
+                <p>Our multi-rate four-lane architecture mirrors the hierarchical timing structure of the human visual cortex — from fast subcortical reflexes to slow semantic reasoning. Each lane operates at a different temporal resolution, just like biology.</p>
+            </div>
+            <div class="about-card" data-aos>
+                <div class="about-icon"><i data-lucide="wifi-off"></i></div>
+                <h3>Offline Edge Detection</h3>
+                <p>100% on-device processing with zero cloud dependency. No pre-trained models, no GPU, no internet. SFSVC performs physics-based crack detection using deterministic spike analysis — works in elevator shafts, tunnels, and underground vaults.</p>
+            </div>
+            <div class="about-card" data-aos>
+                <div class="about-icon"><i data-lucide="map-pin"></i></div>
+                <h3>Based in Hong Kong</h3>
+                <p>AuraSense Limited is headquartered in Hong Kong, positioning the city as a regional innovation hub for neuromorphic edge AI. We're building inspection-grade middleware for the Greater Bay Area and global infrastructure markets.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
      CONTACT / REQUEST DEMO
      ═══════════════════════════════════════════════════════════════════════════ -->
 <section class="section section-dark" id="contact">
@@ -695,7 +758,7 @@
                 <div class="contact-info-card">
                     <i data-lucide="mail"></i>
                     <h4>Email</h4>
-                    <a href="mailto:DicksonChau@aurasensehk.com">DicksonChau@aurasensehk.com</a>
+                    <a href="mailto:support@aurasensehk.com">support@aurasensehk.com</a>
                 </div>
                 <div class="contact-info-card">
                     <i data-lucide="globe"></i>

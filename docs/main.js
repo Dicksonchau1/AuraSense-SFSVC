@@ -8,8 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initNavbar();
     initScrollAnimations();
     initCounters();
-    initTypedEffect();
-    initHeroCanvas();
+    initStarfield();
     initDemo();
     initROI();
     initContactForm();
@@ -170,6 +169,86 @@ function initTypedEffect() {
     setTimeout(tick, 800);
 }
 
+/* ── Starfield Background ─────────────────────────────────────────────────── */
+function initStarfield() {
+    const canvas = document.getElementById('starfield');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let W, H;
+    const stars = [];
+    const STAR_COUNT = 180;
+    const NEBULA_COUNT = 4;
+    const nebulae = [];
+
+    function resize() {
+        W = canvas.width = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    // Init stars
+    for (let i = 0; i < STAR_COUNT; i++) {
+        stars.push({
+            x: Math.random() * W,
+            y: Math.random() * H,
+            r: 0.3 + Math.random() * 1.2,
+            speed: 0.02 + Math.random() * 0.06,
+            phase: Math.random() * Math.PI * 2,
+            bright: 0.3 + Math.random() * 0.7
+        });
+    }
+
+    // Init nebulae (large soft blobs)
+    for (let i = 0; i < NEBULA_COUNT; i++) {
+        nebulae.push({
+            x: Math.random() * W,
+            y: Math.random() * H,
+            r: 200 + Math.random() * 300,
+            hue: 200 + Math.random() * 40,
+            alpha: 0.02 + Math.random() * 0.03,
+            dx: (Math.random() - 0.5) * 0.15,
+            dy: (Math.random() - 0.5) * 0.1
+        });
+    }
+
+    let t = 0;
+    function draw() {
+        t++;
+        ctx.fillStyle = '#020617';
+        ctx.fillRect(0, 0, W, H);
+
+        // Nebulae
+        nebulae.forEach(n => {
+            n.x += n.dx;
+            n.y += n.dy;
+            if (n.x < -n.r) n.x = W + n.r;
+            if (n.x > W + n.r) n.x = -n.r;
+            if (n.y < -n.r) n.y = H + n.r;
+            if (n.y > H + n.r) n.y = -n.r;
+
+            const grad = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r);
+            grad.addColorStop(0, `hsla(${n.hue}, 80%, 50%, ${n.alpha})`);
+            grad.addColorStop(1, 'transparent');
+            ctx.fillStyle = grad;
+            ctx.fillRect(n.x - n.r, n.y - n.r, n.r * 2, n.r * 2);
+        });
+
+        // Stars
+        stars.forEach(s => {
+            const twinkle = 0.5 + 0.5 * Math.sin(t * s.speed + s.phase);
+            const alpha = s.bright * twinkle;
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(180,210,255,${alpha})`;
+            ctx.fill();
+        });
+
+        requestAnimationFrame(draw);
+    }
+    draw();
+}
+
 /* ── Hero Neural Network Canvas ───────────────────────────────────────────── */
 function initHeroCanvas() {
     const canvas = document.getElementById('heroCanvas');
@@ -239,7 +318,7 @@ function initHeroCanvas() {
 
                 if (dist < 160) {
                     const alpha = (1 - dist / 160) * 0.2;
-                    ctx.strokeStyle = `rgba(167, 139, 250, ${alpha})`;
+                    ctx.strokeStyle = `rgba(96, 165, 250, ${alpha})`;
                     ctx.lineWidth = 0.8;
                     ctx.beginPath();
                     ctx.moveTo(nodes[i].x, nodes[i].y);
@@ -263,8 +342,8 @@ function initHeroCanvas() {
         // Draw nodes with glow
         nodes.forEach(n => {
             const glow = 0.4 + Math.sin(n.pulse) * 0.3;
-            ctx.fillStyle = `rgba(167, 139, 250, ${glow})`;
-            ctx.shadowColor = 'rgba(167, 139, 250, 0.5)';
+            ctx.fillStyle = `rgba(96, 165, 250, ${glow})`;
+            ctx.shadowColor = 'rgba(96, 165, 250, 0.5)';
             ctx.shadowBlur = 8;
             ctx.beginPath();
             ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
@@ -293,255 +372,288 @@ function initHeroCanvas() {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   INTERACTIVE DEMO — Canvas-based crack detection visualization
+   INTERACTIVE DEMO — Split-view crack detection with scenario picker
    ═══════════════════════════════════════════════════════════════════════════ */
 function initDemo() {
-    const canvas   = document.getElementById('demoCanvas');
-    const ctx      = canvas.getContext('2d');
-    const overlay  = document.getElementById('demoOverlay');
-    const playBtn  = document.getElementById('demoPlayBtn');
-    const status   = document.getElementById('demoStatus');
+    const rawCanvas = document.getElementById('demoCanvasRaw');
+    const detCanvas = document.getElementById('demoCanvasDet');
+    const rawCtx    = rawCanvas.getContext('2d');
+    const detCtx    = detCanvas.getContext('2d');
+    const playBtn   = document.getElementById('demoPlayBtn');
+    const status    = document.getElementById('demoStatus');
+    const progFill  = document.getElementById('demoProgress');
+    const scLabel   = document.getElementById('demoScenarioLabel');
+    const scenBtns  = document.querySelectorAll('.demo-scenario');
 
     let running = false;
     let frame = 0;
+    let totalFrames = 480;
     let animId = null;
 
-    playBtn.addEventListener('click', () => {
-        if (!running) startDemo();
+    /* Scenario definitions */
+    const scenarios = {
+        tunnel: {
+            label: 'Tunnel Inspection',
+            bgBase: '#080e1e', bgGrain: '#0d1a30', gridColor: 'rgba(59,130,246,0.06)',
+            scanColor: [59,130,246], crackScale: 1.0, surfaceNoise: 350
+        },
+        bridge: {
+            label: 'Bridge Deck Scan',
+            bgBase: '#0a1018', bgGrain: '#141e2e', gridColor: 'rgba(6,182,212,0.05)',
+            scanColor: [6,182,212], crackScale: 1.3, surfaceNoise: 250
+        },
+        runway: {
+            label: 'Runway Survey',
+            bgBase: '#0c0c14', bgGrain: '#1a1a28', gridColor: 'rgba(139,92,246,0.05)',
+            scanColor: [139,92,246], crackScale: 0.8, surfaceNoise: 400
+        },
+        facade: {
+            label: 'Facade Analysis',
+            bgBase: '#0e0a18', bgGrain: '#1c1630', gridColor: 'rgba(236,72,153,0.05)',
+            scanColor: [236,72,153], crackScale: 1.1, surfaceNoise: 300
+        }
+    };
+    let currentScenario = 'tunnel';
+
+    /* Scenario picker */
+    scenBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            scenBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentScenario = btn.dataset.scenario;
+            scLabel.textContent = scenarios[currentScenario].label;
+            if (running) { cancelAnimationFrame(animId); running = false; }
+            resetDemo();
+        });
     });
+
+    playBtn.addEventListener('click', () => {
+        if (running) return;
+        startDemo();
+    });
+
+    function resetDemo() {
+        frame = 0;
+        progFill.style.width = '0%';
+        status.textContent = '● READY';
+        status.style.color = '#10b981';
+        playBtn.querySelector('span').textContent = 'Run Inspection';
+        playBtn.classList.remove('running');
+        clearCanvas(rawCtx, rawCanvas);
+        clearCanvas(detCtx, detCanvas);
+        ['dmCracks','dmLatency','dmSpikes','dmBandwidth','dmFPS'].forEach(id => {
+            document.getElementById(id).textContent = '—';
+            document.getElementById(id).classList.remove('highlight');
+        });
+    }
+
+    function clearCanvas(ctx, cvs) {
+        const sc = scenarios[currentScenario];
+        ctx.fillStyle = sc.bgBase;
+        ctx.fillRect(0, 0, cvs.width, cvs.height);
+    }
 
     function startDemo() {
         running = true;
-        overlay.classList.add('hidden');
-        status.textContent = '● RUNNING';
-        status.style.color = '#10b981';
+        status.textContent = '● SCANNING';
+        status.style.color = '#22d3ee';
+        playBtn.querySelector('span').textContent = 'Scanning...';
+        playBtn.classList.add('running');
         frame = 0;
         requestAnimationFrame(render);
     }
 
     function render() {
         if (!running) return;
-
-        const W = canvas.width;
-        const H = canvas.height;
+        const sc = scenarios[currentScenario];
+        const W = rawCanvas.width;
+        const H = rawCanvas.height;
         frame++;
 
-        // Dark background simulating concrete surface
-        ctx.fillStyle = '#1a1640';
-        ctx.fillRect(0, 0, W, H);
+        /* ── RAW feed (left pane) ─ */
+        rawCtx.fillStyle = sc.bgBase;
+        rawCtx.fillRect(0, 0, W, H);
+        drawSurface(rawCtx, W, H, frame, sc);
+        drawScanBeam(rawCtx, W, H, frame, sc);
 
-        // Simulated concrete texture
-        drawConcreteTexture(ctx, W, H, frame);
+        /* ── Detection output (right pane) ─ */
+        detCtx.fillStyle = sc.bgBase;
+        detCtx.fillRect(0, 0, W, H);
+        drawSurface(detCtx, W, H, frame, sc);
+        drawScanBeam(detCtx, W, H, frame, sc);
 
-        // Simulate cracks
-        const cracks = generateCracks(frame, W, H);
+        const cracks = generateCracks(frame, W, H, sc);
+        drawSpikeField(detCtx, W, H, frame, cracks);
+        drawCrackBoxes(detCtx, cracks);
+        drawHUD(detCtx, W, H, frame, cracks);
 
-        // Draw spike events (yellow dots)
-        drawSpikeEvents(ctx, W, H, frame, cracks);
-
-        // Draw crack detection boxes
-        drawCrackBoxes(ctx, cracks);
-
-        // Draw HUD
-        drawHUD(ctx, W, H, frame, cracks);
-
-        // Update metrics
+        /* Progress bar + metrics */
+        const pct = (frame / totalFrames) * 100;
+        progFill.style.width = pct + '%';
         updateDemoMetrics(frame, cracks);
 
-        if (frame < 600) {
+        if (frame < totalFrames) {
             animId = requestAnimationFrame(render);
         } else {
             running = false;
             status.textContent = '● COMPLETE';
             status.style.color = '#f59e0b';
+            playBtn.querySelector('span').textContent = 'Run Again';
+            playBtn.classList.remove('running');
+            document.getElementById('dmBandwidth').classList.add('highlight');
         }
     }
 
-    function drawConcreteTexture(ctx, W, H, frame) {
-        // Static grain (cached via seed)
-        const seed = 42;
-        const rng = mulberry32(seed);
-
+    /* Surface texture */
+    function drawSurface(ctx, W, H, f, sc) {
+        const rng = mulberry32(42);
         ctx.save();
-        ctx.globalAlpha = 0.15;
-        for (let i = 0; i < 300; i++) {
+        ctx.globalAlpha = 0.18;
+        for (let i = 0; i < sc.surfaceNoise; i++) {
             const x = rng() * W;
             const y = rng() * H;
             const s = 0.5 + rng() * 2;
-            ctx.fillStyle = rng() > 0.5 ? '#3a366e' : '#2a2656';
+            ctx.fillStyle = sc.bgGrain;
             ctx.fillRect(x, y, s, s);
         }
         ctx.globalAlpha = 1;
 
-        // Moving scan line
-        const scanY = (frame * 2) % H;
-        const gradient = ctx.createLinearGradient(0, scanY - 10, 0, scanY + 10);
-        gradient.addColorStop(0, 'rgba(102, 126, 234, 0)');
-        gradient.addColorStop(0.5, 'rgba(102, 126, 234, 0.3)');
-        gradient.addColorStop(1, 'rgba(102, 126, 234, 0)');
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, scanY - 10, W, 20);
-
-        // Grid overlay
-        ctx.strokeStyle = 'rgba(102, 126, 234, 0.05)';
+        // Faint grid
+        ctx.strokeStyle = sc.gridColor;
         ctx.lineWidth = 1;
-        for (let x = 0; x < W; x += 40) {
-            ctx.beginPath();
-            ctx.moveTo(x, 0);
-            ctx.lineTo(x, H);
-            ctx.stroke();
-        }
-        for (let y = 0; y < H; y += 40) {
-            ctx.beginPath();
-            ctx.moveTo(0, y);
-            ctx.lineTo(W, y);
-            ctx.stroke();
-        }
+        for (let x = 0; x < W; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+        for (let y = 0; y < H; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
         ctx.restore();
     }
 
-    function generateCracks(frame, W, H) {
+    /* Horizontal scan beam */
+    function drawScanBeam(ctx, W, H, f, sc) {
+        const scanY = (f * 2.5) % H;
+        const [r, g, b] = sc.scanColor;
+        const grad = ctx.createLinearGradient(0, scanY - 12, 0, scanY + 12);
+        grad.addColorStop(0, `rgba(${r},${g},${b},0)`);
+        grad.addColorStop(0.5, `rgba(${r},${g},${b},0.35)`);
+        grad.addColorStop(1, `rgba(${r},${g},${b},0)`);
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, scanY - 12, W, 24);
+    }
+
+    /* Crack generation with severity */
+    function generateCracks(f, W, H, sc) {
         const cracks = [];
-        const rng = mulberry32(frame * 7 + 31);
-
+        const rng = mulberry32(f * 7 + 31);
         const count = Math.floor(rng() * 4) + 1;
-        const severities = ['Low', 'Medium', 'High'];
-        const colors = { Low: '#10b981', Medium: '#f59e0b', High: '#ef4444' };
-
+        const sevs = ['Low', 'Medium', 'High'];
+        const cols = { Low: '#10b981', Medium: '#f59e0b', High: '#ef4444' };
         for (let i = 0; i < count; i++) {
-            const x = 60 + rng() * (W - 200);
-            const y = 40 + rng() * (H - 140);
-            const w = 60 + rng() * 120;
-            const h = 30 + rng() * 60;
-            const sev = severities[Math.floor(rng() * 3)];
-            const conf = 0.82 + rng() * 0.17;
-
-            cracks.push({ x, y, w, h, severity: sev, confidence: conf, color: colors[sev] });
+            const x = 40 + rng() * (W - 140);
+            const y = 30 + rng() * (H - 100);
+            const w = (50 + rng() * 100) * sc.crackScale;
+            const h = (25 + rng() * 55) * sc.crackScale;
+            const sev = sevs[Math.floor(rng() * 3)];
+            const conf = 0.83 + rng() * 0.16;
+            cracks.push({ x, y, w, h, severity: sev, confidence: conf, color: cols[sev] });
         }
         return cracks;
     }
 
-    function drawSpikeEvents(ctx, W, H, frame, cracks) {
-        const rng = mulberry32(frame * 13 + 97);
-
-        // Background spikes
-        ctx.globalAlpha = 0.4;
-        for (let i = 0; i < 80; i++) {
-            const x = rng() * W;
-            const y = rng() * H;
-            ctx.fillStyle = '#00ffe0';
+    /* Spike field (clustered near cracks) */
+    function drawSpikeField(ctx, W, H, f, cracks) {
+        const rng = mulberry32(f * 13 + 97);
+        ctx.save();
+        ctx.globalAlpha = 0.35;
+        for (let i = 0; i < 60; i++) {
+            ctx.fillStyle = '#22d3ee';
             ctx.beginPath();
-            ctx.arc(x, y, 1 + rng() * 1.5, 0, Math.PI * 2);
+            ctx.arc(rng() * W, rng() * H, 0.8 + rng() * 1.2, 0, Math.PI * 2);
             ctx.fill();
         }
-
-        // Clustered spikes near cracks
-        ctx.globalAlpha = 0.7;
+        ctx.globalAlpha = 0.65;
         cracks.forEach(c => {
             const cx = c.x + c.w / 2;
             const cy = c.y + c.h / 2;
-            const pts = [];
-
-            for (let i = 0; i < 30 + rng() * 40; i++) {
+            for (let i = 0; i < 25 + rng() * 35; i++) {
                 const px = cx + (rng() - 0.5) * c.w * 2;
                 const py = cy + (rng() - 0.5) * c.h * 2;
                 ctx.fillStyle = '#ffff00';
                 ctx.beginPath();
-                ctx.arc(px, py, 1.5 + rng() * 2, 0, Math.PI * 2);
+                ctx.arc(px, py, 1.2 + rng() * 1.8, 0, Math.PI * 2);
                 ctx.fill();
-                pts.push([px, py]);
-            }
-
-            // Connect nearby spikes
-            ctx.strokeStyle = 'rgba(255, 255, 0, 0.2)';
-            ctx.lineWidth = 0.5;
-            for (let i = 0; i < pts.length - 1; i++) {
-                if (Math.abs(pts[i][0] - pts[i + 1][0]) < 40) {
-                    ctx.beginPath();
-                    ctx.moveTo(pts[i][0], pts[i][1]);
-                    ctx.lineTo(pts[i + 1][0], pts[i + 1][1]);
-                    ctx.stroke();
-                }
             }
         });
-        ctx.globalAlpha = 1;
+        ctx.restore();
     }
 
+    /* Detection boxes with glow */
     function drawCrackBoxes(ctx, cracks) {
         cracks.forEach(c => {
-            // Glow effect
             ctx.shadowColor = c.color;
-            ctx.shadowBlur = 10;
-
-            // Box
+            ctx.shadowBlur = 12;
             ctx.strokeStyle = c.color;
             ctx.lineWidth = 2;
             ctx.setLineDash([6, 3]);
             ctx.strokeRect(c.x, c.y, c.w, c.h);
             ctx.setLineDash([]);
 
-            // Label background
             const label = `${c.severity} ${(c.confidence * 100).toFixed(0)}%`;
-            ctx.font = '600 11px Inter, sans-serif';
-            const tw = ctx.measureText(label).width + 12;
+            ctx.font = '600 10px Inter, sans-serif';
+            const tw = ctx.measureText(label).width + 10;
             ctx.fillStyle = c.color;
-            const radius = 4;
-            const lx = c.x;
-            const ly = c.y - 20;
             ctx.beginPath();
-            ctx.roundRect(lx, ly, tw, 18, [radius]);
+            ctx.roundRect(c.x, c.y - 18, tw, 16, [3]);
             ctx.fill();
-
-            // Label text
             ctx.shadowBlur = 0;
             ctx.fillStyle = '#fff';
-            ctx.fillText(label, lx + 6, ly + 13);
+            ctx.fillText(label, c.x + 5, c.y - 5);
         });
         ctx.shadowBlur = 0;
     }
 
-    function drawHUD(ctx, W, H, frame, cracks) {
-        // Frame counter
-        ctx.font = '500 12px "JetBrains Mono", monospace';
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-        ctx.fillText(`Frame ${frame}/600`, 10, H - 10);
-
-        // Status bar
-        const progress = frame / 600;
-        ctx.fillStyle = 'rgba(102, 126, 234, 0.3)';
-        ctx.fillRect(0, H - 4, W, 4);
-        ctx.fillStyle = '#667eea';
-        ctx.fillRect(0, H - 4, W * progress, 4);
-
-        // System info
+    /* Heads-up display overlay */
+    function drawHUD(ctx, W, H, f, cracks) {
+        ctx.font = '500 10px "JetBrains Mono", monospace';
+        ctx.fillStyle = 'rgba(255,255,255,0.5)';
+        ctx.textAlign = 'left';
+        ctx.fillText(`f ${f}/${totalFrames}`, 8, H - 8);
         ctx.textAlign = 'right';
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-        ctx.fillText(`SFSVC v1.0 | ${cracks.length} detected | spikes: ON`, W - 10, H - 10);
+        ctx.fillStyle = 'rgba(255,255,255,0.45)';
+        ctx.fillText(`${cracks.length} detected`, W - 8, H - 8);
         ctx.textAlign = 'left';
 
-        // Waveform in top-right
+        // Waveform top-right
         ctx.save();
-        ctx.translate(W - 140, 15);
-        ctx.strokeStyle = 'rgba(0, 255, 224, 0.5)';
+        ctx.translate(W - 100, 12);
+        ctx.strokeStyle = 'rgba(34,211,238,0.45)';
         ctx.lineWidth = 1;
         ctx.beginPath();
-        for (let i = 0; i < 120; i++) {
-            const y = Math.sin((i + frame * 3) * 0.08) * 8 + Math.sin((i + frame) * 0.15) * 4;
-            if (i === 0) ctx.moveTo(i, y);
-            else ctx.lineTo(i, y);
+        for (let i = 0; i < 80; i++) {
+            const y = Math.sin((i + f * 3) * 0.09) * 6 + Math.sin((i + f) * 0.16) * 3;
+            i === 0 ? ctx.moveTo(i, y) : ctx.lineTo(i, y);
         }
         ctx.stroke();
         ctx.restore();
     }
 
-    function updateDemoMetrics(frame, cracks) {
-        const rng = mulberry32(frame);
+    function updateDemoMetrics(f, cracks) {
+        const rng = mulberry32(f);
         document.getElementById('dmCracks').textContent = cracks.length;
         document.getElementById('dmLatency').textContent = (0.3 + rng() * 0.4).toFixed(2) + ' ms';
         document.getElementById('dmSpikes').textContent = Math.floor(40 + rng() * 120);
-        document.getElementById('dmBandwidth').textContent = (0.28 + rng() * 0.08).toFixed(2) + ' Mbps';
+        document.getElementById('dmBandwidth').textContent = (93 + rng() * 2).toFixed(1) + '%';
         document.getElementById('dmFPS').textContent = Math.floor(110 + rng() * 30);
     }
+
+    // Auto-size canvases
+    function resizeCanvases() {
+        [rawCanvas, detCanvas].forEach(cvs => {
+            const rect = cvs.parentElement.getBoundingClientRect();
+            cvs.width = Math.round(rect.width);
+            cvs.height = Math.round(rect.height || 300);
+        });
+    }
+    window.addEventListener('resize', () => { if (!running) resizeCanvases(); });
+    resizeCanvases();
+    resetDemo();
 }
 
 // Seeded PRNG (mulberry32)
@@ -641,7 +753,7 @@ function initROI() {
             `  Year 1 ROI:        ${roiVal}`,
             '',
             '═══════════════════════════════════════════',
-            '  Contact: DicksonChau@aurasensehk.com',
+            '  Contact: support@aurasensehk.com',
             '  www.aurasensehk.com',
             '═══════════════════════════════════════════',
         ].join('\n');
@@ -697,7 +809,7 @@ function initContactForm() {
     });
 
     function fallbackMailto(payload) {
-        const mailto = `mailto:DicksonChau@aurasensehk.com?subject=${
+        const mailto = `mailto:support@aurasensehk.com?subject=${
             encodeURIComponent('AuraSense Demo Request — ' + (payload.company || ''))
         }&body=${
             encodeURIComponent(
