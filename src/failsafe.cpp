@@ -20,6 +20,13 @@
 // FailsafeMonitor Implementation
 // =============================================================================
 
+FailsafeMonitor::FailsafeMonitor()
+    : configs_(nullptr)
+    , count_(0)
+{
+    state_.store(FailsafeStatus::OK, std::memory_order_relaxed);
+}
+
 FailsafeMonitor::FailsafeMonitor(
     const FailsafeSignalConfig* configs,
     size_t count

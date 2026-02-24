@@ -38,6 +38,12 @@ struct ControlDecision {
     bool     yolo_active          = false;
     double   yolo_age_ms          = 0.0;
     double   encode_time_ms       = 0.0;
+    double   control_latency_ms   = 0.0;
+    std::string action;
+    std::string crack_severity;
+    float    crack_width_mm           = 0.0f;
+    float    crack_length_mm          = 0.0f;
+    float    crack_confidence_percent = 0.0f;
 };
 
 struct UplinkPayload {
@@ -48,6 +54,13 @@ struct UplinkPayload {
     float    crack_score        = 0.0f;
     float    sparsity           = 0.0f;
     double   control_latency_ms = 0.0;
+    std::string action;
+    std::string crack_severity;
+    float    crack_width_mm    = 0.0f;
+    FailsafeStatus failsafe_status = FailsafeStatus::OK;
+    float    sig_conf          = 0.0f;
+    uint64_t yolo_count        = 0;
+    uint64_t latency_violations = 0;
 };
 
 struct Lane2Job {
@@ -163,4 +176,37 @@ struct BenchmarkSuite {
     double lane3_avg_ms = 0.0;
     double lane4_avg_ms = 0.0;
     double lane5_avg_ms = 0.0;
+};
+
+// =============================================================================
+// CrackStats - Lightweight rolling crack statistics (declared here, implemented
+// in crack_statistics.cpp)
+// =============================================================================
+class CrackStats {
+public:
+    explicit CrackStats(double window_ms = 5000.0);
+    void  add_sample(double ts_ms, float crack_score);
+    float window_crack_ratio() const;
+    float global_crack_ratio() const;
+
+private:
+    double window_ms_;
+    mutable std::mutex m_;
+    std::deque<std::pair<double, float>> samples_;
+    uint64_t total_frames_ = 0;
+    uint64_t crack_frames_ = 0;
+};
+
+// =============================================================================
+// DetectionScheduler - Adaptive YOLO scheduling (declared here, implemented
+// in crack_statistics.cpp)
+// =============================================================================
+class DetectionScheduler {
+public:
+    DetectionScheduler();
+    bool should_detect(float crack_score);
+
+private:
+    double base_interval_ms_;
+    double last_detect_ms_;
 };

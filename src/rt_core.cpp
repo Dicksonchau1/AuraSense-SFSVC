@@ -18,7 +18,7 @@
  * Version: 2.0-fully-optimized + lateral-inhibition
  */
 
-#include "rt_core_enhanced.h"
+#include "rt_core.h"
 #include <algorithm>
 #include <cmath>
 #include <cstring>
