@@ -136,52 +136,35 @@ if demo_video_path:
     with col_pause:
         pause_placeholder = st.empty()
 
-    # Session state for playback control
+    # Initialize session state for continuous playback
     if 'is_playing' not in st.session_state:
         st.session_state.is_playing = False
-    if 'is_paused' not in st.session_state:
-        st.session_state.is_paused = False
-    if 'frame_index' not in st.session_state:
-        st.session_state.frame_index = 0
+    if 'frame_idx' not in st.session_state:
+        st.session_state.frame_idx = 0
 
-    # Handle play button
+    # Handle buttons
     if play_button:
         st.session_state.is_playing = True
-        st.session_state.is_paused = False
-
-    # Handle reset button
     if reset_button:
         st.session_state.is_playing = False
-        st.session_state.is_paused = False
-        st.session_state.frame_index = 0
-        cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
+        st.session_state.frame_idx = 0
 
-    # Pause button
+    # Pause button (only show when playing)
     if st.session_state.is_playing:
-        pause_btn = pause_placeholder.button("⏸️ Pause", key="pause_btn", use_container_width=True)
-        if pause_btn:
-            st.session_state.is_paused = True
+        if pause_placeholder.button("⏸️ Pause", key="pause_btn", use_container_width=True):
             st.session_state.is_playing = False
 
-    # Main playback loop
-    if st.session_state.is_playing:
-        with frame_placeholder.container():
-            st.info("▶️ Streaming... (scroll down to see live metrics)")
+    # Main playback logic
+    if st.session_state.is_playing or st.session_state.frame_idx > 0:
+        # Set frame position
+        cap.set(cv2.CAP_PROP_POS_FRAMES, st.session_state.frame_idx)
+        ret, frame = cap.read()
 
-        # Process frames
-        frame_count = 0
-        all_detections = []
-
-        while st.session_state.is_playing and frame_count < total_frames:
-            ret, frame = cap.read()
-
-            if not ret:
-                break
-
+        if ret:
             original_frame = frame.copy()
             h, w = frame.shape[:2]
 
-            # Simulate random crack detections (in real system, this runs the neuromorphic engine)
+            # Simulate crack detections
             import random
             num_cracks = random.randint(1, 5) if random.random() > 0.4 else 0
             cracks = []
@@ -201,7 +184,7 @@ if demo_video_path:
                         "confidence": confidence
                     })
 
-                    # Draw bounding boxes
+                    # Draw bounding boxes with colors
                     if severity == "High":
                         color = (0, 0, 255)  # Red
                         thickness = 3
@@ -224,16 +207,16 @@ if demo_video_path:
                     spike_y = random.randint(0, h)
                     cv2.circle(frame, (spike_x, spike_y), 1, (255, 255, 0), -1)  # Yellow
 
-            # Add timestamp and detection count
-            timestamp = int((frame_count / fps) * 1000)
-            cv2.putText(frame, f"Frame {frame_count} | {timestamp}ms | Detections: {len(cracks)}",
+            # Add frame info
+            timestamp = int((st.session_state.frame_idx / fps) * 1000)
+            cv2.putText(frame, f"Frame {st.session_state.frame_idx}/{total_frames} | {timestamp}ms | Detections: {len(cracks)}",
                        (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
 
-            # Display frame
+            # Display current frame
             frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             frame_placeholder.image(frame_rgb, use_column_width=True, channels="RGB")
 
-            # Update metrics in real-time
+            # Display metrics
             with metrics_placeholder.container():
                 st.markdown("### 📊 Real-Time Metrics")
 
@@ -284,10 +267,10 @@ if demo_video_path:
                         </div>
                         """, unsafe_allow_html=True)
 
-                    # Show detected defects
+                    # Show defects
                     with details_placeholder.container():
                         st.markdown("### 🔴 Detected Defects")
-                        for i, crack in enumerate(cracks[:3], 1):  # Show top 3
+                        for i, crack in enumerate(cracks[:3], 1):
                             x1, y1, x2, y2 = crack["box"]
                             severity = crack["severity"]
                             confidence = crack["confidence"]
@@ -313,25 +296,16 @@ if demo_video_path:
                 else:
                     st.success("✅ No cracks detected")
 
-            # Store detections
-            all_detections.extend(cracks)
-
-            # Frame delay based on playback speed
-            frame_delay = (1.0 / fps) / play_speed
-            time.sleep(frame_delay)
-
-            frame_count += 1
-
-            # Check for pause
-            if st.session_state.is_paused:
+            # Auto-advance to next frame if playing
+            if st.session_state.is_playing and st.session_state.frame_idx < total_frames - 1:
+                st.session_state.frame_idx += 1
+                # Trigger rerun with small delay for smooth playback
+                time.sleep((1.0 / fps) / play_speed)
+                st.rerun()
+            elif st.session_state.frame_idx >= total_frames - 1 and st.session_state.is_playing:
                 st.session_state.is_playing = False
-                break
-
-        # Stream complete
-        if frame_count >= total_frames:
-            st.session_state.is_playing = False
-            with frame_placeholder.container():
-                st.success("✅ Stream Complete!")
+                with frame_placeholder.container():
+                    st.success("✅ Stream Complete!")
 
         cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
 
