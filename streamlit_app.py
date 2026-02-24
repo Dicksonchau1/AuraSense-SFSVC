@@ -1,18 +1,12 @@
 """
 AuraSense SFSVC — Live Video Stream with Real-Time Crack Detection
 www.aurasensehk.com
-
-Frame-by-frame video with toggleable spike overlay,
-real-time bounding-box crack detection, and live metrics.
-Controls (sidebar) respond instantly — every toggle/slider change
-takes effect on the very next frame.
 """
 
 import streamlit as st
 import cv2
 import numpy as np
 import random
-import time
 from pathlib import Path
 
 # ── Page config ──────────────────────────────────────────────────────────────
@@ -29,8 +23,8 @@ st.markdown("""
 </style>""", unsafe_allow_html=True)
 
 st.markdown("# 🎥 AuraSense SFSVC — Live Crack Detection")
-st.markdown("**Real-time neuromorphic spike-based crack detection on video**  ·  "
-            "[aurasensehk.com](https://www.aurasensehk.com)  ·  dickson@aurasense.ai")
+st.markdown("**Real-time neuromorphic spike-based crack detection on video** · "
+            "[aurasensehk.com](https://www.aurasensehk.com) · dickson@aurasense.ai")
 st.divider()
 
 # ── Locate video ─────────────────────────────────────────────────────────────
@@ -40,89 +34,54 @@ for p in [Path(__file__).parent / "demo.mp4", Path("demo.mp4")]:
         VIDEO = str(p)
         break
 if VIDEO is None:
-    st.error("❌ demo.mp4 not found"); st.stop()
+    st.error("❌ demo.mp4 not found")
+    st.stop()
 
-# ── Read video metadata (once) ──────────────────────────────────────────────
+# ── Cache video metadata ────────────────────────────────────────────────────
 @st.cache_data
 def video_meta(path):
-    cap = cv2.VideoCapture(path)
-    info = dict(fps=cap.get(cv2.CAP_PROP_FPS) or 30.0,
-                total=int(cap.get(cv2.CAP_PROP_FRAME_COUNT)),
-                w=int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)),
-                h=int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)))
-    cap.release()
-    return info
+    c = cv2.VideoCapture(path)
+    m = dict(fps=c.get(cv2.CAP_PROP_FPS) or 30.0,
+             total=int(c.get(cv2.CAP_PROP_FRAME_COUNT)),
+             w=int(c.get(cv2.CAP_PROP_FRAME_WIDTH)),
+             h=int(c.get(cv2.CAP_PROP_FRAME_HEIGHT)))
+    c.release()
+    return m
 
 meta = video_meta(VIDEO)
-fps, total_frames = meta["fps"], meta["total"]
+FPS, TOTAL = meta["fps"], meta["total"]
 
 # ── Sidebar controls ────────────────────────────────────────────────────────
 st.sidebar.header("⚙️ Controls")
 enable_spikes = st.sidebar.toggle("⚡ Spike Overlay", value=True,
-    help="Toggles neuromorphic spike-event visualisation. "
-         "Turn OFF to see clean detection boxes only.")
-confidence_thr = st.sidebar.slider("Confidence Threshold", 0.50, 0.99, 0.85, 0.01)
-frame_skip = st.sidebar.slider("Frame Skip (speed)", 1, 10, 3,
-    help="Process every Nth frame — higher = faster")
+    help="Toggle spike-event visualisation on each frame")
+conf_thr = st.sidebar.slider("Confidence Threshold", 0.50, 0.99, 0.85, 0.01)
+skip = st.sidebar.slider("Frame Skip (speed)", 1, 10, 3,
+    help="Higher = faster playback")
 st.sidebar.divider()
 st.sidebar.markdown("**Legend**")
-st.sidebar.markdown("🟥 High · 🟧 Medium · 🟩 Low")
-st.sidebar.markdown("🟡 Spike events (bright dots+lines)")
+st.sidebar.markdown("🟥 High · 🟧 Medium · 🟩 Low · 🟡 Spikes")
 
-# ── Session state ────────────────────────────────────────────────────────────
-if "playing" not in st.session_state:
-    st.session_state.playing = False
-    st.session_state.fidx = 0          # current frame index
-    st.session_state.total_high = 0
-    st.session_state.confs = []
+# ── Init session state ──────────────────────────────────────────────────────
+for k, v in [("playing", False), ("fidx", 0),
+             ("total_high", 0), ("confs", [])]:
+    if k not in st.session_state:
+        st.session_state[k] = v
 
-# ── Info bar ─────────────────────────────────────────────────────────────────
-st.info(f"📊 **{meta['w']}×{meta['h']}** @ **{fps:.0f} fps** · "
-        f"{total_frames} frames · Duration **{total_frames/fps:.1f}s**")
+# ── Info ─────────────────────────────────────────────────────────────────────
+st.info(f"📊 **{meta['w']}×{meta['h']}** @ **{FPS:.0f} fps** · "
+        f"{TOTAL} frames · **{TOTAL/FPS:.1f}s**")
 
-# ── Layout ───────────────────────────────────────────────────────────────────
-col_vid, col_met = st.columns([3, 2])
-with col_vid:
-    st.markdown("### 📺 Live Detection Stream")
-    frame_holder = st.empty()
-    progress_holder = st.empty()
-with col_met:
-    st.markdown("### 📊 Real-Time Metrics")
-    ph_cracks = st.empty()
-    ph_conf   = st.empty()
-    ph_high   = st.empty()
-    ph_lat    = st.empty()
-    ph_red    = st.empty()
-    st.markdown("---")
-    st.markdown("### 🔴 Detected Defects")
-    ph_defects = st.empty()
-
-# ── Buttons ──────────────────────────────────────────────────────────────────
-b1, b2 = st.columns(2)
-with b1:
-    if st.button("▶️  Start / Resume", use_container_width=True):
-        st.session_state.playing = True
-        # don't reset fidx so it resumes
-with b2:
-    if st.button("⏹  Stop / Reset", use_container_width=True):
-        st.session_state.playing = False
-        st.session_state.fidx = 0
-        st.session_state.total_high = 0
-        st.session_state.confs = []
-
-# ── Detection helpers ────────────────────────────────────────────────────────
-SEV_COLOR = {"High": (0,0,255), "Medium": (0,165,255), "Low": (0,255,0)}
+# ── Helper functions ─────────────────────────────────────────────────────────
+SEV_CLR = {"High": (0, 0, 255), "Medium": (0, 165, 255), "Low": (0, 255, 0)}
 
 def simulate_cracks(w, h, fidx, threshold):
-    """Deterministic per-frame crack simulation (seeded by frame index)."""
     rng = random.Random(fidx * 7 + 31)
-    n = rng.randint(0, 5)
     cracks = []
-    for _ in range(n):
+    for _ in range(rng.randint(0, 5)):
         x1 = rng.randint(50, max(51, w - 220))
         y1 = rng.randint(50, max(51, h - 170))
-        bw = rng.randint(60, 200)
-        bh = rng.randint(30, 100)
+        bw, bh = rng.randint(60, 200), rng.randint(30, 100)
         sev = rng.choice(["Low", "Medium", "High"])
         conf = rng.uniform(0.80, 0.99)
         if conf >= threshold:
@@ -130,147 +89,147 @@ def simulate_cracks(w, h, fidx, threshold):
                                severity=sev, confidence=conf))
     return cracks
 
-def draw_detections(frame, cracks):
-    """Draw bounding boxes + labels."""
+def draw_boxes(frame, cracks):
     for c in cracks:
-        col = SEV_COLOR[c["severity"]]
+        clr = SEV_CLR[c["severity"]]
         th = 3 if c["severity"] == "High" else 2
-        cv2.rectangle(frame, (c["x1"], c["y1"]), (c["x2"], c["y2"]), col, th)
-        txt = f'{c["severity"]} {c["confidence"]*100:.0f}%'
-        cv2.putText(frame, txt, (c["x1"], c["y1"]-8),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, col, 2)
+        cv2.rectangle(frame, (c["x1"], c["y1"]), (c["x2"], c["y2"]), clr, th)
+        cv2.putText(frame, f'{c["severity"]} {c["confidence"]*100:.0f}%',
+                    (c["x1"], c["y1"] - 8),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, clr, 2)
 
 def draw_spikes(frame, cracks, fidx):
-    """Draw highly-visible neuromorphic spike overlay.
-    Bright cyan/yellow dots + short connecting lines around cracks."""
     h, w = frame.shape[:2]
     rng = random.Random(fidx * 13 + 97)
-
-    # Global background spikes (sparse, dim)
+    # Sparse background
     for _ in range(rng.randint(80, 150)):
-        sx, sy = rng.randint(0, w-1), rng.randint(0, h-1)
-        cv2.circle(frame, (sx, sy), 2, (0, 200, 200), -1)
-
-    # Dense bright spikes clustered around each crack
+        cv2.circle(frame, (rng.randint(0, w-1), rng.randint(0, h-1)),
+                   2, (0, 200, 200), -1)
+    # Dense cluster around each crack
     for c in cracks:
-        cx = (c["x1"] + c["x2"]) // 2
-        cy = (c["y1"] + c["y2"]) // 2
-        spread_x = (c["x2"] - c["x1"])
-        spread_y = (c["y2"] - c["y1"])
+        cx, cy = (c["x1"]+c["x2"])//2, (c["y1"]+c["y2"])//2
+        sx, sy = c["x2"]-c["x1"], c["y2"]-c["y1"]
         pts = []
         for _ in range(rng.randint(40, 80)):
-            sx = cx + rng.randint(-spread_x, spread_x)
-            sy = cy + rng.randint(-spread_y, spread_y)
-            sx = max(0, min(w-1, sx))
-            sy = max(0, min(h-1, sy))
-            cv2.circle(frame, (sx, sy), 3, (0, 255, 255), -1)  # bright yellow
-            pts.append((sx, sy))
-        # Draw spike connection lines between nearby points
+            px = max(0, min(w-1, cx + rng.randint(-sx, sx)))
+            py = max(0, min(h-1, cy + rng.randint(-sy, sy)))
+            cv2.circle(frame, (px, py), 3, (0, 255, 255), -1)
+            pts.append((px, py))
         for i in range(len(pts)-1):
-            if abs(pts[i][0]-pts[i+1][0]) < 60 and abs(pts[i][1]-pts[i+1][1]) < 60:
+            if abs(pts[i][0]-pts[i+1][0]) < 60:
                 cv2.line(frame, pts[i], pts[i+1], (0, 220, 220), 1)
+    # Activity bar
+    intensity = min(len(cracks) * 50, 255)
+    cv2.rectangle(frame, (0, h-8), (w, h), (0, intensity, intensity), -1)
 
-    # Spike activity bar at bottom
-    bar_h = 8
-    spike_intensity = min(len(cracks) * 50, 255)
-    cv2.rectangle(frame, (0, h-bar_h), (w, h),
-                  (0, spike_intensity, spike_intensity), -1)
-
-def metric_html(label, value):
+def mbox(label, value):
     return (f'<div class="metric-box"><div>{label}</div>'
             f'<div class="metric-value">{value}</div></div>')
 
-# ── Main: process ONE frame per script run, then st.rerun() ─────────────────
-if st.session_state.playing:
-    fidx = st.session_state.fidx
-
-    if fidx >= total_frames:
-        st.session_state.playing = False
-        progress_holder.success("✅ Stream complete!")
-        st.stop()
-
-    # Read the exact frame we need
-    cap = cv2.VideoCapture(VIDEO)
-    cap.set(cv2.CAP_PROP_POS_FRAMES, fidx)
-    ret, frame = cap.read()
+def read_frame(path, idx):
+    cap = cv2.VideoCapture(path)
+    cap.set(cv2.CAP_PROP_POS_FRAMES, idx)
+    ok, frame = cap.read()
     cap.release()
+    return frame if ok else None
 
-    if not ret:
+# ── Buttons ──────────────────────────────────────────────────────────────────
+b1, b2 = st.columns(2)
+with b1:
+    if st.button("▶️  Start / Resume", use_container_width=True):
+        st.session_state.playing = True
+with b2:
+    if st.button("⏹  Stop / Reset", use_container_width=True):
         st.session_state.playing = False
-        progress_holder.error("⚠️ Could not read frame")
-        st.stop()
+        st.session_state.fidx = 0
+        st.session_state.total_high = 0
+        st.session_state.confs = []
 
-    h, w = frame.shape[:2]
+# ── Fragment: auto-refreshes every 100 ms while playing ─────────────────────
+# Only the fragment re-executes — the rest of the page (header, sidebar,
+# buttons, footer) stays intact.  Sidebar toggles take effect instantly.
+@st.fragment(run_every=0.1 if st.session_state.playing else None)
+def video_stream():
+    fidx = st.session_state.fidx
+    frame = read_frame(VIDEO, fidx) if fidx < TOTAL else None
 
-    # ── Detect ──
-    cracks = simulate_cracks(w, h, fidx, confidence_thr)
+    col_vid, col_met = st.columns([3, 2])
 
-    # ── Draw ──
-    draw_detections(frame, cracks)
-    if enable_spikes:
-        draw_spikes(frame, cracks, fidx)
+    with col_vid:
+        st.markdown("### 📺 Live Detection Stream")
+        if frame is not None:
+            h, w = frame.shape[:2]
+            cracks = simulate_cracks(w, h, fidx, conf_thr)
+            draw_boxes(frame, cracks)
+            if enable_spikes:
+                draw_spikes(frame, cracks, fidx)
+            sp = "ON" if enable_spikes else "OFF"
+            cv2.putText(frame,
+                f"Frame {fidx}/{TOTAL} | {int(fidx/FPS*1000)}ms | "
+                f"Det: {len(cracks)} | Spikes: {sp}",
+                (10, 28), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+            st.image(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB),
+                     channels="RGB", use_container_width=True)
+            st.progress(fidx / max(TOTAL, 1), text=f"Frame {fidx}/{TOTAL}")
+        else:
+            if fidx == 0:
+                st.warning("Press **▶️ Start / Resume** to begin")
+            else:
+                st.success("✅ Stream complete!")
+                st.session_state.playing = False
 
-    # HUD overlay
-    ts_ms = int(fidx / fps * 1000)
-    spike_txt = "Spikes: ON" if enable_spikes else "Spikes: OFF"
-    hud = f"Frame {fidx}/{total_frames}  |  {ts_ms}ms  |  Det: {len(cracks)}  |  {spike_txt}"
-    cv2.putText(frame, hud, (10, 28), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
-
-    # ── Display ──
-    frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    frame_holder.image(frame_rgb, channels="RGB", use_container_width=True)
-    progress_holder.progress(fidx / total_frames,
-                             text=f"Frame {fidx}/{total_frames}")
-
-    # ── Update cumulative metrics ──
-    st.session_state.total_high += sum(1 for c in cracks if c["severity"] == "High")
-    st.session_state.confs.extend([c["confidence"] for c in cracks])
-    avg_conf = np.mean(st.session_state.confs) if st.session_state.confs else 0
-
-    rng_m = random.Random(fidx)
-    latency = rng_m.uniform(0.65, 0.95)
-    reduction = 94.0 - rng_m.uniform(0, 2)
-
-    ph_cracks.markdown(metric_html("Cracks (this frame)", len(cracks)),
-                       unsafe_allow_html=True)
-    ph_conf.markdown(metric_html("Avg Confidence", f"{avg_conf*100:.1f}%"),
-                     unsafe_allow_html=True)
-    ph_high.markdown(metric_html("High Severity Total",
-                                 st.session_state.total_high),
-                     unsafe_allow_html=True)
-    ph_lat.markdown(metric_html("Latency", f"{latency:.2f} ms"),
+    with col_met:
+        st.markdown("### 📊 Real-Time Metrics")
+        n_cracks = 0
+        if frame is not None and st.session_state.playing:
+            n_cracks = len(cracks)
+            st.session_state.total_high += sum(
+                1 for c in cracks if c["severity"] == "High")
+            st.session_state.confs.extend(
+                [c["confidence"] for c in cracks])
+        avg_c = np.mean(st.session_state.confs) if st.session_state.confs else 0
+        rng_m = random.Random(fidx)
+        st.markdown(mbox("Cracks (this frame)", n_cracks), unsafe_allow_html=True)
+        st.markdown(mbox("Avg Confidence", f"{avg_c*100:.1f}%"),
                     unsafe_allow_html=True)
-    ph_red.markdown(metric_html("Data Reduction", f"{reduction:.1f}%"),
+        st.markdown(mbox("High Severity Total", st.session_state.total_high),
                     unsafe_allow_html=True)
+        st.markdown(mbox("Latency", f"{rng_m.uniform(0.65,0.95):.2f} ms"),
+                    unsafe_allow_html=True)
+        st.markdown(mbox("Data Reduction",
+                    f"{94.0 - rng_m.uniform(0,2):.1f}%"), unsafe_allow_html=True)
+        st.markdown("---")
+        st.markdown("### 🔴 Detected Defects")
+        if frame is not None and n_cracks > 0:
+            parts = []
+            for i, c in enumerate(cracks[:5], 1):
+                l = ((c["x2"]-c["x1"])**2+(c["y2"]-c["y1"])**2)**0.5*0.05
+                b = f'badge-{c["severity"].lower()}'
+                parts.append(
+                    f'<div style="padding:4px 8px;background:#f5f5f5;'
+                    f'border-radius:4px;margin:3px 0;font-size:.85rem">'
+                    f'<b>#{i}</b> <span class="{b}">{c["severity"]}</span>'
+                    f' {l:.1f}mm {c["confidence"]*100:.1f}%</div>')
+            st.markdown("".join(parts), unsafe_allow_html=True)
+        else:
+            st.success("✅ No cracks this frame")
 
-    # ── Defect list ──
-    if cracks:
-        parts = []
-        for i, c in enumerate(cracks[:5], 1):
-            l_mm = ((c["x2"]-c["x1"])**2 + (c["y2"]-c["y1"])**2)**0.5 * 0.05
-            badge = f'badge-{c["severity"].lower()}'
-            parts.append(
-                f'<div style="padding:4px 8px;background:#f5f5f5;border-radius:4px;'
-                f'margin:3px 0;font-size:.85rem">'
-                f'<b>Crack #{i}</b> <span class="{badge}">{c["severity"]}</span>'
-                f'  {l_mm:.1f} mm  {c["confidence"]*100:.1f}%</div>')
-        ph_defects.markdown("".join(parts), unsafe_allow_html=True)
-    else:
-        ph_defects.success("✅ No cracks this frame")
+    # Advance frame
+    if st.session_state.playing and frame is not None:
+        st.session_state.fidx = fidx + skip
+        if st.session_state.fidx >= TOTAL:
+            st.session_state.playing = False
 
-    # ── Advance & rerun ──
-    st.session_state.fidx = fidx + frame_skip
-    time.sleep(0.04)   # ~25 fps cap (network + render is the real bottleneck)
-    st.rerun()
+video_stream()
 
 # ── Footer ───────────────────────────────────────────────────────────────────
 st.divider()
 st.markdown("""
 ### About AuraSense SFSVC
 **Real-time neuromorphic crack detection**
-- ✅ <1 ms latency  ·  ✅ 94% bandwidth reduction (sparse spikes)
+- ✅ <1 ms latency · ✅ 94% bandwidth reduction (sparse spikes)
 - ✅ Deterministic physics-based (no ML hallucinations)
-- ✅ Works offline in tunnels/subways  ·  ✅ Insurance-grade reproducibility
+- ✅ Works offline in tunnels/subways · ✅ Insurance-grade reproducibility
 
 [www.aurasensehk.com](https://www.aurasensehk.com) · dickson@aurasense.ai
 """)
