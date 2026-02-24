@@ -8,10 +8,11 @@ document.addEventListener('DOMContentLoaded', () => {
     initNavbar();
     initScrollAnimations();
     initCounters();
+    initTypedEffect();
+    initHeroCanvas();
     initDemo();
     initROI();
     initContactForm();
-    initParticles();
 });
 
 /* ── Navigation ────────────────────────────────────────────────────────────── */
@@ -51,13 +52,30 @@ function initScrollAnimations() {
                 const i = siblings.indexOf(entry.target);
                 setTimeout(() => {
                     entry.target.classList.add('visible');
-                }, i >= 0 ? i * 100 : 0);
+                }, i >= 0 ? i * 120 : 0);
                 observer.unobserve(entry.target);
             }
         });
     }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
     document.querySelectorAll('[data-aos]').forEach(el => observer.observe(el));
+
+    // Tilt effect on feature/use-case/perf cards
+    document.querySelectorAll('.feature-card, .use-case-card, .perf-card').forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const cx = rect.width / 2;
+            const cy = rect.height / 2;
+            const rotateX = (y - cy) / cy * -4;
+            const rotateY = (x - cx) / cx * 4;
+            card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px)`;
+        });
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = '';
+        });
+    });
 }
 
 /* ── Counter Animation ─────────────────────────────────────────────────────── */
@@ -104,42 +122,174 @@ function animateCounters(container) {
     });
 }
 
-/* ── Hero Particles ────────────────────────────────────────────────────────── */
-function initParticles() {
-    const container = document.getElementById('heroParticles');
-    if (!container) return;
+/* ── Hero Typing Effect ─────────────────────────────────────────────────────── */
+function initTypedEffect() {
+    const el = document.getElementById('heroTyped');
+    if (!el) return;
 
-    const count = 50;
-    for (let i = 0; i < count; i++) {
-        const p = document.createElement('div');
-        p.style.cssText = `
-            position: absolute;
-            width: ${1 + Math.random() * 3}px;
-            height: ${1 + Math.random() * 3}px;
-            background: rgba(167, 139, 250, ${0.2 + Math.random() * 0.4});
-            border-radius: 50%;
-            left: ${Math.random() * 100}%;
-            top: ${Math.random() * 100}%;
-            animation: particle-float ${5 + Math.random() * 10}s ${Math.random() * 5}s infinite ease-in-out;
-        `;
-        container.appendChild(p);
+    const phrases = [
+        'find every crack.',
+        'cut your data by 94%.',
+        'work without internet.',
+        'replace manual inspections.',
+        'save $29K/month.',
+        'never miss a defect.',
+    ];
+
+    let phraseIdx = 0;
+    let charIdx = 0;
+    let deleting = false;
+    let pauseTimer = 0;
+
+    function tick() {
+        const current = phrases[phraseIdx];
+
+        if (!deleting) {
+            el.textContent = current.substring(0, charIdx + 1);
+            charIdx++;
+            if (charIdx === current.length) {
+                pauseTimer = 50; // pause at end
+                deleting = true;
+            }
+        } else {
+            if (pauseTimer > 0) { pauseTimer--; requestAnimationFrame(tick); return; }
+            el.textContent = current.substring(0, charIdx);
+            charIdx--;
+            if (charIdx < 0) {
+                deleting = false;
+                charIdx = 0;
+                phraseIdx = (phraseIdx + 1) % phrases.length;
+            }
+        }
+
+        const speed = deleting ? 25 : (charIdx === 1 ? 600 : 55 + Math.random() * 40);
+        setTimeout(() => requestAnimationFrame(tick), speed);
     }
 
-    // Add keyframes dynamically
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes particle-float {
-            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
-            25% { transform: translate(${rr(-30, 30)}px, ${rr(-30, 30)}px) scale(1.2); opacity: 0.6; }
-            50% { transform: translate(${rr(-20, 20)}px, ${rr(-40, 10)}px) scale(0.8); opacity: 0.4; }
-            75% { transform: translate(${rr(-30, 30)}px, ${rr(-20, 20)}px) scale(1.1); opacity: 0.5; }
-        }
-    `;
-    document.head.appendChild(style);
+    // Wait for entrance animation then start
+    setTimeout(tick, 800);
 }
 
-function rr(min, max) {
-    return Math.floor(Math.random() * (max - min) + min);
+/* ── Hero Neural Network Canvas ───────────────────────────────────────────── */
+function initHeroCanvas() {
+    const canvas = document.getElementById('heroCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    let W, H;
+    const nodes = [];
+    const connections = [];
+    const MOUSE = { x: -1000, y: -1000 };
+    const NODE_COUNT = 60;
+
+    function resize() {
+        W = canvas.width = canvas.offsetWidth;
+        H = canvas.height = canvas.offsetHeight;
+    }
+
+    function init() {
+        resize();
+        nodes.length = 0;
+        for (let i = 0; i < NODE_COUNT; i++) {
+            nodes.push({
+                x: Math.random() * W,
+                y: Math.random() * H,
+                vx: (Math.random() - 0.5) * 0.4,
+                vy: (Math.random() - 0.5) * 0.4,
+                r: 1.5 + Math.random() * 2,
+                pulse: Math.random() * Math.PI * 2,
+            });
+        }
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, W, H);
+
+        // Update nodes
+        nodes.forEach(n => {
+            n.x += n.vx;
+            n.y += n.vy;
+            n.pulse += 0.02;
+
+            // Bounce off edges
+            if (n.x < 0 || n.x > W) n.vx *= -1;
+            if (n.y < 0 || n.y > H) n.vy *= -1;
+
+            // Mouse repulsion
+            const dx = n.x - MOUSE.x;
+            const dy = n.y - MOUSE.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 150) {
+                const force = (150 - dist) / 150 * 0.03;
+                n.vx += dx * force;
+                n.vy += dy * force;
+            }
+
+            // Damping
+            n.vx *= 0.995;
+            n.vy *= 0.995;
+        });
+
+        // Draw connections
+        for (let i = 0; i < nodes.length; i++) {
+            for (let j = i + 1; j < nodes.length; j++) {
+                const dx = nodes[i].x - nodes[j].x;
+                const dy = nodes[i].y - nodes[j].y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                if (dist < 160) {
+                    const alpha = (1 - dist / 160) * 0.2;
+                    ctx.strokeStyle = `rgba(167, 139, 250, ${alpha})`;
+                    ctx.lineWidth = 0.8;
+                    ctx.beginPath();
+                    ctx.moveTo(nodes[i].x, nodes[i].y);
+                    ctx.lineTo(nodes[j].x, nodes[j].y);
+                    ctx.stroke();
+
+                    // Occasional data pulse along the line
+                    if (Math.sin(nodes[i].pulse * 3) > 0.97) {
+                        const t = (Math.sin(nodes[i].pulse * 5) + 1) / 2;
+                        const px = nodes[i].x + (nodes[j].x - nodes[i].x) * t;
+                        const py = nodes[i].y + (nodes[j].y - nodes[i].y) * t;
+                        ctx.fillStyle = `rgba(0, 242, 254, ${0.6 * (1 - dist / 160)})`;
+                        ctx.beginPath();
+                        ctx.arc(px, py, 2, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                }
+            }
+        }
+
+        // Draw nodes with glow
+        nodes.forEach(n => {
+            const glow = 0.4 + Math.sin(n.pulse) * 0.3;
+            ctx.fillStyle = `rgba(167, 139, 250, ${glow})`;
+            ctx.shadowColor = 'rgba(167, 139, 250, 0.5)';
+            ctx.shadowBlur = 8;
+            ctx.beginPath();
+            ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+        });
+
+        requestAnimationFrame(animate);
+    }
+
+    canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        MOUSE.x = e.clientX - rect.left;
+        MOUSE.y = e.clientY - rect.top;
+    });
+
+    canvas.addEventListener('mouseleave', () => {
+        MOUSE.x = -1000;
+        MOUSE.y = -1000;
+    });
+
+    window.addEventListener('resize', () => { resize(); });
+
+    init();
+    animate();
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════

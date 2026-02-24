@@ -57,51 +57,67 @@
      ═══════════════════════════════════════════════════════════════════════════ -->
 <section class="hero" id="hero">
     <div class="hero-bg-grid"></div>
-    <div class="hero-glow hero-glow-1"></div>
-    <div class="hero-glow hero-glow-2"></div>
-    <div class="hero-particles" id="heroParticles"></div>
+    <canvas class="hero-canvas" id="heroCanvas"></canvas>
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-orb hero-orb-3"></div>
     <div class="container hero-content">
-        <div class="hero-badge">
+        <div class="hero-badge hero-fade-up" style="--delay: 0s">
             <span class="badge-dot"></span>
-            Trusted by Infrastructure Teams
+            <span class="badge-text">Deployed on 3 continents · Zero downtime</span>
         </div>
-        <h1 class="hero-title">
-            See Every Crack.<br>
-            <span class="gradient-text">Send Almost Nothing.</span>
+        <h1 class="hero-title hero-fade-up" style="--delay: 0.15s">
+            Your drones fly.
+            <br>
+            <span class="hero-typed-wrapper">
+                We <span class="hero-typed" id="heroTyped"></span><span class="typed-cursor">|</span>
+            </span>
         </h1>
-        <p class="hero-subtitle">
-            Your drones inspect. Our AI detects cracks instantly — and transmits <strong>94% less data</strong>.
-            Works underground, offline, on any hardware. From <strong>$64/drone/month</strong>.
+        <p class="hero-subtitle hero-fade-up" style="--delay: 0.4s">
+            AuraSense finds cracks in real time, transmits <strong>94% less data</strong>, 
+            and works in places where cloud AI can't — tunnels, subways, offshore.
+            No GPU. No internet. No guesswork.
         </p>
-        <div class="hero-actions">
-            <a href="#contact" class="btn btn-primary btn-lg">
-                Start Free Pilot
+        <div class="hero-actions hero-fade-up" style="--delay: 0.55s">
+            <a href="#contact" class="btn btn-primary btn-lg btn-glow">
+                Start Your Free Pilot
                 <i data-lucide="arrow-right"></i>
             </a>
-            <a href="#demo" class="btn btn-outline btn-lg">
-                <i data-lucide="play-circle"></i>
-                See It In Action
+            <a href="#roi" class="btn btn-outline btn-lg">
+                <i data-lucide="calculator"></i>
+                Calculate Your Savings
             </a>
         </div>
-        <div class="hero-stats">
+        <div class="hero-stats hero-fade-up" style="--delay: 0.7s">
             <div class="hero-stat">
                 <span class="hero-stat-value" data-count="0.4">0</span><span class="hero-stat-unit">ms</span>
-                <span class="hero-stat-label">P50 Latency</span>
+                <span class="hero-stat-label">Detection Speed</span>
             </div>
             <div class="hero-stat-divider"></div>
             <div class="hero-stat">
                 <span class="hero-stat-value" data-count="94">0</span><span class="hero-stat-unit">%</span>
-                <span class="hero-stat-label">Bandwidth Saved</span>
+                <span class="hero-stat-label">Less Data Sent</span>
             </div>
             <div class="hero-stat-divider"></div>
             <div class="hero-stat">
                 <span class="hero-stat-value" data-count="98.7">0</span><span class="hero-stat-unit">%</span>
-                <span class="hero-stat-label">Detection Accuracy</span>
+                <span class="hero-stat-label">Accuracy</span>
             </div>
             <div class="hero-stat-divider"></div>
             <div class="hero-stat">
-                <span class="hero-stat-value">$64</span><span class="hero-stat-unit">/mo</span>
-                <span class="hero-stat-label">Per Drone</span>
+                <span class="hero-stat-value">6</span><span class="hero-stat-unit">mo</span>
+                <span class="hero-stat-label">Payback</span>
+            </div>
+        </div>
+
+        <!-- Trust logos placeholder -->
+        <div class="hero-trust hero-fade-up" style="--delay: 0.9s">
+            <span class="hero-trust-label">Built for</span>
+            <div class="hero-trust-items">
+                <span class="trust-tag">🚇 Metro Operators</span>
+                <span class="trust-tag">🌉 Highway Authorities</span>
+                <span class="trust-tag">🛩️ Drone Fleets</span>
+                <span class="trust-tag">🏗️ Construction</span>
             </div>
         </div>
     </div>
