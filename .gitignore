@@ -1,0 +1,7 @@
+node_modules/
+build/
+build-ucrt/
+__pycache__/
+*.pyc
+_codeql_detected_source_root
+package-lock.json
