@@ -25,7 +25,7 @@ st.markdown("""
 
 st.markdown("# 🎥 AuraSense SFSVC — Live Crack Detection")
 st.markdown("**Real-time neuromorphic spike-based crack detection on video** · "
-            "[aurasensehk.com](https://www.aurasensehk.com) · dickson@aurasense.ai")
+            "[aurasensehk.com](https://www.aurasensehk.com) · DicksonChau@aurasensehk.com")
 st.divider()
 
 # ── Video source ─────────────────────────────────────────────────────────────
@@ -284,5 +284,5 @@ st.markdown("""
 - ✅ Deterministic physics-based (no ML hallucinations)
 - ✅ Works offline in tunnels/subways · ✅ Insurance-grade reproducibility
 
-[www.aurasensehk.com](https://www.aurasensehk.com) · dickson@aurasense.ai
+[www.aurasensehk.com](https://www.aurasensehk.com) · DicksonChau@aurasensehk.com
 """)
