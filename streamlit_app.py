@@ -266,6 +266,15 @@ def video_stream():
 
 video_stream()
 
+# ── Download PDF report ──────────────────────────────────────────────────────
+pdf_path = Path(__file__).parent / "AuraSense_SFSVC_Demo_Report.pdf"
+if pdf_path.exists():
+    st.divider()
+    with open(pdf_path, "rb") as f:
+        st.download_button("📥 Download Demo Report (PDF)", f.read(),
+                           file_name="AuraSense_SFSVC_Demo_Report.pdf",
+                           mime="application/pdf", use_container_width=True)
+
 # ── Footer ───────────────────────────────────────────────────────────────────
 st.divider()
 st.markdown("""
