@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SFSVC — Selective Frame Streaming with Visual Confirmation | AuraSense</title>
+    <meta name="description" content="SFSVC reduces drone video bandwidth by 94% while maintaining 98.7% YOLOv8 detection accuracy. Real-time structural inspection on CPU-only edge devices.">
+    <meta name="keywords" content="SFSVC, drone vision, edge AI, structural inspection, crack detection, bandwidth reduction, YOLOv8, real-time video">
+    <meta property="og:title" content="SFSVC — Industrial Drone Vision by AuraSense">
+    <meta property="og:description" content="94% bandwidth reduction. 0.4ms latency. 98.7% accuracy. All on CPU.">
+    <meta property="og:type" content="product">
+    <meta property="og:url" content="https://www.aurasensehk.com/sfsvc.html">
+    <link rel="canonical" href="https://www.aurasensehk.com/sfsvc.html">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+
+<!-- ═══════════ NAVIGATION ═══════════ -->
+<nav class="navbar" id="navbar">
+    <div class="nav-container">
+        <a href="index.html" class="nav-logo">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="32" height="32" rx="8" fill="#2D5BFF"/>
+                <path d="M16 6L26 24H6L16 6Z" fill="white" opacity="0.9"/>
+                <circle cx="16" cy="18" r="3" fill="#2D5BFF"/>
+            </svg>
+            AuraSense
+        </a>
+        <button class="nav-toggle" id="navToggle" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links" id="navLinks">
+            <a href="index.html">Home</a>
+            <div class="nav-dropdown">
+                <a href="#" class="nav-dropdown-trigger active" onclick="return false;">
+                    Products
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+                </a>
+                <div class="nav-dropdown-menu">
+                    <a href="sfsvc.html">
+                        <div class="dropdown-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+                        <div class="dropdown-text"><strong>SFSVC</strong><span>Industrial Drone Vision</span></div>
+                    </a>
+                    <a href="auraplay.html">
+                        <div class="dropdown-icon purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></div>
+                        <div class="dropdown-text"><strong>AuraPlay</strong><span>Dyslexia &amp; Phonics</span></div>
+                    </a>
+                </div>
+            </div>
+            <a href="contact.html">Contact</a>
+            <a href="contact.html" class="nav-cta">Get Started</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="hero hero-sfsvc">
+    <div class="hero-particles">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+    </div>
+    <div class="container">
+        <div class="hero-grid">
+            <div class="hero-content">
+                <div class="hero-eyebrow">SFSVC &bull; B2B Industrial</div>
+                <h1>See every crack.<br><span class="gradient-text-green">Send almost nothing.</span></h1>
+                <p class="hero-sub">Selective Frame Streaming with Visual Confirmation — our edge-AI video codec cuts 94% of drone bandwidth while keeping 98.7% detection accuracy. No GPU. No cloud. No compromise.</p>
+                <div class="hero-actions">
+                    <a href="contact.html?topic=sfsvc" class="btn btn-primary btn-lg">
+                        Request Pilot
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+                    <a href="#demo" class="btn btn-outline-white btn-lg">Watch Demo</a>
+                </div>
+                <div class="hero-proof">
+                    <span class="hero-proof-check">&#10003;</span> CPU-only inference
+                    <span style="margin: 0 4px;">|</span>
+                    <span class="hero-proof-check">&#10003;</span> Offline capable
+                    <span style="margin: 0 4px;">|</span>
+                    <span class="hero-proof-check">&#10003;</span> Real-time
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-visual-card">
+                    <video autoplay muted loop playsinline>
+                        <source src="videos/demo_building.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ METRICS ═══════════ -->
+<section class="section section-dark">
+    <div class="container">
+        <div class="grid-4" data-aos>
+            <div class="metric-card">
+                <div class="metric-value">94<span class="metric-unit">%</span></div>
+                <span class="metric-label">Bandwidth Reduced</span>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">0.4<span class="metric-unit">ms</span></div>
+                <span class="metric-label">Processing Latency</span>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">98.7<span class="metric-unit">%</span></div>
+                <span class="metric-label">YOLOv8 Accuracy</span>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">0</div>
+                <span class="metric-label">GPU Required</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ HOW IT WORKS ═══════════ -->
+<section class="section">
+    <div class="container">
+        <div class="section-header" data-aos>
+            <span class="section-badge">Technology</span>
+            <h2>How SFSVC works</h2>
+            <p>A three-stage pipeline that turns raw drone footage into actionable structural intelligence — all at the edge.</p>
+        </div>
+
+        <div class="pipeline" data-aos>
+            <div class="pipeline-step">
+                <div class="pipeline-num">1</div>
+                <div class="pipeline-content">
+                    <h3>Delta-Spike Encoding</h3>
+                    <p>Frame-to-frame pixel differences are computed on-device. Only regions with meaningful change (cracks, spalls, anomalies) are flagged for transmission — eliminating 94% of redundant data.</p>
+                </div>
+            </div>
+            <div class="pipeline-step">
+                <div class="pipeline-num">2</div>
+                <div class="pipeline-content">
+                    <h3>Adaptive YOLO Detection</h3>
+                    <p>A custom YOLOv8-nano model runs inference on flagged regions. Confidence-weighted bounding boxes identify cracks, corrosion, and structural degradation in real-time on CPU.</p>
+                </div>
+            </div>
+            <div class="pipeline-step">
+                <div class="pipeline-num">3</div>
+                <div class="pipeline-content">
+                    <h3>Visual Confirmation Stream</h3>
+                    <p>Only annotated key-frames with detection overlays are transmitted to the ground station. Human operators see confirmed findings instantly — not raw video noise.</p>
+                </div>
+            </div>
+            <div class="pipeline-step">
+                <div class="pipeline-num">4</div>
+                <div class="pipeline-content">
+                    <h3>Failsafe &amp; Degraded Mode</h3>
+                    <p>If signal drops or hardware degrades, SFSVC automatically enters degraded-mode: lowering resolution, increasing compression, and preserving critical detections until conditions improve.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ COMPARISON TABLE ═══════════ -->
+<section class="section section-dark">
+    <div class="container">
+        <div class="section-header" data-aos>
+            <span class="section-badge">Why SFSVC</span>
+            <h2>Cloud ML fails in elevator shafts.<br>SFSVC doesn't.</h2>
+            <p>Traditional cloud-based drone analytics break down in the environments that need them most.</p>
+        </div>
+
+        <div class="comparison-wrapper" data-aos>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Capability</th>
+                        <th>Cloud-Based</th>
+                        <th class="highlight-col">SFSVC (Edge)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Works offline</td>
+                        <td>&#10007; Requires 4G/5G</td>
+                        <td class="highlight-col">&#10003; Fully offline</td>
+                    </tr>
+                    <tr>
+                        <td>Latency</td>
+                        <td>200-2000 ms</td>
+                        <td class="highlight-col">0.4 ms</td>
+                    </tr>
+                    <tr>
+                        <td>Bandwidth usage</td>
+                        <td>100% (raw stream)</td>
+                        <td class="highlight-col">6% (94% reduction)</td>
+                    </tr>
+                    <tr>
+                        <td>GPU required</td>
+                        <td>&#10003; Cloud GPU</td>
+                        <td class="highlight-col">&#10007; CPU-only</td>
+                    </tr>
+                    <tr>
+                        <td>Data privacy</td>
+                        <td>&#10007; Leaves device</td>
+                        <td class="highlight-col">&#10003; On-device</td>
+                    </tr>
+                    <tr>
+                        <td>Detection accuracy</td>
+                        <td>~95% (varies)</td>
+                        <td class="highlight-col">98.7% (YOLOv8)</td>
+                    </tr>
+                    <tr>
+                        <td>Signal-loss handling</td>
+                        <td>&#10007; Total failure</td>
+                        <td class="highlight-col">&#10003; Degraded mode</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ USE CASES ═══════════ -->
+<section class="section">
+    <div class="container">
+        <div class="section-header" data-aos>
+            <span class="section-badge">Use Cases</span>
+            <h2>Built for the hardest environments</h2>
+            <p>SFSVC deploys wherever conventional connectivity fails and inspection stakes are highest.</p>
+        </div>
+
+        <div class="grid-3" data-aos>
+            <div class="card">
+                <div class="card-icon blue">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+                </div>
+                <h3>Building Facades</h3>
+                <p>Detect hairline cracks, spalling, and water damage on high-rise exteriors without scaffolding. Inspect 30 floors in under an hour.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon green">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 20h20"/><path d="M5 20V8l7-5 7 5v12"/><path d="M9 20v-4h6v4"/></svg>
+                </div>
+                <h3>Bridge &amp; Infrastructure</h3>
+                <p>Continuous monitoring of bridge decks, piers, and expansion joints. SFSVC identifies sub-millimeter cracks invisible to the human eye.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon amber">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                </div>
+                <h3>Runway &amp; Airfield</h3>
+                <p>Automated surface inspection for airports. Detect FOD, cracks, and pavement degradation at taxiway speeds without halting operations.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ DEMO VIDEOS ═══════════ -->
+<section class="section section-dark" id="demo">
+    <div class="container">
+        <div class="section-header" data-aos>
+            <span class="section-badge">Live Demo</span>
+            <h2>See SFSVC in action</h2>
+            <p>Real detection results from our edge pipeline — running on CPU, processing drone footage in real-time.</p>
+        </div>
+
+        <div class="demo-tabs" data-aos>
+            <button class="demo-tab active" data-video="videos/demo_building.mp4">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
+                Building
+            </button>
+            <button class="demo-tab" data-video="videos/demo_public.mp4">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                Public Area
+            </button>
+            <button class="demo-tab" data-video="videos/demo_runway.mp4">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 12l10 5 10-5"/></svg>
+                Runway
+            </button>
+        </div>
+
+        <div class="demo-video-wrapper" data-aos>
+            <video id="demoVideo" autoplay muted loop playsinline>
+                <source src="videos/demo_building.mp4" type="video/mp4">
+            </video>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ CTA ═══════════ -->
+<section class="cta-banner">
+    <div class="container" data-aos>
+        <h2>Ready to cut 94% of your drone bandwidth?</h2>
+        <p>Join our pilot program. We'll deploy SFSVC on your fleet and prove the numbers on your infrastructure.</p>
+        <div>
+            <a href="contact.html?topic=sfsvc" class="btn btn-white btn-lg">Request a Pilot</a>
+            <a href="index.html" class="btn btn-outline-white btn-lg">Back to Home</a>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <a href="index.html" class="nav-logo" style="font-size:1.2rem;">
+                    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" width="28" height="28">
+                        <rect width="32" height="32" rx="8" fill="#2D5BFF"/>
+                        <path d="M16 6L26 24H6L16 6Z" fill="white" opacity="0.9"/>
+                        <circle cx="16" cy="18" r="3" fill="#2D5BFF"/>
+                    </svg>
+                    AuraSense
+                </a>
+                <p>Edge AI products for safety-critical environments and underserved learners. Built in Hong Kong.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Products</h4>
+                <a href="sfsvc.html">SFSVC</a>
+                <a href="auraplay.html">AuraPlay</a>
+            </div>
+            <div class="footer-links">
+                <h4>Company</h4>
+                <a href="index.html#about">About</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="footer-links">
+                <h4>Resources</h4>
+                <a href="https://stellular-meerkat-b623ea.netlify.app/" target="_blank" rel="noopener">AuraPlay Demo</a>
+                <a href="mailto:support@aurasensehk.com">support@aurasensehk.com</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; 2025 AuraSense Limited. All rights reserved.</span>
+            <div class="footer-bottom-links">
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

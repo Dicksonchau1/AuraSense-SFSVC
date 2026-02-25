@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact — AuraSense Limited</title>
+    <meta name="description" content="Get in touch with AuraSense. Inquire about SFSVC pilot programs, AuraPlay beta access, partnerships, or general questions.">
+    <meta property="og:title" content="Contact AuraSense">
+    <meta property="og:description" content="Inquire about SFSVC pilots, AuraPlay beta, or partnerships.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.aurasensehk.com/contact.html">
+    <link rel="canonical" href="https://www.aurasensehk.com/contact.html">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+
+<!-- ═══════════ NAVIGATION ═══════════ -->
+<nav class="navbar" id="navbar">
+    <div class="nav-container">
+        <a href="index.html" class="nav-logo">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="32" height="32" rx="8" fill="#2D5BFF"/>
+                <path d="M16 6L26 24H6L16 6Z" fill="white" opacity="0.9"/>
+                <circle cx="16" cy="18" r="3" fill="#2D5BFF"/>
+            </svg>
+            AuraSense
+        </a>
+        <button class="nav-toggle" id="navToggle" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links" id="navLinks">
+            <a href="index.html">Home</a>
+            <div class="nav-dropdown">
+                <a href="#" class="nav-dropdown-trigger" onclick="return false;">
+                    Products
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+                </a>
+                <div class="nav-dropdown-menu">
+                    <a href="sfsvc.html">
+                        <div class="dropdown-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+                        <div class="dropdown-text"><strong>SFSVC</strong><span>Industrial Drone Vision</span></div>
+                    </a>
+                    <a href="auraplay.html">
+                        <div class="dropdown-icon purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></div>
+                        <div class="dropdown-text"><strong>AuraPlay</strong><span>Dyslexia &amp; Phonics</span></div>
+                    </a>
+                </div>
+            </div>
+            <a href="contact.html" class="active">Contact</a>
+            <a href="contact.html" class="nav-cta">Get Started</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="hero hero-contact">
+    <div class="container">
+        <div class="hero-content" style="text-align: center; max-width: 650px; margin: 0 auto;">
+            <div class="hero-eyebrow">Get In Touch</div>
+            <h1>Let's build something<br><span class="gradient-text">together</span></h1>
+            <p class="hero-sub" style="margin-left: auto; margin-right: auto;">Whether you're exploring SFSVC for your drone fleet, interested in AuraPlay beta access, or want to partner — we'd love to hear from you.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ CONTACT FORM ═══════════ -->
+<section class="section">
+    <div class="container">
+        <div class="contact-grid">
+            <div class="contact-form-card">
+                <form id="contactForm" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+                    <input type="hidden" name="form-name" value="contact">
+                    <p style="display:none;"><label>Don't fill this out: <input name="bot-field"></label></p>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">First Name *</label>
+                            <input type="text" id="firstName" name="firstName" placeholder="Jane" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name *</label>
+                            <input type="text" id="lastName" name="lastName" placeholder="Doe" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" placeholder="jane@company.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="company">Company / Organisation</label>
+                        <input type="text" id="company" name="company" placeholder="Acme Corp">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="topic">What's this about? *</label>
+                        <select id="topic" name="topic" required>
+                            <option value="" disabled selected>Select a topic</option>
+                            <option value="sfsvc">SFSVC Pilot Program</option>
+                            <option value="auraplay">AuraPlay Beta Access</option>
+                            <option value="partnership">Partnership</option>
+                            <option value="careers">Careers</option>
+                            <option value="general">General Inquiry</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Message *</label>
+                        <textarea id="message" name="message" rows="5" placeholder="Tell us about your project or question..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-full btn-lg" id="submitBtn">
+                        Send Message
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                    </button>
+                </form>
+
+                <div class="form-success" id="formSuccess" style="display: none;">
+                    <div class="success-check">&#10003;</div>
+                    <h3>Message Sent!</h3>
+                    <p>Thanks for reaching out. We'll get back to you within 1-2 business days.</p>
+                </div>
+            </div>
+
+            <div class="contact-info-side">
+                <div class="contact-info-item">
+                    <div class="ci-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    </div>
+                    <div>
+                        <h4>Email</h4>
+                        <a href="mailto:support@aurasensehk.com">support@aurasensehk.com</a>
+                    </div>
+                </div>
+
+                <div class="contact-info-item">
+                    <div class="ci-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    </div>
+                    <div>
+                        <h4>Office</h4>
+                        <p>Room 1505, 15/F<br>Yu Sung Boon Building<br>107-111 Des Voeux Road Central<br>Hong Kong</p>
+                    </div>
+                </div>
+
+                <div class="contact-info-item">
+                    <div class="ci-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    </div>
+                    <div>
+                        <h4>Response Time</h4>
+                        <p>We typically respond within 1-2 business days. For urgent inquiries, email us directly.</p>
+                    </div>
+                </div>
+
+                <div class="contact-info-item">
+                    <div class="ci-icon" style="background: rgba(139,92,246,0.08); color: var(--secondary);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                    </div>
+                    <div>
+                        <h4>Try AuraPlay</h4>
+                        <p>Want to try directly? <a href="https://stellular-meerkat-b623ea.netlify.app/" target="_blank" rel="noopener" style="color: var(--secondary); font-weight: 600;">Open the demo &rarr;</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <a href="index.html" class="nav-logo" style="font-size:1.2rem;">
+                    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" width="28" height="28">
+                        <rect width="32" height="32" rx="8" fill="#2D5BFF"/>
+                        <path d="M16 6L26 24H6L16 6Z" fill="white" opacity="0.9"/>
+                        <circle cx="16" cy="18" r="3" fill="#2D5BFF"/>
+                    </svg>
+                    AuraSense
+                </a>
+                <p>Edge AI products for safety-critical environments and underserved learners. Built in Hong Kong.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Products</h4>
+                <a href="sfsvc.html">SFSVC</a>
+                <a href="auraplay.html">AuraPlay</a>
+            </div>
+            <div class="footer-links">
+                <h4>Company</h4>
+                <a href="index.html#about">About</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="footer-links">
+                <h4>Resources</h4>
+                <a href="https://stellular-meerkat-b623ea.netlify.app/" target="_blank" rel="noopener">AuraPlay Demo</a>
+                <a href="mailto:support@aurasensehk.com">support@aurasensehk.com</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; 2025 AuraSense Limited. All rights reserved.</span>
+            <div class="footer-bottom-links">
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+<script src="assets/js/contact.js"></script>
+</body>
+</html>
