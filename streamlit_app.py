@@ -76,8 +76,12 @@ FPS, TOTAL = meta["fps"], meta["total"]
 st.sidebar.header("⚙️ Controls")
 enable_spikes = st.sidebar.toggle("⚡ Spike Overlay", value=True,
     help="Toggle spike-event visualisation on each frame")
+
+# Confidence threshold set to 0.70 (vs. 0.85 in simulation) to balance precision/recall
+# for CV-based detection. Lower threshold captures more true cracks while temporal
+# consistency filtering reduces false positives.
 conf_thr = st.sidebar.slider("Confidence Threshold", 0.50, 0.99, 0.70, 0.01,
-    help="Minimum confidence score to display detections")
+    help="Minimum confidence score to display detections. Lower = higher recall but more false positives")
 skip = st.sidebar.slider("Frame Skip (speed)", 1, 10, 3,
     help="Higher = faster playback")
 
@@ -112,6 +116,37 @@ st.info(f"📊 **{meta['w']}×{meta['h']}** @ **{FPS:.0f} fps** · "
 
 # ── Helper functions ─────────────────────────────────────────────────────────
 SEV_CLR = {"High": (0, 0, 255), "Medium": (0, 165, 255), "Low": (0, 255, 0)}
+
+# ── Crack Detection Configuration Constants ──────────────────────────────────
+
+# Confidence calculation parameters
+BASE_CONFIDENCE = 0.70  # Base confidence for all detections
+CONF_AREA_NORM = 5000.0  # Normalization factor for area contribution
+CONF_AREA_WEIGHT = 0.15  # Weight of area in confidence calculation
+CONF_ASPECT_THRESHOLD = 2.0  # Minimum aspect ratio for elongated crack bonus
+CONF_ASPECT_DIVISOR = 10.0  # Divisor for aspect ratio contribution
+CONF_ASPECT_WEIGHT = 0.10  # Maximum weight of aspect ratio
+CONF_LENGTH_NORM = 300.0  # Normalization factor for length contribution
+CONF_LENGTH_WEIGHT = 0.05  # Weight of length in confidence calculation
+
+# Severity classification thresholds (in pixels)
+SEV_HIGH_AREA = 3000  # Area threshold for high severity (px²)
+SEV_HIGH_LENGTH = 200  # Length threshold for high severity (px)
+SEV_HIGH_WIDTH = 15  # Width threshold for high severity (px)
+SEV_MEDIUM_AREA = 1000  # Area threshold for medium severity (px²)
+SEV_MEDIUM_LENGTH = 100  # Length threshold for medium severity (px)
+SEV_MEDIUM_WIDTH = 8  # Width threshold for medium severity (px)
+
+# Temporal tracking parameters
+TEMPORAL_IOU_THRESHOLD = 0.3  # Minimum IoU for temporal matching
+TEMPORAL_BOOST_FACTOR = 0.10  # Confidence boost per IoU unit for temporal consistency
+MAX_TEMPORAL_BOOST = 0.15  # Maximum confidence boost from temporal tracking
+
+# Pixel to physical unit conversion
+# Note: This calibration factor depends on camera specifications and distance to surface.
+# Default assumes ~0.5mm per pixel. Adjust based on actual deployment setup.
+PIXEL_TO_MM = 0.5  # Conversion factor: pixels to millimeters
+PIXEL2_TO_MM2 = PIXEL_TO_MM ** 2  # Conversion factor: px² to mm²
 
 def detect_cracks_cv(frame, threshold, canny_low=50, canny_high=150, min_area=100, min_length=20):
     """
@@ -198,32 +233,29 @@ def detect_cracks_cv(frame, threshold, canny_low=50, canny_high=150, min_area=10
         # - Larger area
         # - Higher aspect ratio (elongated shapes typical of cracks)
         # - Longer length
-        confidence = 0.70  # Base confidence
+        confidence = BASE_CONFIDENCE
         
         # Area factor (normalize to reasonable range)
-        area_factor = min(area / 5000.0, 1.0)
-        confidence += area_factor * 0.15
+        area_factor = min(area / CONF_AREA_NORM, 1.0)
+        confidence += area_factor * CONF_AREA_WEIGHT
         
         # Aspect ratio factor (cracks are typically elongated)
-        if aspect_ratio > 2.0:
-            confidence += min((aspect_ratio - 2.0) / 10.0, 0.10)
+        if aspect_ratio > CONF_ASPECT_THRESHOLD:
+            confidence += min((aspect_ratio - CONF_ASPECT_THRESHOLD) / CONF_ASPECT_DIVISOR, 
+                            CONF_ASPECT_WEIGHT)
         
         # Length factor
-        length_factor = min(length_px / 300.0, 1.0)
-        confidence += length_factor * 0.05
+        length_factor = min(length_px / CONF_LENGTH_NORM, 1.0)
+        confidence += length_factor * CONF_LENGTH_WEIGHT
         
         # Ensure confidence stays in valid range
         confidence = min(confidence, 0.99)
         
         # Determine severity based on crack dimensions
-        # Severity criteria:
-        # - High: Large area (>3000px²) OR long length (>200px) OR wide (>15px)
-        # - Medium: Moderate area (1000-3000px²) OR length (100-200px) OR width (8-15px)
-        # - Low: Small area (<1000px²) AND short length (<100px) AND narrow (<8px)
-        
-        if area > 3000 or length_px > 200 or width_px > 15:
+        # Using calibrated thresholds defined as module constants
+        if area > SEV_HIGH_AREA or length_px > SEV_HIGH_LENGTH or width_px > SEV_HIGH_WIDTH:
             severity = "High"
-        elif area > 1000 or length_px > 100 or width_px > 8:
+        elif area > SEV_MEDIUM_AREA or length_px > SEV_MEDIUM_LENGTH or width_px > SEV_MEDIUM_WIDTH:
             severity = "Medium"
         else:
             severity = "Low"
@@ -277,7 +309,7 @@ def compute_iou(box1, box2):
     
     return intersection / union if union > 0 else 0.0
 
-def filter_with_temporal_consistency(current_cracks, prev_cracks, iou_threshold=0.3):
+def filter_with_temporal_consistency(current_cracks, prev_cracks, iou_threshold=TEMPORAL_IOU_THRESHOLD):
     """
     Filter and enhance crack detections using temporal consistency.
     Boosts confidence for cracks that persist across frames.
@@ -285,7 +317,7 @@ def filter_with_temporal_consistency(current_cracks, prev_cracks, iou_threshold=
     Args:
         current_cracks: List of cracks detected in current frame
         prev_cracks: List of cracks from previous frame
-        iou_threshold: Minimum IoU to consider a match
+        iou_threshold: Minimum IoU to consider a match (default from module constant)
     
     Returns:
         Filtered and enhanced list of cracks
@@ -312,7 +344,7 @@ def filter_with_temporal_consistency(current_cracks, prev_cracks, iou_threshold=
         # If matched with previous frame, boost confidence
         if best_iou >= iou_threshold:
             # Increase confidence for temporal consistency
-            boost = min(best_iou * 0.10, 0.15)  # Up to 15% boost
+            boost = min(best_iou * TEMPORAL_BOOST_FACTOR, MAX_TEMPORAL_BOOST)
             enhanced_crack['confidence'] = min(curr_crack['confidence'] + boost, 0.99)
             enhanced_crack['temporal_match'] = True
             enhanced_crack['iou'] = best_iou
@@ -477,10 +509,10 @@ def video_stream():
         parts = []
         for i, c in enumerate(cracks[:5], 1):
             # Use actual crack measurements from CV detection
-            # Convert pixels to mm (assuming ~0.5mm per pixel as calibration factor)
-            length_mm = c.get("length_px", 0) * 0.5
-            width_mm = c.get("width_px", 0) * 0.5
-            area_mm2 = c.get("area", 0) * 0.25  # 0.5mm² per pixel²
+            # Convert pixels to mm using calibration factor
+            length_mm = c.get("length_px", 0) * PIXEL_TO_MM
+            width_mm = c.get("width_px", 0) * PIXEL_TO_MM
+            area_mm2 = c.get("area", 0) * PIXEL2_TO_MM2
             
             b = f'badge-{c["severity"].lower()}'
             parts.append(
