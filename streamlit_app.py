@@ -119,6 +119,21 @@ SEV_CLR = {"High": (0, 0, 255), "Medium": (0, 165, 255), "Low": (0, 255, 0)}
 
 # ── Crack Detection Configuration Constants ──────────────────────────────────
 
+# Image preprocessing parameters
+BILATERAL_FILTER_D = 9  # Diameter of pixel neighborhood for bilateral filter
+BILATERAL_FILTER_SIGMA_COLOR = 75  # Filter sigma in color space
+BILATERAL_FILTER_SIGMA_SPACE = 75  # Filter sigma in coordinate space
+CLAHE_CLIP_LIMIT = 2.0  # Contrast limiting threshold for CLAHE
+CLAHE_TILE_GRID_SIZE = (8, 8)  # Size of grid for histogram equalization
+
+# Morphological operation parameters
+MORPH_KERNEL_H = (15, 1)  # Horizontal line kernel for connecting crack segments
+MORPH_KERNEL_V = (1, 15)  # Vertical line kernel for connecting crack segments
+MORPH_KERNEL_CLOSE = (3, 3)  # Kernel for closing small gaps in cracks
+
+# Detection filtering parameters
+BORDER_MARGIN = 10  # Pixels to exclude from edges (filters edge artifacts)
+
 # Confidence calculation parameters
 BASE_CONFIDENCE = 0.70  # Base confidence for all detections
 CONF_AREA_NORM = 5000.0  # Normalization factor for area contribution
@@ -143,8 +158,11 @@ TEMPORAL_BOOST_FACTOR = 0.10  # Confidence boost per IoU unit for temporal consi
 MAX_TEMPORAL_BOOST = 0.15  # Maximum confidence boost from temporal tracking
 
 # Pixel to physical unit conversion
-# Note: This calibration factor depends on camera specifications and distance to surface.
-# Default assumes ~0.5mm per pixel. Adjust based on actual deployment setup.
+# Calibration: Measure a known physical distance in the image (e.g., a ruler or
+# reference object with known dimensions), count the pixels, then compute:
+#   PIXEL_TO_MM = known_distance_mm / pixel_count
+# This factor varies with camera focal length, resolution, and distance to surface.
+# Default assumes ~0.5mm per pixel for typical drone inspection at 2-3m distance.
 PIXEL_TO_MM = 0.5  # Conversion factor: pixels to millimeters
 PIXEL2_TO_MM2 = PIXEL_TO_MM ** 2  # Conversion factor: px² to mm²
 
@@ -177,27 +195,31 @@ def detect_cracks_cv(frame, threshold, canny_low=50, canny_high=150, min_area=10
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     
     # Apply bilateral filter to reduce noise while preserving edges
-    denoised = cv2.bilateralFilter(gray, 9, 75, 75)
+    # Parameters chosen to balance noise reduction vs. edge preservation
+    denoised = cv2.bilateralFilter(gray, BILATERAL_FILTER_D, 
+                                     BILATERAL_FILTER_SIGMA_COLOR, 
+                                     BILATERAL_FILTER_SIGMA_SPACE)
     
     # Enhance contrast using CLAHE (Contrast Limited Adaptive Histogram Equalization)
-    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+    # Parameters tuned to enhance crack visibility without over-amplifying noise
+    clahe = cv2.createCLAHE(clipLimit=CLAHE_CLIP_LIMIT, tileGridSize=CLAHE_TILE_GRID_SIZE)
     enhanced = clahe.apply(denoised)
     
     # Apply Canny edge detection to find crack edges
     edges = cv2.Canny(enhanced, canny_low, canny_high)
     
     # Morphological operations to connect crack segments
-    # Use a line-shaped kernel to connect linear crack segments
-    kernel_horizontal = cv2.getStructuringElement(cv2.MORPH_RECT, (15, 1))
-    kernel_vertical = cv2.getStructuringElement(cv2.MORPH_RECT, (1, 15))
+    # Line-shaped kernels connect nearby edges along horizontal/vertical directions
+    kernel_horizontal = cv2.getStructuringElement(cv2.MORPH_RECT, MORPH_KERNEL_H)
+    kernel_vertical = cv2.getStructuringElement(cv2.MORPH_RECT, MORPH_KERNEL_V)
     
     # Dilate to connect nearby edges
     dilated_h = cv2.dilate(edges, kernel_horizontal, iterations=1)
     dilated_v = cv2.dilate(edges, kernel_vertical, iterations=1)
     dilated = cv2.bitwise_or(dilated_h, dilated_v)
     
-    # Close small gaps
-    kernel_close = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
+    # Close small gaps in crack segments
+    kernel_close = cv2.getStructuringElement(cv2.MORPH_RECT, MORPH_KERNEL_CLOSE)
     closed = cv2.morphologyEx(dilated, cv2.MORPH_CLOSE, kernel_close, iterations=1)
     
     # Find contours (crack candidates)
@@ -213,9 +235,9 @@ def detect_cracks_cv(frame, threshold, canny_low=50, canny_high=150, min_area=10
         if area < min_area or bw < min_length or bh < min_length:
             continue
         
-        # Filter out detections too close to borders (likely edge artifacts)
-        border_margin = 10
-        if x < border_margin or y < border_margin or x + bw > w - border_margin or y + bh > h - border_margin:
+        # Filter out detections too close to borders (artifacts from video edges)
+        if (x < BORDER_MARGIN or y < BORDER_MARGIN or 
+            x + bw > w - BORDER_MARGIN or y + bh > h - BORDER_MARGIN):
             continue
         
         # Calculate crack characteristics
@@ -226,7 +248,8 @@ def detect_cracks_cv(frame, threshold, canny_low=50, canny_high=150, min_area=10
         width_px = min(bw, bh)
         
         # Aspect ratio: helps identify elongated cracks
-        aspect_ratio = max(bw, bh) / max(min(bw, bh), 1)
+        # Guard against division by zero (min_length filter should prevent this)
+        aspect_ratio = max(bw, bh) / max(min(bw, bh), 1.0)
         
         # Calculate confidence based on detection quality
         # Higher confidence for:
