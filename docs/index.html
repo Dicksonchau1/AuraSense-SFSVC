@@ -1,470 +1,443 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="AuraSense SFSVC — Neuromorphic perception SDK for autonomous drone inspection. Sub-2ms latency. No GPU. Edge-native." />
-  <meta name="theme-color" content="#06060A" />
-  <title>AuraSense SFSVC — Neuromorphic Codec for Autonomous Drones</title>
-  <meta property="og:title"       content="AuraSense SFSVC" />
-  <meta property="og:description" content="Spike-based perception SDK for autonomous drone inspection. Sub-2ms. No GPU." />
-  <meta property="og:type"        content="website" />
-  <meta property="og:url"         content="https://aurasensehk.com" />
-  <link rel="stylesheet" href="css/design.css" />
-  <link rel="stylesheet" href="css/layout.css" />
-  <link rel="stylesheet" href="css/animate.css" />
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="description" content="AuraSense SFSVC — Neuromorphic perception SDK for autonomous drone inspection. Sub-2.5ms latency. No GPU. Edge-native."/>
+<title>AuraSense SFSVC — Neuromorphic Perception for Drones</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0d12;--bg2:#0f1318;--bg3:#141920;--bg4:#1a2030;
+  --teal:#00c9a7;--teal2:#00a88a;--teal-dim:rgba(0,201,167,.15);
+  --red:#ff4d6d;--amber:#f59e0b;--purple:#a78bfa;
+  --text:#e8eaf0;--text2:#9aa3b2;--text3:#5a6478;
+  --border:rgba(255,255,255,.07);--border2:rgba(0,201,167,.25);
+  --radius:10px;--radius2:6px;
+  --font:'Inter',system-ui,-apple-system,sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.6;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+ul{list-style:none}
+button{cursor:pointer;font-family:inherit}
+
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 5%;height:62px;
+  background:rgba(10,13,18,.88);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border)}
+.nav-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1rem;letter-spacing:.08em}
+.nav-logo{width:28px;height:28px;border-radius:50%;
+  background:conic-gradient(var(--teal),#004d3d,var(--teal));
+  display:flex;align-items:center;justify-content:center;font-size:.6rem;color:#000;font-weight:900}
+.nav-brand span{color:var(--teal)}
+.nav-links{display:flex;gap:2rem}
+.nav-links a{color:var(--text2);font-size:.875rem;transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+.nav-actions{display:flex;align-items:center;gap:1rem}
+.btn-ghost{background:none;border:none;color:var(--text2);font-size:.875rem;padding:.4rem .8rem}
+.btn-ghost:hover{color:var(--text)}
+.btn-primary{background:var(--teal);color:#000;font-weight:700;font-size:.875rem;
+  padding:.5rem 1.2rem;border:none;border-radius:var(--radius2);
+  display:flex;align-items:center;gap:.4rem;transition:background .2s}
+.btn-primary:hover{background:var(--teal2)}
+.btn-primary svg{width:16px;height:16px}
+
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:100px 5% 60px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;z-index:0}
+.hero-bg::before{content:'';position:absolute;top:20%;left:50%;transform:translateX(-50%);
+  width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,201,167,.12) 0%,transparent 70%);
+  pointer-events:none}
+.hero-bg::after{content:'';position:absolute;inset:0;
+  background-image:linear-gradient(var(--border) 1px,transparent 1px),
+    linear-gradient(90deg,var(--border) 1px,transparent 1px);
+  background-size:60px 60px;opacity:.4}
+.hero-inner{position:relative;z-index:1;max-width:760px}
+.hero-badge{display:inline-block;background:rgba(0,201,167,.1);border:1px solid var(--border2);
+  color:var(--teal);font-size:.75rem;font-weight:600;letter-spacing:.1em;
+  padding:.3rem .8rem;border-radius:20px;margin-bottom:1.5rem}
+.hero h1{font-size:clamp(2.2rem,5vw,3.8rem);font-weight:800;line-height:1.15;
+  letter-spacing:-.02em;margin-bottom:1.2rem}
+.hero p{color:var(--text2);font-size:1.05rem;max-width:540px;margin:0 auto 2rem;line-height:1.7}
+.hero-ctas{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:3rem}
+.btn-cta-primary{background:var(--teal);color:#000;font-weight:700;font-size:.95rem;
+  padding:.75rem 1.8rem;border:none;border-radius:var(--radius2);
+  display:flex;align-items:center;gap:.5rem;transition:all .2s}
+.btn-cta-primary:hover{background:var(--teal2);transform:translateY(-1px)}
+.btn-cta-secondary{background:none;color:var(--text);font-weight:600;font-size:.95rem;
+  padding:.75rem 1.8rem;border:1px solid var(--border);border-radius:var(--radius2);
+  transition:all .2s}
+.btn-cta-secondary:hover{border-color:var(--teal);color:var(--teal)}
+.hero-metrics{display:flex;gap:2.5rem;justify-content:center;flex-wrap:wrap}
+.hero-metric{display:flex;align-items:center;gap:.5rem;color:var(--text2);font-size:.82rem}
+.hero-metric svg{width:14px;height:14px;color:var(--teal)}
+.hero-metric strong{color:var(--text);font-weight:600}
+
+.section{padding:80px 5%}
+.container{max-width:1100px;margin:0 auto}
+.section-label{color:var(--teal);font-size:.75rem;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;display:block;margin-bottom:.6rem}
+.section-title{font-size:clamp(1.8rem,3vw,2.6rem);font-weight:800;letter-spacing:-.02em;margin-bottom:.8rem}
+.section-sub{color:var(--text2);font-size:.95rem;max-width:520px;line-height:1.7}
+
+.tech-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:3rem}
+.tech-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.8rem;
+  transition:border-color .2s,transform .2s}
+.tech-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.tech-icon{width:44px;height:44px;background:var(--teal-dim);border-radius:var(--radius2);
+  display:flex;align-items:center;justify-content:center;margin-bottom:1.2rem}
+.tech-icon svg{width:22px;height:22px;color:var(--teal)}
+.tech-card h3{font-size:1rem;font-weight:700;margin-bottom:.6rem}
+.tech-card p{color:var(--text2);font-size:.875rem;line-height:1.65}
+
+.bench-layout{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+.bench-metrics{display:flex;flex-direction:column;gap:1.4rem;margin-top:2rem}
+.bench-row{display:flex;justify-content:space-between;margin-bottom:.4rem;font-size:.875rem}
+.bench-label{color:var(--text2)}
+.bench-val{color:var(--text);font-weight:600}
+.bench-bar-bg{height:6px;background:var(--bg4);border-radius:3px;overflow:hidden}
+.bench-bar-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--teal2));
+  border-radius:3px;width:0;transition:width 1.2s ease}
+.bench-note{margin-top:1.5rem;color:var(--teal);font-size:.9rem;font-weight:600}
+.bench-video{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);
+  aspect-ratio:16/10;display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden}
+.bench-video-inner{text-align:center}
+.play-btn{width:64px;height:64px;border-radius:50%;background:var(--teal);
+  display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;
+  cursor:pointer;transition:transform .2s}
+.play-btn:hover{transform:scale(1.08)}
+.play-btn svg{width:28px;height:28px;color:#000;margin-left:4px}
+.bench-caption{color:var(--text2);font-size:.8rem}
+
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.2rem;margin-top:3rem}
+.pricing-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);
+  padding:1.8rem;position:relative;transition:border-color .2s}
+.pricing-card:hover{border-color:var(--border2)}
+.pricing-card.featured{border-color:var(--teal);background:linear-gradient(145deg,var(--bg2),rgba(0,201,167,.06))}
+.popular-badge{position:absolute;top:-11px;left:50%;transform:translateX(-50%);
+  background:var(--teal);color:#000;font-size:.68rem;font-weight:800;letter-spacing:.1em;
+  padding:.2rem .7rem;border-radius:20px}
+.pricing-tier{color:var(--text2);font-size:.8rem;font-weight:600;letter-spacing:.08em;
+  text-transform:uppercase;margin-bottom:.8rem;display:block}
+.pricing-price{display:flex;align-items:baseline;gap:.2rem;margin-bottom:.3rem}
+.pricing-amount{font-size:2.2rem;font-weight:800}
+.pricing-unit{color:var(--text2);font-size:.85rem}
+.pricing-drones{color:var(--text2);font-size:.8rem;margin-bottom:1.2rem;display:block}
+.pricing-divider{border:none;border-top:1px solid var(--border);margin-bottom:1.2rem}
+.pricing-features{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.5rem}
+.pricing-feature{display:flex;align-items:center;gap:.5rem;font-size:.82rem;color:var(--text2)}
+.pricing-feature::before{content:'✓';color:var(--teal);font-weight:700;flex-shrink:0}
+.btn-card{width:100%;padding:.65rem;border-radius:var(--radius2);font-weight:600;
+  font-size:.85rem;transition:all .2s;border:1px solid var(--border);
+  background:none;color:var(--text)}
+.btn-card:hover{border-color:var(--teal);color:var(--teal)}
+.btn-card.filled{background:var(--teal);color:#000;border-color:var(--teal)}
+.btn-card.filled:hover{background:var(--teal2)}
+
+.dash-section{padding:80px 5%;background:var(--bg2)}
+.dash-section .section-sub{margin-bottom:2.5rem}
+.dash-wrap{border:1px solid var(--border);border-radius:14px;overflow:hidden;
+  background:var(--bg);box-shadow:0 24px 80px rgba(0,0,0,.5)}
+.dash-nav{display:flex;align-items:center;justify-content:space-between;
+  padding:.8rem 1.5rem;background:var(--bg2);border-bottom:1px solid var(--border)}
+.dash-nav-brand{display:flex;align-items:center;gap:.6rem;font-weight:700;font-size:.9rem;letter-spacing:.06em}
+.dash-nav-brand span{color:var(--teal)}
+.dash-nav-logo{width:22px;height:22px;border-radius:50%;
+  background:conic-gradient(var(--teal),#004d3d,var(--teal))}
+.dash-body{display:grid;grid-template-columns:200px 1fr}
+.dash-sidebar{background:var(--bg2);border-right:1px solid var(--border);
+  padding:1.2rem 0;min-height:500px;display:flex;flex-direction:column}
+.dash-sidebar-label{color:#5a6478;font-size:.68rem;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;padding:.5rem 0 .3rem 1.5rem}
+.dash-sidebar-item{display:flex;align-items:center;gap:.6rem;padding:.55rem 1rem;
+  border-radius:var(--radius2);font-size:.82rem;color:var(--text2);cursor:pointer;
+  transition:background .15s;margin:.1rem .5rem}
+.dash-sidebar-item:hover{background:var(--bg4)}
+.dash-sidebar-item.active{background:rgba(0,201,167,.12);color:var(--teal)}
+.dash-sidebar-item svg{width:15px;height:15px;flex-shrink:0}
+.dash-avatar{width:28px;height:28px;border-radius:50%;background:var(--teal-dim);
+  border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;
+  color:var(--teal);font-weight:700;font-size:.75rem;flex-shrink:0}
+.dash-main{padding:1.5rem;overflow:hidden}
+.dash-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;flex-wrap:wrap;gap:.5rem}
+.dash-engine-title{display:flex;align-items:center;gap:.7rem;font-size:.95rem;font-weight:700;flex-wrap:wrap}
+.badge{display:inline-flex;align-items:center;gap:.3rem;background:var(--bg4);
+  border:1px solid var(--border);border-radius:4px;padding:.15rem .5rem;
+  font-size:.68rem;font-weight:700;color:var(--text2)}
+.badge.teal{background:rgba(0,201,167,.1);border-color:var(--border2);color:var(--teal)}
+.badge.running{background:rgba(0,201,167,.1);border-color:var(--border2);color:var(--teal)}
+.badge.running::before{content:'';width:6px;height:6px;border-radius:50%;display:inline-block;
+  background:var(--teal);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.dash-status{display:flex;align-items:center;gap:.8rem;font-size:.75rem;color:var(--text2);flex-wrap:wrap}
+.btn-stop{background:none;border:1px solid var(--border);color:var(--text2);
+  font-size:.72rem;padding:.25rem .6rem;border-radius:4px;transition:all .2s}
+.btn-stop:hover{border-color:#ff4d6d;color:#ff4d6d}
+.metric-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin-bottom:1.2rem}
+.metric-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:.9rem}
+.metric-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem}
+.metric-card-label{color:var(--text3);font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.metric-card-icon svg{width:14px;height:14px;color:var(--teal)}
+.metric-value{font-size:1.5rem;font-weight:800;color:var(--teal);line-height:1;margin-bottom:.15rem}
+.metric-value .unit{font-size:.75rem;font-weight:600;color:var(--text2);margin-left:2px}
+.metric-sub{color:var(--text3);font-size:.68rem}
+.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1.2rem}
+.chart-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:.9rem}
+.chart-header{display:flex;align-items:center;gap:.4rem;margin-bottom:.8rem;
+  font-size:.72rem;color:var(--text2);font-weight:600}
+.chart-header svg{width:12px;height:12px;color:var(--teal)}
+.sparkline{height:60px;width:100%;overflow:hidden}
+.sparkline svg{width:100%;height:100%}
+.chart-val{text-align:right;font-size:.72rem;color:var(--teal);font-weight:700;margin-top:.4rem}
+.chart-samples{font-size:.65rem;color:var(--text3);float:left}
+.bottom-row{display:grid;grid-template-columns:1fr 280px;gap:.8rem}
+.lane-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:.9rem}
+.lane-title{display:flex;align-items:center;gap:.4rem;font-size:.72rem;color:var(--text2);
+  font-weight:700;margin-bottom:.8rem}
+.lane-title svg{width:12px;height:12px;color:var(--teal)}
+.lanes-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.lane-item{background:var(--bg4);border-radius:4px;padding:.5rem .7rem;
+  display:flex;align-items:flex-start;gap:.4rem}
+.lane-dot{width:7px;height:7px;border-radius:50%;background:var(--teal);
+  margin-top:4px;flex-shrink:0;animation:pulse 2s infinite}
+.lane-name{font-size:.72rem;font-weight:700;color:var(--text)}
+.lane-freq{font-size:.65rem;color:var(--text3)}
+.econ-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:.9rem}
+.econ-title{display:flex;align-items:center;gap:.4rem;font-size:.72rem;color:var(--text2);
+  font-weight:700;margin-bottom:.8rem}
+.econ-title svg{width:12px;height:12px;color:var(--teal)}
+.econ-row{margin-bottom:.8rem}
+.econ-label{color:var(--text3);font-size:.65rem;font-weight:600;letter-spacing:.06em;
+  text-transform:uppercase;margin-bottom:.15rem}
+.econ-val{font-size:1.1rem;font-weight:800;color:var(--teal)}
+.econ-val.amber{color:#f59e0b}
+
+.footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 5% 1.5rem}
+.footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:3rem;margin-bottom:2.5rem}
+.footer-brand-name{font-size:1rem;font-weight:800;letter-spacing:.06em;margin-bottom:.6rem}
+.footer-brand-name span{color:var(--teal)}
+.footer-tagline{color:var(--text2);font-size:.82rem;margin-bottom:.5rem}
+.footer-copy{color:var(--text3);font-size:.75rem}
+.footer-col-label{color:var(--text3);font-size:.7rem;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;display:block;margin-bottom:.8rem}
+.footer-links{display:flex;flex-direction:column;gap:.5rem}
+.footer-link{color:var(--text2);font-size:.82rem;transition:color .2s}
+.footer-link:hover{color:var(--teal)}
+.footer-bottom{border-top:1px solid var(--border);padding-top:1.2rem;
+  color:var(--text3);font-size:.75rem;text-align:center}
+
+@media(max-width:900px){
+  .bench-layout{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .dash-body{grid-template-columns:1fr}
+  .dash-sidebar{display:none!important}
+  .metric-cards{grid-template-columns:repeat(2,1fr)}
+  .charts-row{grid-template-columns:1fr}
+  .bottom-row{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .nav-links{display:none}
+  .hero h1{font-size:2rem}
+  .metric-cards{grid-template-columns:1fr 1fr}
+  .pricing-grid{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr}
+}
+</style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════════
-     NAVIGATION
-     ═══════════════════════════════════════════════ -->
-<nav class="nav" id="nav" role="navigation" aria-label="Main navigation">
-  <div class="nav__inner">
-
-    <a href="#" class="nav__brand" aria-label="AuraSense SFSVC home">
-      <span class="nav__wordmark">
-        <span class="nav__wordmark-aura">AURA</span><span class="nav__wordmark-sense">SENSE</span>
-      </span>
-      <span class="nav__badge" aria-label="Product: SFSVC">SFSVC</span>
-    </a>
-
-    <ul class="nav__links" id="navLinks">
-      <li><a href="#technology" class="nav__link" data-nav>Technology</a></li>
-      <li><a href="#benchmark"  class="nav__link" data-nav>Benchmark</a></li>
-      <li><a href="#licensing"  class="nav__link" data-nav>Licensing</a></li>
-      <li><a href="#about"      class="nav__link" data-nav>About</a></li>
-    </ul>
-
-    <div class="nav__cta">
-      <a href="#licensing" class="btn-outline-cyan">Get License</a>
-    </div>
-
-    <button class="nav__hamburger" id="hamburger" aria-label="Toggle navigation" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
-
+<nav class="nav">
+  <a href="#" class="nav-brand">
+    <div class="nav-logo">A</div>
+    AURA<span>SENSE</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#technology">Technology</a></li>
+    <li><a href="#benchmark">Live Demo</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#footer">Contact</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button class="btn-ghost">Sign In</button>
+    <a href="#pricing" class="btn-primary">Get Started <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
   </div>
 </nav>
 
-
-<!-- ═══════════════════════════════════════════════
-     HERO
-     ═══════════════════════════════════════════════ -->
-<section class="hero" id="hero" aria-labelledby="hero-heading">
-
-  <div class="hero__bg" aria-hidden="true">
-    <div class="hero__bg-glow"></div>
-    <div class="hero__bg-grid"></div>
-    <div class="hero__bg-line-left"></div>
-    <div class="hero__bg-line-right"></div>
-  </div>
-
-  <div class="hero__content">
-
-    <div class="hero__badge hero-anim hero-anim--badge" aria-label="Neuromorphic Perception, SDK version 2">
-      <span class="hero__badge-dot" aria-hidden="true"></span>
-      Neuromorphic Perception &nbsp;·&nbsp; SDK v2
+<section class="hero" id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+    <span class="hero-badge">Patent Pending US 63/975,351</span>
+    <h1>Neuromorphic Perception<br>for Autonomous Drones<br>and Robotics</h1>
+    <p>Inspired by neuroscientists' story of the frog's retina — spikes, not pixels, as the way biology does it.<br><br>AuraSense SFSVC delivers real-time structural health monitoring for tunnels, bridges, facades, and rooftops. Sub-millisecond latency on standard hardware. No GPU required.</p>
+    <div class="hero-ctas">
+      <a href="#pricing" class="btn-cta-primary">Start Free Trial <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      <a href="#benchmark" class="btn-cta-secondary">See Live Demo</a>
     </div>
-
-    <div class="hero__headline" id="hero-heading">
-      <span class="hero__line1 hero-anim hero-anim--line1">Neuromorphic Codec.</span>
-      <span class="hero__line2 hero-anim hero-anim--line2">Retina for Drones.</span>
-    </div>
-
-    <p class="hero__sub hero-anim hero-anim--sub">
-      SFSVC encodes drone video through biological spike trains.<br>
-      Edge-native. Sub-2ms. No GPU.
-    </p>
-
-    <div class="hero__cta hero-anim hero-anim--cta">
-      <a href="#licensing" class="btn btn-primary">Start at $9.9 / drone</a>
-      <a href="#benchmark" class="btn btn-secondary">Watch Benchmark &#9654;</a>
-    </div>
-
-    <div class="hero__metrics hero-anim hero-anim--metrics" aria-label="Key performance metrics">
-
-      <div class="hero__metric">
-        <span class="hero__metric-value" data-counter data-target="2" data-prefix="&lt;&nbsp;" data-suffix="ms" aria-label="P95 Latency: under 2 milliseconds">
-          &lt;&nbsp;2ms
-        </span>
-        <span class="hero__metric-label">P95 Latency</span>
-      </div>
-
-      <div class="hero__metric">
-        <span class="hero__metric-value" data-counter data-target="8" data-suffix="" aria-label="8 parallel lanes">
-          8
-        </span>
-        <span class="hero__metric-label">Lanes Parallel</span>
-      </div>
-
-      <div class="hero__metric">
-        <span class="hero__metric-value" data-suffix=" GPU" aria-label="Zero GPU required">
-          0 GPU
-        </span>
-        <span class="hero__metric-label">Required</span>
-      </div>
-
-    </div>
-
-  </div>
-
-  <div class="hero__scroll hero-anim hero-anim--scroll" aria-hidden="true">
-    <div class="hero__scroll-arrow"></div>
-  </div>
-
-</section>
-
-
-<!-- ═══════════════════════════════════════════════
-     MARQUEE STRIP
-     ═══════════════════════════════════════════════ -->
-<div class="marquee-strip" aria-hidden="true">
-  <div class="marquee-track" id="marqueeTrack">
-    <span class="marquee-item">SFSVC SDK v2</span>
-    <span class="marquee-item">Sub-2ms Latency</span>
-    <span class="marquee-item">Edge-Native</span>
-    <span class="marquee-item">No GPU Required</span>
-    <span class="marquee-item">Ed25519 Licensed</span>
-    <span class="marquee-item">BVLOS-Ready</span>
-    <span class="marquee-item">Hong Kong &#x1F1ED;&#x1F1F0;</span>
-    <span class="marquee-item">Neuromorphic Perception</span>
-    <span class="marquee-item">Spike-Based Encoding</span>
-    <span class="marquee-item">Linux ARM x86</span>
-    <span class="marquee-item">SFSVC SDK v2</span>
-    <span class="marquee-item">Sub-2ms Latency</span>
-    <span class="marquee-item">Edge-Native</span>
-    <span class="marquee-item">No GPU Required</span>
-    <span class="marquee-item">Ed25519 Licensed</span>
-    <span class="marquee-item">BVLOS-Ready</span>
-    <span class="marquee-item">Hong Kong &#x1F1ED;&#x1F1F0;</span>
-    <span class="marquee-item">Neuromorphic Perception</span>
-    <span class="marquee-item">Spike-Based Encoding</span>
-    <span class="marquee-item">Linux ARM x86</span>
-  </div>
-</div>
-
-
-<!-- ═══════════════════════════════════════════════
-     TECHNOLOGY SECTION
-     ═══════════════════════════════════════════════ -->
-<section class="section-tech" id="technology" aria-labelledby="tech-title">
-  <div class="container">
-
-    <header class="section-tech__header scroll-reveal">
-      <span class="section-label">Architecture</span>
-      <h2 class="text-section" id="tech-title">Built different.</h2>
-      <p class="section-tech__subtitle">
-        Not a neural network. Not a traditional codec.<br>
-        A new class of perception engine.
-      </p>
-    </header>
-
-    <div class="tech-grid-wrapper">
-
-      <article class="tech-card scroll-reveal delay-1">
-        <div class="tech-card__icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="4"/>
-            <path d="M2 12C4.5 6 9 3 12 3s7.5 3 10 9c-2.5 6-7 9-10 9s-7.5-3-10-9z"/>
-            <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/>
-          </svg>
-        </div>
-        <h3 class="tech-card__title">Retinal Spike Encoding</h3>
-        <p class="tech-card__body">
-          Temporal contrast detection converts raw video to sparse spike trains at
-          source — eliminating redundant pixel data before any processing begins.
-        </p>
-      </article>
-
-      <article class="tech-card scroll-reveal delay-2">
-        <div class="tech-card__icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.5" stroke-linecap="round">
-            <line x1="4" y1="6"  x2="20" y2="6"/>
-            <line x1="4" y1="10" x2="20" y2="10"/>
-            <line x1="4" y1="14" x2="20" y2="14"/>
-            <line x1="4" y1="18" x2="20" y2="18"/>
-          </svg>
-        </div>
-        <h3 class="tech-card__title">Multi-Lane Parallel Processing</h3>
-        <p class="tech-card__body">
-          SIMD-parallelised frequency decomposition across independent processing
-          lanes. Controlled latency under 2ms on embedded Linux — no GPU, no cloud.
-        </p>
-      </article>
-
-      <article class="tech-card scroll-reveal delay-3">
-        <div class="tech-card__icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.5" stroke-linecap="round">
-            <rect x="7" y="7" width="10" height="10" rx="1"/>
-            <line x1="9"  y1="7"  x2="9"  y2="4"/>
-            <line x1="12" y1="7"  x2="12" y2="4"/>
-            <line x1="15" y1="7"  x2="15" y2="4"/>
-            <line x1="9"  y1="17" x2="9"  y2="20"/>
-            <line x1="12" y1="17" x2="12" y2="20"/>
-            <line x1="15" y1="17" x2="15" y2="20"/>
-            <line x1="7"  y1="9"  x2="4"  y2="9"/>
-            <line x1="7"  y1="12" x2="4"  y2="12"/>
-            <line x1="7"  y1="15" x2="4"  y2="15"/>
-            <line x1="17" y1="9"  x2="20" y2="9"/>
-            <line x1="17" y1="12" x2="20" y2="12"/>
-            <line x1="17" y1="15" x2="20" y2="15"/>
-          </svg>
-        </div>
-        <h3 class="tech-card__title">Edge-Native Deployment</h3>
-        <p class="tech-card__body">
-          Runs entirely on-device across mini PCs, drone payloads, and embedded ARM.
-          License validates offline via Ed25519 cryptographic proof.
-        </p>
-      </article>
-
+    <div class="hero-metrics">
+      <div class="hero-metric"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg><strong>P95 &lt; 2.5ms</strong></div>
+      <div class="hero-metric"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg><strong>8-Lane Pipeline</strong></div>
+      <div class="hero-metric"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23,6 13.5,15.5 8.5,10.5 1,18"/></svg><strong>10x Compression</strong></div>
+      <div class="hero-metric"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg><strong>Edge AI</strong></div>
     </div>
   </div>
 </section>
 
-
-<!-- ═══════════════════════════════════════════════
-     BENCHMARK VIDEO SECTION
-     ═══════════════════════════════════════════════ -->
-<section class="section-benchmark" id="benchmark" aria-labelledby="benchmark-title">
+<section class="section" id="technology">
   <div class="container">
-    <div class="benchmark-layout">
-
-      <div class="scroll-reveal">
-        <div class="benchmark-video-wrap">
-          <video
-            id="benchmarkVideo"
-            src="./assets/sfsvc_demo.mp4"
-            muted
-            loop
-            playsinline
-            preload="metadata"
-            aria-label="Live SFSVC crack detection demo video"
-          ></video>
-          <div class="benchmark-video-overlay" id="videoOverlay" role="button" tabindex="0" aria-label="Play demo video">
-            <div class="benchmark-play-btn" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="currentColor" style="color:var(--accent-cyan)">
-                <polygon points="5,3 19,12 5,21"/>
-              </svg>
-            </div>
-          </div>
-        </div>
-        <p class="benchmark-caption">Live crack detection &nbsp;·&nbsp; 1280x720 &nbsp;·&nbsp; 30fps</p>
+    <span class="section-label">Architecture</span>
+    <h2 class="section-title">Built different.</h2>
+    <p class="section-sub">Not a neural network. Not a traditional codec. A new class of perception engine inspired by biological vision.</p>
+    <div class="tech-grid">
+      <div class="tech-card">
+        <div class="tech-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="4"/><path d="M2 12C4.5 6 9 3 12 3s7.5 3 10 9c-2.5 6-7 9-10 9s-7.5-3-10-9z"/></svg></div>
+        <h3>Retinal Spike Encoding</h3>
+        <p>Temporal contrast detection converts raw video to sparse spike trains at source — eliminating redundant pixel data before any processing begins. Zero hallucinations on wet surfaces or shadows.</p>
       </div>
+      <div class="tech-card">
+        <div class="tech-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="10" x2="20" y2="10"/><line x1="4" y1="14" x2="20" y2="14"/><line x1="4" y1="18" x2="20" y2="18"/></svg></div>
+        <h3>8-Lane Parallel Processing</h3>
+        <p>SIMD-parallelised frequency decomposition across 8 independent lanes: crack detection, spalling, looming, vibration, thermal, corrosion, deformation, and anomaly — all simultaneously.</p>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="7" y="7" width="10" height="10" rx="1"/><line x1="9" y1="7" x2="9" y2="4"/><line x1="12" y1="7" x2="12" y2="4"/><line x1="15" y1="7" x2="15" y2="4"/><line x1="9" y1="17" x2="9" y2="20"/><line x1="12" y1="17" x2="12" y2="20"/><line x1="15" y1="17" x2="15" y2="20"/></svg></div>
+        <h3>STDP Adaptive Learning</h3>
+        <p>Spike-Timing-Dependent Plasticity strengthens detection accuracy over repeat inspections. The system learns your site's material signature — accuracy improves every flight, no retraining required.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-      <div class="scroll-reveal delay-2">
+<section class="section" id="benchmark" style="background:var(--bg2)">
+  <div class="container">
+    <div class="bench-layout">
+      <div>
         <span class="section-label">Benchmark</span>
-        <h2 class="benchmark-stats__title" id="benchmark-title">Numbers that matter.</h2>
-
-        <div class="benchmark-metrics" id="benchmarkMetrics">
-
-          <div class="benchmark-metric">
-            <div class="benchmark-metric__row">
-              <span class="benchmark-metric__label">P95 Latency</span>
-              <span class="benchmark-metric__value">1.87ms</span>
-            </div>
-            <div class="benchmark-bar-bg">
-              <div class="benchmark-bar-fill bar-delay-0" style="--bar-target:94%" data-bar="94"></div>
-            </div>
-          </div>
-
-          <div class="benchmark-metric">
-            <div class="benchmark-metric__row">
-              <span class="benchmark-metric__label">Detection Accuracy</span>
-              <span class="benchmark-metric__value">99.2%</span>
-            </div>
-            <div class="benchmark-bar-bg">
-              <div class="benchmark-bar-fill bar-delay-1" style="--bar-target:99%" data-bar="99"></div>
-            </div>
-          </div>
-
-          <div class="benchmark-metric">
-            <div class="benchmark-metric__row">
-              <span class="benchmark-metric__label">Power Draw</span>
-              <span class="benchmark-metric__value">4.2W</span>
-            </div>
-            <div class="benchmark-bar-bg">
-              <div class="benchmark-bar-fill bar-delay-2" style="--bar-target:28%" data-bar="28"></div>
-            </div>
-          </div>
-
-          <div class="benchmark-metric">
-            <div class="benchmark-metric__row">
-              <span class="benchmark-metric__label">GPU Usage</span>
-              <span class="benchmark-metric__value">0.0%</span>
-            </div>
-            <div class="benchmark-bar-bg">
-              <div class="benchmark-bar-fill bar-delay-3 bar-dim" style="--bar-target:0%" data-bar="0"></div>
-            </div>
-          </div>
-
+        <h2 class="section-title">Numbers that matter.</h2>
+        <div class="bench-metrics">
+          <div class="bench-metric"><div class="bench-row"><span class="bench-label">P95 Latency</span><span class="bench-val">1.87ms</span></div><div class="bench-bar-bg"><div class="bench-bar-fill" data-w="94"></div></div></div>
+          <div class="bench-metric"><div class="bench-row"><span class="bench-label">Detection Accuracy</span><span class="bench-val">99.2%</span></div><div class="bench-bar-bg"><div class="bench-bar-fill" data-w="99"></div></div></div>
+          <div class="bench-metric"><div class="bench-row"><span class="bench-label">Bandwidth Savings</span><span class="bench-val">90.7%</span></div><div class="bench-bar-bg"><div class="bench-bar-fill" data-w="91"></div></div></div>
+          <div class="bench-metric"><div class="bench-row"><span class="bench-label">GPU Usage</span><span class="bench-val">0.0%</span></div><div class="bench-bar-bg"><div class="bench-bar-fill" data-w="0" style="background:#333"></div></div></div>
         </div>
-
-        <p class="benchmark-highlight">87x less power than GPU-based CV pipelines.</p>
+        <p class="bench-note">87x less power than GPU-based CV pipelines.</p>
       </div>
-
+      <div class="bench-video">
+        <div class="bench-video-inner">
+          <div class="play-btn"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg></div>
+          <p class="bench-caption">Live crack detection · 1280×720 · 30fps</p>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-
-<!-- ═══════════════════════════════════════════════
-     PRICING / LICENSING SECTION
-     ═══════════════════════════════════════════════ -->
-<section class="section-pricing" id="licensing" aria-labelledby="pricing-title">
+<section class="dash-section" id="dashboard">
   <div class="container">
+    <span class="section-label">Live Engine Preview</span>
+    <h2 class="section-title">Watch SFSVC in action.</h2>
+    <p class="section-sub">Simulated preview mirrors actual engine telemetry your team receives during inspection operations.</p>
+    <div class="dash-wrap">
+      <div class="dash-nav">
+        <div class="dash-nav-brand"><div class="dash-nav-logo"></div>AURA<span>SENSE</span></div>
+        <div style="display:flex;align-items:center;gap:.6rem">
+          <button class="btn-ghost" style="font-size:.75rem">Sign In</button>
+          <a href="#pricing" class="btn-primary" style="font-size:.75rem;padding:.3rem .8rem">Get Started</a>
+        </div>
+      </div>
+      <div class="dash-body">
+        <div class="dash-sidebar">
+          <div style="padding:.5rem 0">
+            <div class="dash-sidebar-label">Navigation</div>
+            <div class="dash-sidebar-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Overview</div>
+            <div class="dash-sidebar-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>SFSVC Engine</div>
+            <div class="dash-sidebar-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>Portfolio</div>
+            <div class="dash-sidebar-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>Reports</div>
+            <div class="dash-sidebar-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Settings</div>
+          </div>
+          <div style="margin-top:auto;padding:1rem;border-top:1px solid var(--border);display:flex;align-items:center;gap:.6rem">
+            <div class="dash-avatar">D</div>
+            <div><div style="font-weight:600;color:var(--text);font-size:.78rem">Dickson Chau</div><div style="color:var(--text3);font-size:.68rem">demo@aurasensehk.com</div></div>
+          </div>
+        </div>
+        <div class="dash-main">
+          <div class="dash-top">
+            <div class="dash-engine-title"><span>SFSVC Engine</span><span class="badge teal">v5.0</span><span class="badge">US 63/975,351</span></div>
+            <div class="dash-status"><span class="badge running">RUNNING</span><span style="font-size:.72rem;color:var(--text3)" id="elapsed">13.0s elapsed · 3,639 frames · SLA ✓</span><button class="btn-stop">STOP</button></div>
+          </div>
+          <div class="metric-cards">
+            <div class="metric-card"><div class="metric-card-header"><span class="metric-card-label">Control Rate</span><div class="metric-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c5.5-2 10-7 10-12A10 10 0 002 10c0 5 4.5 10 10 12z"/></svg></div></div><div class="metric-value" id="cr-val">286<span class="unit">Hz</span></div><div class="metric-sub">Target: 160 Hz</div></div>
+            <div class="metric-card"><div class="metric-card-header"><span class="metric-card-label">L1 P95 Lat</span><div class="metric-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg></div></div><div class="metric-value" id="lat-val">2.055<span class="unit">ms</span></div><div class="metric-sub">SLA: 6 ms</div></div>
+            <div class="metric-card"><div class="metric-card-header"><span class="metric-card-label">Crack Rate</span><div class="metric-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div></div><div class="metric-value">8.8<span class="unit">%</span></div><div class="metric-sub">318 detections</div></div>
+            <div class="metric-card"><div class="metric-card-header"><span class="metric-card-label">YOLO Age</span><div class="metric-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13,2 3,14 12,14 11,22 21,10 12,10"/></svg></div></div><div class="metric-value">48<span class="unit">ms</span></div><div class="metric-sub">Bonding layer</div></div>
+          </div>
+          <div class="charts-row">
+            <div class="chart-card"><div class="chart-header"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>Control Rate (Hz)</div><div class="sparkline"><svg id="cr-chart" viewBox="0 0 300 60" preserveAspectRatio="none"><polyline id="cr-line" fill="none" stroke="#00c9a7" stroke-width="1.5" points=""/></svg></div><div><span class="chart-samples">60 samples</span><span class="chart-val" id="cr-last">286 Hz</span></div></div>
+            <div class="chart-card"><div class="chart-header"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>L1 Latency (ms)</div><div class="sparkline"><svg id="lat-chart" viewBox="0 0 300 60" preserveAspectRatio="none"><polyline id="lat-line" fill="none" stroke="#a78bfa" stroke-width="1.5" points=""/></svg></div><div><span class="chart-samples">60 samples</span><span class="chart-val" id="lat-last" style="color:#a78bfa">2.055 ms</span></div></div>
+          </div>
+          <div class="bottom-row">
+            <div class="lane-card"><div class="lane-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.5 12a9.5 9.5 0 1119 0"/></svg>8-Lane Pipeline Status</div><div class="lanes-grid"><div class="lane-item"><div class="lane-dot"></div><div><div class="lane-name">RT Core</div><div class="lane-freq">286 Hz / 160 target</div></div></div><div class="lane-item"><div class="lane-dot"></div><div><div class="lane-name">Signature</div><div class="lane-freq">135 Hz / 30 target</div></div></div><div class="lane-item"><div class="lane-dot"></div><div><div class="lane-name">YOLO Bond</div><div class="lane-freq">20 Hz / 5 target</div></div></div><div class="lane-item"><div class="lane-dot"></div><div><div class="lane-name">Uplink</div><div class="lane-freq">21 Hz / 5 target</div></div></div><div class="lane-item"><div class="lane-dot"></div><div><div class="lane-name">Looming</div><div class="lane-freq">60 Hz / 30 target</div></div></div><div class="lane-item"><div class="lane-dot"></div><div><div class="lane-name">Thermal</div><div class="lane-freq">45 Hz / 15 target</div></div></div><div class="lane-item"><div class="lane-dot"></div><div><div class="lane-name">STDP Learn</div><div class="lane-freq">30 Hz / 10 target</div></div></div><div class="lane-item"><div class="lane-dot"></div><div><div class="lane-name">Vibration</div><div class="lane-freq">50 Hz / 20 target</div></div></div></div></div>
+            <div class="econ-card"><div class="econ-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23,6 13.5,15.5 8.5,10.5 1,18"/></svg>Economics</div><div class="econ-row"><div class="econ-label">Compression</div><div class="econ-val">9.94x</div></div><div class="econ-row"><div class="econ-label">BW Savings</div><div class="econ-val">90.70%</div></div><div class="econ-row"><div class="econ-label">Annual / 1000 km</div><div class="econ-val">$116,667</div></div><div class="econ-row"><div class="econ-label">Fused Crack Score</div><div class="econ-val amber">0.111</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <header class="section-pricing__header scroll-reveal">
-      <span class="section-label">Licensing</span>
-      <h2 class="text-section" id="pricing-title">Per drone. Per month.</h2>
-      <p class="section-pricing__subtitle">
-        One key per drone. Validates offline. Cancel anytime.
-      </p>
-    </header>
-
+<section class="section" id="pricing">
+  <div class="container">
+    <span class="section-label">Licensing</span>
+    <h2 class="section-title">Per drone. Per month.</h2>
+    <p class="section-sub">One key per drone. Validates offline. Cancel anytime.</p>
     <div class="pricing-grid">
-
-      <article class="pricing-card scroll-reveal delay-1" aria-labelledby="tier-starter">
-        <span class="pricing-tier-label" id="tier-starter">Starter</span>
-        <div class="pricing-price">
-          <span class="pricing-price__amount">$9.9</span>
-          <span class="pricing-price__unit">/mo</span>
-        </div>
-        <span class="pricing-drones">1 drone activation</span>
-        <hr class="pricing-divider" />
-        <ul class="pricing-features" aria-label="Starter plan features">
-          <li class="pricing-feature">1 drone activation</li>
-          <li class="pricing-feature">Ed25519 license key</li>
-          <li class="pricing-feature">Offline validation</li>
-          <li class="pricing-feature">Email delivery</li>
-          <li class="pricing-feature">30-day renewal</li>
-        </ul>
-        <a href="#" data-tier="starter" class="btn-card-outline">Get Starter License</a>
-      </article>
-
-      <article class="pricing-card scroll-reveal delay-2" aria-labelledby="tier-growth">
-        <span class="pricing-tier-label" id="tier-growth">Growth</span>
-        <div class="pricing-price">
-          <span class="pricing-price__amount">$19.9</span>
-          <span class="pricing-price__unit">/mo</span>
-        </div>
-        <span class="pricing-drones">4 drone activations</span>
-        <hr class="pricing-divider" />
-        <ul class="pricing-features" aria-label="Growth plan features">
-          <li class="pricing-feature">4 drone activations</li>
-          <li class="pricing-feature">Floating license</li>
-          <li class="pricing-feature">Ed25519 license key</li>
-          <li class="pricing-feature">Offline validation</li>
-          <li class="pricing-feature">Email delivery</li>
-        </ul>
-        <a href="#" data-tier="growth" class="btn-card-outline">Get Growth License</a>
-      </article>
-
-      <article class="pricing-card pricing-card--featured scroll-reveal delay-3" aria-labelledby="tier-group">
-        <span class="pricing-popular-badge" aria-label="Most popular plan">POPULAR</span>
-        <span class="pricing-tier-label" id="tier-group">Group</span>
-        <div class="pricing-price">
-          <span class="pricing-price__amount">$29.9</span>
-          <span class="pricing-price__unit">/mo</span>
-        </div>
-        <span class="pricing-drones">6 drone activations</span>
-        <hr class="pricing-divider" />
-        <ul class="pricing-features" aria-label="Group plan features">
-          <li class="pricing-feature">6 drone activations</li>
-          <li class="pricing-feature">Floating license</li>
-          <li class="pricing-feature">Ed25519 license key</li>
-          <li class="pricing-feature">Offline validation</li>
-          <li class="pricing-feature">Priority email support</li>
-        </ul>
-        <a href="#" data-tier="group" class="btn-card-filled">Get Group License</a>
-      </article>
-
-      <article class="pricing-card scroll-reveal delay-4" aria-labelledby="tier-enterprise">
-        <span class="pricing-tier-label" id="tier-enterprise">Enterprise</span>
-        <div class="pricing-price">
-          <span class="pricing-price__amount">$99.9</span>
-          <span class="pricing-price__unit">/mo</span>
-        </div>
-        <span class="pricing-drones">15 drones &middot; 3 fleets</span>
-        <hr class="pricing-divider" />
-        <ul class="pricing-features" aria-label="Enterprise plan features">
-          <li class="pricing-feature">15 drones &middot; 3 fleets</li>
-          <li class="pricing-feature">Floating license</li>
-          <li class="pricing-feature">Ed25519 license key</li>
-          <li class="pricing-feature">Offline validation</li>
-          <li class="pricing-feature">Dedicated support</li>
-        </ul>
-        <a href="#" data-tier="enterprise" class="btn-card-outline">Get Enterprise License</a>
-      </article>
-
+      <div class="pricing-card"><span class="pricing-tier">Starter</span><div class="pricing-price"><span class="pricing-amount">$9.9</span><span class="pricing-unit">/mo</span></div><span class="pricing-drones">1 drone activation</span><hr class="pricing-divider"/><ul class="pricing-features"><li class="pricing-feature">1 drone activation</li><li class="pricing-feature">Ed25519 license key</li><li class="pricing-feature">Offline validation</li><li class="pricing-feature">Email delivery</li><li class="pricing-feature">30-day renewal</li></ul><button class="btn-card">Get Starter License</button></div>
+      <div class="pricing-card"><span class="pricing-tier">Growth</span><div class="pricing-price"><span class="pricing-amount">$19.9</span><span class="pricing-unit">/mo</span></div><span class="pricing-drones">4 drone activations</span><hr class="pricing-divider"/><ul class="pricing-features"><li class="pricing-feature">4 drone activations</li><li class="pricing-feature">Floating license</li><li class="pricing-feature">Ed25519 license key</li><li class="pricing-feature">Offline validation</li><li class="pricing-feature">Email delivery</li></ul><button class="btn-card">Get Growth License</button></div>
+      <div class="pricing-card featured"><span class="popular-badge">POPULAR</span><span class="pricing-tier">Group</span><div class="pricing-price"><span class="pricing-amount">$29.9</span><span class="pricing-unit">/mo</span></div><span class="pricing-drones">6 drone activations</span><hr class="pricing-divider"/><ul class="pricing-features"><li class="pricing-feature">6 drone activations</li><li class="pricing-feature">Floating license</li><li class="pricing-feature">Ed25519 license key</li><li class="pricing-feature">Offline validation</li><li class="pricing-feature">Priority email support</li></ul><button class="btn-card filled">Get Group License</button></div>
+      <div class="pricing-card"><span class="pricing-tier">Enterprise</span><div class="pricing-price"><span class="pricing-amount">$99.9</span><span class="pricing-unit">/mo</span></div><span class="pricing-drones">15 drones · 3 fleets</span><hr class="pricing-divider"/><ul class="pricing-features"><li class="pricing-feature">15 drones · 3 fleets</li><li class="pricing-feature">Floating license</li><li class="pricing-feature">Ed25519 license key</li><li class="pricing-feature">Offline validation</li><li class="pricing-feature">Dedicated support</li></ul><button class="btn-card">Get Enterprise License</button></div>
     </div>
   </div>
 </section>
 
-
-<!-- ═══════════════════════════════════════════════
-     FOOTER
-     ═══════════════════════════════════════════════ -->
-<footer class="footer" id="about" role="contentinfo">
-  <div class="container">
-
-    <div class="footer__grid">
-
-      <div>
-        <div class="footer__brand-name">
-          AURASENSE&nbsp;<span>SFSVC</span>
-        </div>
-        <p class="footer__tagline">
-          Neuromorphic perception for autonomous systems.
-        </p>
-        <p class="footer__copyright">&copy; 2026 AuraSense Limited</p>
-      </div>
-
-      <nav aria-label="Product links">
-        <span class="footer__col-label">Product</span>
-        <ul class="footer__links">
-          <li><a href="#technology" class="footer__link">Technology</a></li>
-          <li><a href="#benchmark"  class="footer__link">Benchmark</a></li>
-          <li><a href="#licensing"  class="footer__link">Licensing</a></li>
-          <li><a href="#"           class="footer__link">Documentation</a></li>
-        </ul>
-      </nav>
-
-      <nav aria-label="Company links">
-        <span class="footer__col-label">Company</span>
-        <ul class="footer__links">
-          <li><a href="#about"                        class="footer__link">About</a></li>
-          <li><a href="mailto:support@aurasensehk.com" class="footer__link">Contact</a></li>
-          <li><a href="#"                             class="footer__link">Privacy Policy</a></li>
-          <li><a href="#"                             class="footer__link">Terms of Service</a></li>
-        </ul>
-      </nav>
-
-      <div>
-        <span class="footer__col-label">Contact</span>
-        <ul class="footer__links">
-          <li>
-            <a href="mailto:support@aurasensehk.com" class="footer__link">
-              support@aurasensehk.com
-            </a>
-          </li>
-          <li><a href="https://github.com/Dicksonchau1" class="footer__link" target="_blank" rel="noopener noreferrer">GitHub</a></li>
-          <li><a href="#" class="footer__link">LinkedIn</a></li>
-        </ul>
-      </div>
-
-    </div>
-
-    <div class="footer__bottom">
-      SFSVC SDK v2.0 &nbsp;&mdash;&nbsp; Ed25519 Licensed &nbsp;&mdash;&nbsp;
-      Neuromorphic Perception Engine &nbsp;&mdash;&nbsp; Built in Hong Kong &#x1F1ED;&#x1F1F0;
-    </div>
-
+<footer class="footer" id="footer">
+  <div class="footer-grid">
+    <div><div class="footer-brand-name">AURASENSE <span>SFSVC</span></div><p class="footer-tagline">Neuromorphic perception for autonomous systems.</p><p class="footer-copy">© 2026 AuraSense Limited</p></div>
+    <nav><span class="footer-col-label">Product</span><ul class="footer-links"><li><a href="#technology" class="footer-link">Technology</a></li><li><a href="#benchmark" class="footer-link">Benchmark</a></li><li><a href="#pricing" class="footer-link">Licensing</a></li><li><a href="#dashboard" class="footer-link">Live Demo</a></li></ul></nav>
+    <nav><span class="footer-col-label">Company</span><ul class="footer-links"><li><a href="#" class="footer-link">About</a></li><li><a href="mailto:support@aurasensehk.com" class="footer-link">Contact</a></li><li><a href="#" class="footer-link">Privacy Policy</a></li><li><a href="#" class="footer-link">Terms of Service</a></li></ul></nav>
+    <div><span class="footer-col-label">Contact</span><ul class="footer-links"><li><a href="mailto:dicksonchau@aurasensehk.com" class="footer-link">dicksonchau@aurasensehk.com</a></li><li><a href="https://github.com/Dicksonchau1" class="footer-link" target="_blank">GitHub</a></li><li><a href="#" class="footer-link">LinkedIn</a></li></ul></div>
   </div>
+  <div class="footer-bottom">SFSVC SDK v2.0 &mdash; Ed25519 Licensed &mdash; Neuromorphic Perception Engine &mdash; Built in Hong Kong 🇭🇰</div>
 </footer>
 
+<script>
+const bars=document.querySelectorAll('.bench-bar-fill');
+const io=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){x.target.style.width=x.target.dataset.w+'%'}})},{threshold:.3});
+bars.forEach(b=>io.observe(b));
 
-<script src="js/main.js" defer></script>
+const crData=[],latData=[];
+for(let i=0;i<60;i++){crData.push(280+Math.random()*20);latData.push(2+Math.random()*.4);}
 
+function pts(data,w,h){const mn=Math.min(...data),mx=Math.max(...data),r=mx-mn||1;return data.map((v,i)=>`${(i/(data.length-1))*w},${h-((v-mn)/r)*(h-8)+4}`).join(' ');}
+
+let frames=3639,elapsed=13.0;
+setInterval(()=>{
+  crData.shift();crData.push(275+Math.random()*25);
+  latData.shift();latData.push(1.9+Math.random()*.4);
+  frames+=Math.floor(Math.random()*5+3);elapsed+=0.1;
+  document.getElementById('cr-line').setAttribute('points',pts(crData,300,60));
+  document.getElementById('lat-line').setAttribute('points',pts(latData,300,60));
+  const cr=crData[crData.length-1].toFixed(0),lat=latData[latData.length-1].toFixed(3);
+  document.getElementById('cr-val').innerHTML=cr+'<span class="unit">Hz</span>';
+  document.getElementById('lat-val').innerHTML=lat+'<span class="unit">ms</span>';
+  document.getElementById('cr-last').textContent=cr+' Hz';
+  document.getElementById('lat-last').textContent=lat+' ms';
+  document.getElementById('elapsed').textContent=elapsed.toFixed(1)+'s elapsed · '+frames.toLocaleString()+' frames · SLA ✓';
+},100);
+document.getElementById('cr-line').setAttribute('points',pts(crData,300,60));
+document.getElementById('lat-line').setAttribute('points',pts(latData,300,60));
+</script>
 </body>
 </html>
