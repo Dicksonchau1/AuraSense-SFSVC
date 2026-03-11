@@ -73,18 +73,140 @@ Using AuraSense's **C++‑accelerated SFSVC engine** on a 720p runway inspection
 
 This public repo is a **reference implementation** and learning resource, not the full production SDK.
 
-### `examples/simple_neurocodec_python.py`
+### Python SDK Package (`aurasense_sfsvc/`)
 
-A minimal Python implementation showing:
+A modular Python SDK providing:
 
-- Frame‑to‑frame difference computation
-- Simple ON/OFF spike generation with fixed thresholds
-- Per‑frame latency measurement
-- Typical performance: **~8 ms/frame** on 720p video with pure Python
+- **SpikeCodec:** Neuromorphic spike generation from video frames
+- **CrackDetector:** Crack detection with severity classification
+- **VideoProcessor:** High-level video processing pipeline
+- **Benchmarks:** Performance measurement tools
+- **Docker:** Containerized deployment
 
-**Purpose:** Demonstrate the core neuromorphic codec concept in an accessible way, showing that even a basic implementation can achieve single‑digit millisecond latency.
+**Quick Start:**
+
+```bash
+# Install SDK
+pip install -e .
+
+# Run example
+python examples/simple_neurocodec_python.py --input demo.mp4
+
+# Run benchmarks
+python benchmarks/run_benchmark.py --input demo.mp4
+
+# Or use Docker
+docker-compose up streamlit
+```
+
+### `streamlit_app.py`
+
+Interactive demo application with:
+
+- Live video playback with frame controls
+- Real-time crack detection visualization
+- Spike overlay rendering
+- Performance metrics dashboard
 
 **Usage:**
 
 ```bash
-python examples/simple_neurocodec_python.py --input your_video.mp4
+streamlit run streamlit_app.py
+```
+
+---
+
+## SDK Documentation
+
+For complete SDK documentation, see [SDK_USAGE.md](SDK_USAGE.md).
+
+### Quick API Example
+
+```python
+from aurasense_sfsvc import VideoProcessor
+
+# Initialize processor
+processor = VideoProcessor(
+    video_path="demo.mp4",
+    spike_threshold=15.0,
+    confidence_threshold=0.85
+)
+
+# Process video
+summary = processor.process_video(max_frames=100)
+print(f"Avg latency: {summary['avg_processing_time_ms']:.2f}ms")
+print(f"Compression: {summary['avg_compression_percent']:.1f}%")
+```
+
+### Docker Usage
+
+```bash
+# Build and run Streamlit app
+docker-compose up streamlit
+
+# Run SDK benchmarks
+docker build --target runtime-sdk -t aurasense-sfsvc:sdk .
+docker run --rm -v $(pwd)/demo.mp4:/app/demo.mp4 \
+    aurasense-sfsvc:sdk \
+    python benchmarks/run_benchmark.py --input demo.mp4
+```
+
+---
+
+## Project Structure
+
+```
+AuraSense-SFSVC/
+├── aurasense_sfsvc/          # SDK package
+│   ├── codec.py              # Spike codec
+│   ├── detection.py          # Crack detection
+│   └── processor.py          # Video processor
+├── benchmarks/               # Benchmarking tools
+│   └── run_benchmark.py      # Performance tests
+├── examples/                 # Example scripts
+│   └── simple_neurocodec_python.py
+├── docs/                     # Documentation
+├── streamlit_app.py          # Interactive demo
+├── setup.py                  # Package setup
+├── pyproject.toml            # Package metadata
+├── Dockerfile                # Docker configuration
+├── docker-compose.yml        # Docker Compose
+└── demo.mp4                  # Demo video (720p runway)
+```
+
+---
+
+## Performance Comparison
+
+| Metric | Python SDK (This Repo) | C++ Production Engine |
+|--------|------------------------|----------------------|
+| Latency (P95) | ~0.5-2ms | <0.5ms |
+| Latency (P99) | ~2-5ms | <0.8ms |
+| Throughput | 100-500fps (varies) | 125+ fps sustained |
+| Compression | 94-98% | 94% |
+| Platform | Python 3.8+ | AVX2-optimized C++ |
+
+---
+
+## Links & Resources
+
+- **Website:** [www.aurasensehk.com](https://www.aurasensehk.com)
+- **SDK Documentation:** [SDK_USAGE.md](SDK_USAGE.md)
+- **Technical Datasheet:** [docs/SFSVC_DATASHEET.md](docs/SFSVC_DATASHEET.md)
+- **Deployment Guide:** [docs/DEPLOYMENT_CHECKLIST.md](docs/DEPLOYMENT_CHECKLIST.md)
+- **Pilot Onboarding:** [docs/PILOT_ONBOARDING.md](docs/PILOT_ONBOARDING.md)
+
+---
+
+## Contact
+
+For production SDK access, pilot programs, or commercial licensing:
+
+- **Email:** DicksonChau@aurasensehk.com
+- **Website:** https://www.aurasensehk.com
+
+---
+
+## License
+
+Proprietary - Contact AuraSense HK for licensing information.

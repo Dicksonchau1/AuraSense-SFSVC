@@ -1,0 +1,80 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aurasense-sfsvc"
+version = "0.1.0"
+description = "Neuromorphic video codec layer for drone inspections with real-time crack detection"
+readme = "README.md"
+authors = [
+    {name = "AuraSense HK", email = "DicksonChau@aurasensehk.com"}
+]
+license = {text = "Proprietary"}
+requires-python = ">=3.8"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Image Recognition",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+keywords = ["neuromorphic", "codec", "crack-detection", "drone-inspection", "computer-vision"]
+
+dependencies = [
+    "numpy>=1.24.0",
+    "opencv-python-headless>=4.8.0",
+    "Pillow>=10.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "flake8>=6.0.0",
+    "mypy>=1.0.0",
+]
+streamlit = [
+    "streamlit>=1.30.0",
+    "python-dateutil>=2.8.2",
+]
+all = [
+    "aurasense-sfsvc[dev,streamlit]",
+]
+
+[project.urls]
+Homepage = "https://www.aurasensehk.com"
+Repository = "https://github.com/Dicksonchau1/AuraSense-SFSVC"
+Documentation = "https://dicksonchau1.github.io/AuraSense-SFSVC"
+
+[project.scripts]
+aurasense-benchmark = "benchmarks.run_benchmark:main"
+
+[tool.setuptools]
+packages = ["aurasense_sfsvc", "benchmarks", "examples"]
+
+[tool.setuptools.package-data]
+"*" = ["*.md", "*.txt"]
+
+[tool.black]
+line-length = 100
+target-version = ['py38', 'py39', 'py310', 'py311']
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+addopts = "-v --cov=aurasense_sfsvc --cov-report=term-missing"
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false

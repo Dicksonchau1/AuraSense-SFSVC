@@ -1,0 +1,68 @@
+# Docker Compose for AuraSense SFSVC
+version: '3.8'
+
+services:
+  # Streamlit Demo Application
+  streamlit:
+    build:
+      context: .
+      target: runtime-streamlit
+      dockerfile: Dockerfile
+    image: aurasense-sfsvc:streamlit
+    container_name: aurasense-streamlit
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./demo.mp4:/app/demo.mp4:ro
+      - ./data:/app/data:rw
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # SDK Runtime (for benchmarks/examples)
+  sdk:
+    build:
+      context: .
+      target: runtime-sdk
+      dockerfile: Dockerfile
+    image: aurasense-sfsvc:sdk
+    container_name: aurasense-sdk
+    volumes:
+      - ./demo.mp4:/app/demo.mp4:ro
+      - ./data:/app/data:rw
+      - ./output:/app/output:rw
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: python examples/simple_neurocodec_python.py --input demo.mp4
+    profiles:
+      - sdk
+
+  # Development Environment
+  dev:
+    build:
+      context: .
+      target: development
+      dockerfile: Dockerfile
+    image: aurasense-sfsvc:dev
+    container_name: aurasense-dev
+    volumes:
+      - .:/app:rw
+      - ./data:/app/data:rw
+    environment:
+      - PYTHONUNBUFFERED=1
+    stdin_open: true
+    tty: true
+    profiles:
+      - dev
+
+volumes:
+  data:
+    driver: local
+  output:
+    driver: local
