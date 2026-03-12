@@ -1276,7 +1276,7 @@ body {
     display: none;
   }
 
-  #about, #neuromorphic, #sdk, #facade, #usecases, #demo {
+  #about, #neuromorphic, #sdk, #facade, #usecases, #demo-hub, #demo {
     padding-right: 24px;
   }
 
@@ -1310,6 +1310,203 @@ body {
   .facade-thumbs { grid-template-columns: 1fr; }
   .about-stats { grid-template-columns: 1fr; }
   .logo-text { display: none; }
+}
+
+/* ═══════════════════════════════════════
+   DEMO HUB CARDS
+   ═══════════════════════════════════════ */
+#demo-hub {
+  padding-right: 76px;
+}
+
+.demo-hub-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 50px;
+}
+
+.demo-hub-card {
+  padding: 28px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: all 0.3s ease;
+}
+
+.demo-hub-card:hover {
+  border-color: var(--accent-cyan-dim);
+  box-shadow: var(--glow-cyan);
+  transform: translateY(-4px);
+}
+
+.demo-hub-card-roadmap:hover {
+  border-color: var(--accent-violet-dim);
+  box-shadow: 0 0 40px rgba(139,92,246,0.15);
+}
+
+.demo-hub-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.demo-hub-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.demo-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 100px;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  font-weight: 700;
+}
+
+.demo-status-live {
+  background: rgba(0, 229, 204, 0.1);
+  border: 1px solid rgba(0, 229, 204, 0.25);
+  color: var(--accent-cyan);
+}
+
+.demo-status-roadmap {
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  color: var(--accent-violet);
+}
+
+.demo-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-cyan);
+  animation: pulseDot 2s ease-in-out infinite;
+}
+
+.demo-hub-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.demo-hub-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  flex: 1;
+}
+
+.demo-hub-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: 10px;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  align-self: flex-start;
+}
+
+.demo-hub-btn-primary {
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+  color: var(--bg-primary);
+  border: none;
+}
+
+.demo-hub-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(0, 229, 204, 0.3);
+}
+
+.demo-hub-btn-secondary {
+  background: transparent;
+  color: var(--accent-violet);
+  border: 1px solid rgba(139, 92, 246, 0.4);
+}
+
+.demo-hub-btn-secondary:hover {
+  background: rgba(139, 92, 246, 0.1);
+  transform: translateY(-2px);
+}
+
+/* ═══════════════════════════════════════
+   IPAD-OPTIMISED (768px – 1024px)
+   ═══════════════════════════════════════ */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .hero-title { font-size: 2.8rem; }
+
+  .side-nav {
+    width: 52px;
+  }
+
+  .side-nav .nav-item .nav-label {
+    opacity: 0;
+  }
+
+  .side-nav:hover .nav-item .nav-label {
+    opacity: 1;
+  }
+
+  #about, #neuromorphic, #sdk, #facade, #usecases, #demo-hub, #demo {
+    padding-right: 76px;
+  }
+
+  .demo-hub-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .about-grid { grid-template-columns: 1fr; gap: 32px; }
+  .about-visual { height: 300px; }
+
+  .neuro-features { grid-template-columns: repeat(2, 1fr); }
+
+  .sdk-grid { grid-template-columns: repeat(2, 1fr); }
+
+  .facade-main { height: 380px; }
+
+  .usecase-card { gap: 24px; padding: 28px; }
+
+  .demo-wrap { grid-template-columns: 1fr; }
+
+  canvas.facade-iframe-fill,
+  iframe.facade-iframe-fill {
+    min-width: 80vw;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+  .hero-title { font-size: 2.8rem; }
+  .demo-hub-grid { grid-template-columns: repeat(2, 1fr); }
+  .about-grid { grid-template-columns: 1fr; }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+  .hero-title { font-size: 2.8rem; }
+  .demo-hub-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Demo hub responsive for small tablet */
+@media (max-width: 767px) {
+  #demo-hub { padding-right: 24px; }
+  .demo-hub-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -1352,6 +1549,10 @@ body {
     <span class="nav-icon"><i class="fas fa-rocket"></i></span>
     <span class="nav-label">Use Cases</span>
   </a>
+  <a class="nav-item" href="#demo-hub" onclick="smoothNav(event, 'demo-hub')">
+    <span class="nav-icon"><i class="fas fa-th-large"></i></span>
+    <span class="nav-label">Demo Hub</span>
+  </a>
   <a class="nav-item" href="#demo" onclick="smoothNav(event, 'demo')">
     <span class="nav-icon"><i class="fas fa-paper-plane"></i></span>
     <span class="nav-label">Request Demo</span>
@@ -1383,11 +1584,11 @@ body {
       with sub-millimeter precision mapping.
     </p>
     <div class="hero-actions">
-      <a class="btn-primary" href="#demo" onclick="smoothNav(event, 'demo')">
-        <i class="fas fa-paper-plane"></i> Request Demo
+      <a class="btn-primary" href="#demo-hub" onclick="smoothNav(event, 'demo-hub')">
+        <i class="fas fa-th-large"></i> View Demos
       </a>
-      <a class="btn-ghost" href="#sdk" onclick="smoothNav(event, 'sdk')">
-        <i class="fas fa-code"></i> Explore SDK
+      <a class="btn-ghost" href="#about" onclick="smoothNav(event, 'about')">
+        <i class="fas fa-info-circle"></i> About Us
       </a>
     </div>
   </div>
@@ -1677,11 +1878,85 @@ facade.<span class="fn">export</span>(<span class="str">"facade_report.glb"</spa
 </section>
 
 <!-- ═══════════════════════════════════════
+     DEMO HUB
+     ═══════════════════════════════════════ -->
+<div class="section-divider"></div>
+<section class="section reveal" id="demo-hub">
+  <div class="section-label">06 — Demo Hub</div>
+  <h2 class="section-title">Live Demos &amp;<br>Deployments</h2>
+  <p class="section-subtitle">
+    Explore our interactive technology demos. Each surface showcases a different
+    layer of the Aura Sense autonomous inspection stack.
+  </p>
+  <div class="demo-hub-grid">
+    <!-- Card 1: Facade Risk Map -->
+    <div class="demo-hub-card">
+      <div class="demo-hub-card-top">
+        <div class="demo-hub-icon" style="background: var(--accent-cyan-dim); color: var(--accent-cyan);">
+          <i class="fas fa-map-marked-alt"></i>
+        </div>
+        <span class="demo-status-badge demo-status-live">
+          <span class="demo-status-dot"></span> LIVE
+        </span>
+      </div>
+      <h3 class="demo-hub-title">Live Facade Risk Map</h3>
+      <p class="demo-hub-desc">
+        AI-powered heatmap overlaying structural risk data on building facades.
+        Real-time defect scoring with thermal and depth overlays.
+      </p>
+      <a class="demo-hub-btn demo-hub-btn-primary" href="./facade_map_v3.html" target="_blank" rel="noopener">
+        Launch Demo <i class="fas fa-arrow-right"></i>
+      </a>
+    </div>
+
+    <!-- Card 2: Inspection Dashboard -->
+    <div class="demo-hub-card">
+      <div class="demo-hub-card-top">
+        <div class="demo-hub-icon" style="background: var(--accent-blue-dim); color: var(--accent-blue);">
+          <i class="fas fa-tachometer-alt"></i>
+        </div>
+        <span class="demo-status-badge demo-status-live">
+          <span class="demo-status-dot" style="background: var(--accent-blue);"></span> LIVE
+        </span>
+      </div>
+      <h3 class="demo-hub-title">Inspection Dashboard</h3>
+      <p class="demo-hub-desc">
+        Run status monitoring and building inspector interface. Track drone
+        missions, defect reports, and compliance scores in real time.
+      </p>
+      <a class="demo-hub-btn demo-hub-btn-primary" href="https://aurasense-sfsvc.streamlit.app" target="_blank" rel="noopener">
+        Open Dashboard <i class="fas fa-arrow-right"></i>
+      </a>
+    </div>
+
+    <!-- Card 3: AR/VR On-Site Viewer -->
+    <div class="demo-hub-card demo-hub-card-roadmap">
+      <div class="demo-hub-card-top">
+        <div class="demo-hub-icon" style="background: var(--accent-violet-dim); color: var(--accent-violet);">
+          <i class="fas fa-vr-cardboard"></i>
+        </div>
+        <span class="demo-status-badge demo-status-roadmap">
+          ROADMAP
+        </span>
+      </div>
+      <h3 class="demo-hub-title">AR / VR On-Site Viewer</h3>
+      <p class="demo-hub-desc">
+        Real-time AR facade overlay for on-site inspectors.
+        VR remote review for surveyors and clients.
+      </p>
+      <a class="demo-hub-btn demo-hub-btn-secondary" href="./vr-facade.html" target="_blank" rel="noopener">
+        Preview <i class="fas fa-arrow-right"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
      REQUEST DEMO
      ═══════════════════════════════════════ -->
 <div class="section-divider"></div>
 <section class="section reveal" id="demo">
-  <div class="section-label">06 — Request Demo</div>
+  <div class="section-label">07 — Request Demo</div>
   <h2 class="section-title">Experience the<br>Inspection Layer</h2>
   <p class="section-subtitle">
     See Aura Sense in action. Schedule a live demo with our autonomous drone fleet
@@ -1757,8 +2032,10 @@ facade.<span class="fn">export</span>(<span class="str">"facade_report.glb"</spa
   <span class="footer-copy">© 2026 Aura Sense Technologies. All rights reserved.</span>
   <div class="footer-links">
     <a href="#about" onclick="smoothNav(event, 'about')">About</a>
+    <a href="#demo-hub" onclick="smoothNav(event, 'demo-hub')">Demo</a>
+    <a href="./facade_map_v3.html" target="_blank" rel="noopener">Facade Map</a>
     <a href="#sdk" onclick="smoothNav(event, 'sdk')">SDK</a>
-    <a href="#demo" onclick="smoothNav(event, 'demo')">Contact</a>
+    <a href="#demo" onclick="smoothNav(event, 'demo')">Join Us</a>
   </div>
 </footer>
 
@@ -1799,7 +2076,7 @@ function smoothNav(e, id) {
    NAV ACTIVE STATE
    ═══════════════════════════════════════ */
 const navItems = document.querySelectorAll('.side-nav .nav-item');
-const sections = ['hero', 'about', 'neuromorphic', 'sdk', 'facade', 'usecases', 'demo'];
+const sections = ['hero', 'about', 'neuromorphic', 'sdk', 'facade', 'usecases', 'demo-hub', 'demo'];
 
 function updateNav() {
   let current = 'hero';

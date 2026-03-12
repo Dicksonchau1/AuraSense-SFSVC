@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VR Facade Review — Aura Sense</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root {
+  --bg-primary: #0a0c10;
+  --bg-secondary: #12151c;
+  --bg-card: #181c26;
+  --accent-cyan: #00e5cc;
+  --accent-cyan-dim: #00e5cc33;
+  --accent-blue: #2d7aff;
+  --accent-violet: #8b5cf6;
+  --accent-violet-dim: #8b5cf633;
+  --text-primary: #e8ecf4;
+  --text-secondary: #8a94a8;
+  --text-muted: #525c72;
+  --border-color: #1e2330;
+  --glow-cyan: 0 0 40px rgba(0, 229, 204, 0.15);
+  --glow-violet: 0 0 40px rgba(139, 92, 246, 0.15);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* ── TOP BAR ── */
+.top-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 32px;
+  background: rgba(10, 12, 16, 0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent-cyan);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: opacity 0.2s ease;
+}
+
+.back-link:hover { opacity: 0.75; }
+
+.top-bar-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+/* ── HERO ── */
+.hero {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px 60px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.hero-canvas-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero-canvas-bg canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.hero-radial {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 50%, rgba(139,92,246,0.07), transparent 70%),
+    radial-gradient(ellipse 40% 40% at 30% 60%, rgba(0,229,204,0.04), transparent 60%);
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 10;
+  max-width: 800px;
+}
+
+/* Logo */
+.logo-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.logo-circle {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 2px solid var(--accent-cyan);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at center, rgba(0,229,204,0.08), transparent);
+  box-shadow: var(--glow-cyan);
+}
+
+.logo-letter {
+  font-weight: 800;
+  font-size: 22px;
+  color: var(--accent-cyan);
+}
+
+.logo-name {
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Badge */
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  background: rgba(139, 92, 246, 0.08);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  border-radius: 100px;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-violet);
+  margin-bottom: 32px;
+}
+
+.hero-badge .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-violet);
+  animation: pulseDot 2.5s ease-in-out infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.hero-title {
+  font-size: clamp(2.8rem, 6vw, 5rem);
+  font-weight: 900;
+  line-height: 1.05;
+  margin-bottom: 28px;
+}
+
+.hero-title span {
+  background: linear-gradient(135deg, var(--accent-violet), var(--accent-cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-desc-blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 0 auto 48px;
+  max-width: 640px;
+  text-align: left;
+}
+
+.hero-desc-block {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  transition: border-color 0.3s ease;
+}
+
+.hero-desc-block:hover {
+  border-color: rgba(139, 92, 246, 0.25);
+}
+
+.desc-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: var(--accent-violet-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-violet);
+  font-size: 16px;
+}
+
+.hero-desc-block h4 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.hero-desc-block p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* CTA */
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 36px;
+  background: linear-gradient(135deg, var(--accent-violet), var(--accent-blue));
+  color: #fff;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(139,92,246,0.25);
+}
+
+.hero-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(139,92,246,0.4);
+}
+
+/* ── ROADMAP SECTION ── */
+.roadmap-section {
+  padding: 60px 24px;
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.section-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-label::before {
+  content: '';
+  display: block;
+  width: 24px;
+  height: 1px;
+  background: var(--accent-cyan);
+}
+
+.section-title {
+  font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+  font-weight: 800;
+  margin-bottom: 40px;
+}
+
+.roadmap-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+}
+
+.roadmap-steps::before {
+  content: '';
+  position: absolute;
+  left: 19px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--accent-violet), var(--accent-cyan));
+  opacity: 0.3;
+}
+
+.roadmap-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  padding: 24px 0 24px 0;
+}
+
+.step-num {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 1px solid var(--accent-violet);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  color: var(--accent-violet);
+  position: relative;
+  z-index: 1;
+}
+
+.step-content h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.step-content p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ── FOOTER ── */
+footer {
+  padding: 20px 32px;
+  border-top: 1px solid var(--border-color);
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-muted);
+  font-family: 'Space Mono', monospace;
+  letter-spacing: 0.08em;
+}
+
+@media (max-width: 768px) {
+  .hero { padding: 60px 20px 40px; }
+  .top-bar { padding: 12px 20px; }
+  .hero-desc-blocks { text-align: left; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <a class="back-link" href="./index.html">
+    <i class="fas fa-arrow-left"></i> Aura Sense Home
+  </a>
+  <span class="top-bar-title">VR Facade Review</span>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-canvas-bg">
+    <canvas id="vrCanvas"></canvas>
+  </div>
+  <div class="hero-radial"></div>
+
+  <div class="hero-content">
+    <!-- Logo -->
+    <div class="logo-wrap">
+      <div class="logo-circle">
+        <span class="logo-letter">A</span>
+      </div>
+      <span class="logo-name">Aura Sense</span>
+    </div>
+
+    <div class="hero-badge">
+      <span class="dot"></span>
+      Roadmap — Q3 2026
+    </div>
+
+    <h1 class="hero-title">
+      VR Facade<br><span>Review</span>
+    </h1>
+
+    <!-- 3 description paragraphs -->
+    <div class="hero-desc-blocks">
+      <div class="hero-desc-block">
+        <div class="desc-icon"><i class="fas fa-vr-cardboard"></i></div>
+        <div>
+          <h4>Immersive 3D Facade Walkthrough</h4>
+          <p>Step inside a photorealistic virtual reconstruction of any inspected building. Navigate floor-by-floor through a full-resolution point cloud, with defects, cracks, and thermal anomalies rendered as interactive 3D overlays — all captured by our autonomous drone fleet in a single pass.</p>
+        </div>
+      </div>
+      <div class="hero-desc-block">
+        <div class="desc-icon"><i class="fas fa-exclamation-triangle"></i></div>
+        <div>
+          <h4>Anomaly Highlighting &amp; Annotation</h4>
+          <p>AI-detected anomalies appear as colour-coded hotspots within the VR environment. Inspectors can tag, annotate, and prioritise defects in real time — linking each marker directly to the underlying sensor data, risk score, and recommended remediation action in the inspection report.</p>
+        </div>
+      </div>
+      <div class="hero-desc-block">
+        <div class="desc-icon"><i class="fas fa-users"></i></div>
+        <div>
+          <h4>Client Review Mode</h4>
+          <p>Surveyors and property clients can join a shared VR session from any location. The guided walkthrough mode lets clients experience inspection findings first-hand — reducing the need for on-site visits, accelerating approval cycles, and improving communication between engineers and stakeholders.</p>
+        </div>
+      </div>
+    </div>
+
+    <a href="mailto:info@aurasensehk.com?subject=VR%20Facade%20Review%20-%20Register%20Interest" class="hero-cta">
+      <i class="fas fa-envelope"></i> Register Interest
+    </a>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<div class="roadmap-section">
+  <div class="section-label">Development Roadmap</div>
+  <h2 class="section-title">Planned VR Workflow</h2>
+
+  <div class="roadmap-steps">
+    <div class="roadmap-step">
+      <div class="step-num">01</div>
+      <div class="step-content">
+        <h4>Drone Capture &amp; Point Cloud Generation</h4>
+        <p>Autonomous drone fleet performs high-density LiDAR + RGB scan. Data is processed on-device into a georeferenced 3D point cloud within minutes of mission completion.</p>
+      </div>
+    </div>
+    <div class="roadmap-step">
+      <div class="step-num">02</div>
+      <div class="step-content">
+        <h4>AI Analysis &amp; Overlay Baking</h4>
+        <p>Neuromorphic AI pipeline detects defects, thermal anomalies, and structural stress indicators. Results are baked into the 3D model as interactive annotation layers.</p>
+      </div>
+    </div>
+    <div class="roadmap-step">
+      <div class="step-num">03</div>
+      <div class="step-content">
+        <h4>VR Session Hosting</h4>
+        <p>Processed model is streamed to any WebXR-compatible headset or desktop browser. Multi-user sessions support up to 10 concurrent reviewers with real-time annotation sync.</p>
+      </div>
+    </div>
+    <div class="roadmap-step">
+      <div class="step-num">04</div>
+      <div class="step-content">
+        <h4>Report Export</h4>
+        <p>Session recordings, annotated screenshots, and risk summaries are automatically compiled into a compliant inspection report (PDF, IFC, or JSON) ready for submission to regulators.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  © 2026 Aura Sense Technologies —
+  <a href="./index.html" style="color: var(--accent-cyan); text-decoration: none;">www.aurasensehk.com</a>
+</footer>
+
+<script>
+// Particle / floating node canvas for VR page
+(function() {
+  const canvas = document.getElementById('vrCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  function resize() {
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const nodes = [];
+  const COUNT = 60;
+
+  for (let i = 0; i < COUNT; i++) {
+    nodes.push({
+      x: Math.random(),
+      y: Math.random(),
+      vx: (Math.random() - 0.5) * 0.0006,
+      vy: (Math.random() - 0.5) * 0.0006,
+      size: 1 + Math.random() * 2.5,
+      alpha: 0.15 + Math.random() * 0.4,
+      color: Math.random() > 0.5 ? [139, 92, 246] : [0, 229, 204]
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const w = canvas.width, h = canvas.height;
+
+    // Draw connections
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const a = nodes[i], b = nodes[j];
+        const dx = (a.x - b.x) * w, dy = (a.y - b.y) * h;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 120) {
+          const alpha = (1 - dist / 120) * 0.08;
+          ctx.strokeStyle = `rgba(139,92,246,${alpha})`;
+          ctx.lineWidth = 0.5;
+          ctx.beginPath();
+          ctx.moveTo(a.x * w, a.y * h);
+          ctx.lineTo(b.x * w, b.y * h);
+          ctx.stroke();
+        }
+      }
+    }
+
+    // Draw nodes
+    nodes.forEach(n => {
+      n.x += n.vx;
+      n.y += n.vy;
+      if (n.x < 0) n.x = 1;
+      if (n.x > 1) n.x = 0;
+      if (n.y < 0) n.y = 1;
+      if (n.y > 1) n.y = 0;
+
+      const [r, g, b] = n.color;
+      ctx.fillStyle = `rgba(${r},${g},${b},${n.alpha})`;
+      ctx.beginPath();
+      ctx.arc(n.x * w, n.y * h, n.size, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+</body>
+</html>
