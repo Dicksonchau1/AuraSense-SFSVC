@@ -307,9 +307,9 @@ ul { list-style: none; }
 /* Comparison cards */
 .hero-comparison {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 24px;
-    max-width: 700px;
+    max-width: 420px;
     margin: 0 auto 48px;
 }
 
