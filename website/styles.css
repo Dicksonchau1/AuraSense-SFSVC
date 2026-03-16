@@ -69,6 +69,7 @@ body {
 
 img { max-width: 100%; height: auto; }
 a { color: inherit; text-decoration: none; }
+.inline-link { color: inherit; text-decoration: underline; }
 ul { list-style: none; }
 
 .container {
@@ -300,8 +301,17 @@ ul { list-style: none; }
     font-size: clamp(1rem, 1.8vw, 1.15rem);
     color: #475569;
     max-width: 600px;
-    margin: 0 auto 48px;
+    margin: 0 auto 16px;
     line-height: 1.7;
+}
+
+.hero-pilot-note {
+    font-size: 0.85rem;
+    color: #64748b;
+    letter-spacing: 0.02em;
+    font-style: italic;
+    max-width: 520px;
+    margin: 0 auto 40px;
 }
 
 /* Comparison cards */
