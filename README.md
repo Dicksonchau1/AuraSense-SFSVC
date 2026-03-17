@@ -84,8 +84,48 @@ Built on SFSVC SDK for Hong Kong MBIS compliance:
 ├── benchmark.html         # Artifact-backed performance data
 ├── pricing.html           # SDK licensing
 ├── security.html          # Security & data architecture
-└── about.html             # Company information
+├── about.html             # Company information
+├── css/
+│   ├── design.css         # Design tokens and components
+│   ├── animate.css        # Animations and visualizations
+│   └── layout.css         # Layout utilities
+└── js/
+    ├── main.js            # Core site functionality
+    └── neuro-viz.js       # Neuromorphic visualizations
 ```
+
+## Neuromorphic Visual System
+
+The website features a custom-built visualization system that demonstrates neuromorphic computing principles:
+
+### 1. Homepage Hero — Spike Animation
+- Sparse neuron grid with lateral connections
+- Deterministic spike generation based on threshold dynamics
+- Refractory period simulation
+- Visualizes temporal sparse encoding in real-time
+
+### 2. Technology Page — Architecture Visualization
+- 4-layer processing pipeline animation
+- Data packet flow through spike encoding → parallel lanes → fusion → output
+- Real-time visualization of NEPA architecture
+
+### 3. Benchmark Page — Latency Visualization
+- Live latency distribution histogram
+- P50/P95/P99 percentile markers
+- Rolling window sparkline
+- Realistic latency simulation matching benchmark data
+
+### 4. Façade Solution — Crack Detection Sweep
+- Scanning beam animation
+- Real-time defect detection visualization
+- Severity classification (Low/Medium/High)
+- Demonstrates on-site processing capability
+
+**Technology Stack**: Vanilla JavaScript + HTML5 Canvas (no frameworks)
+- Deterministic rendering at 60 FPS
+- GPU-accelerated canvas operations
+- Low-latency, sparse-driven visuals matching neuromorphic principles
+
 
 ## Navigation (Consistent Across Site)
 
