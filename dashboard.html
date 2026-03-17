@@ -87,14 +87,14 @@
 <!-- ─── NAV (minimal — post-checkout) ──────────────────────────── -->
 <nav class="nav" id="main-nav">
   <div class="nav-inner">
-    <a href="https://www.aurasensehk.com/index.html" class="nav-brand">
+    <a href="./index.html" class="nav-brand">
       <span class="brand-name">AURASENSE</span>
       <span class="brand-badge">SFSVC</span>
     </a>
     <ul class="nav-links">
-      <li><a href="https://www.aurasensehk.com/docs.html">Docs</a></li>
-      <li><a href="https://www.aurasensehk.com/pricing.html">Pricing</a></li>
-      <li><a href="https://www.aurasensehk.com/about.html">About</a></li>
+      <li><a href="./docs.html">Docs</a></li>
+      <li><a href="./pricing.html">Pricing</a></li>
+      <li><a href="./about.html">About</a></li>
     </ul>
     <a href="mailto:support@aurasensehk.com" class="btn btn-outline">Support</a>
   </div>
@@ -165,10 +165,10 @@
           <li><a id="link-docker" href="#" target="_blank" rel="noopener">
             ↓ Docker Image — <span style="font-family:var(--font-mono);font-size:12px">aurasense/sfsvc:latest</span>
           </a></li>
-          <li><a id="link-docs" href="https://www.aurasensehk.com/docs.html">
+          <li><a id="link-docs" href="./docs.html">
             📖 Documentation &amp; API Reference
           </a></li>
-          <li><a id="link-apiref" href="https://www.aurasensehk.com/docs.html#api">
+          <li><a id="link-apiref" href="./docs.html#api">
             ⚡ API Quickstart
           </a></li>
         </ul>
@@ -188,8 +188,8 @@
   <div class="container">
     <div class="footer-bottom" style="text-align:center">
       SFSVC SDK v2.0 — Ed25519 Licensed — Built in Hong Kong 🇭🇰 &nbsp;|&nbsp;
-      <a href="./legal/privacy.html">Privacy</a> &nbsp;|&nbsp;
-      <a href="./legal/terms.html">Terms</a>
+      <a href="./privacy.html">Privacy</a> &nbsp;|&nbsp;
+      <a href="./terms.html">Terms</a>
     </div>
   </div>
 </footer>
@@ -197,6 +197,27 @@
 <script src="./js/main.js"></script>
 <script>
 'use strict';
+
+// API URL configuration helper
+window.aurasenseApiUrl = function(endpoint) {
+  // In production, use the production API endpoint
+  // In development, you can override this by setting localStorage.devApiUrl
+  const devApiUrl = localStorage.getItem('devApiUrl');
+  if (devApiUrl) {
+    return devApiUrl + endpoint;
+  }
+
+  // Production: Detect if we're on the production domain
+  const isProduction = window.location.hostname === 'www.aurasensehk.com' ||
+                       window.location.hostname === 'aurasensehk.com';
+
+  if (isProduction) {
+    return 'https://api.aurasensehk.com' + endpoint;
+  }
+
+  // Local development fallback
+  return 'http://localhost:3000' + endpoint;
+};
 
 async function loadDashboard() {
   const params = new URLSearchParams(window.location.search);

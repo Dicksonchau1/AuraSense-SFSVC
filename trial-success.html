@@ -118,7 +118,7 @@
 <!-- ─── NAV ──────────────────────────────────────────────────── -->
 <nav class="nav scrolled" id="main-nav">
   <div class="nav-inner">
-    <a href="https://www.aurasensehk.com/index.html" class="nav-brand">
+    <a href="./index.html" class="nav-brand">
       <span class="brand-name">AURASENSE</span>
       <span class="brand-badge">SFSVC</span>
     </a>
@@ -155,8 +155,8 @@
     </div>
 
     <div class="success-actions">
-      <a href="https://www.aurasensehk.com/docs.html" class="btn btn-primary">Read the docs →</a>
-      <a href="https://www.aurasensehk.com/index.html" class="btn btn-outline">Back to homepage</a>
+      <a href="./docs.html" class="btn btn-primary">Read the docs →</a>
+      <a href="./index.html" class="btn btn-outline">Back to homepage</a>
     </div>
 
     <p class="success-note">
@@ -167,6 +167,27 @@
 
 <script src="./js/main.js"></script>
 <script>
+  // API URL configuration helper
+  window.aurasenseApiUrl = function(endpoint) {
+    // In production, use the production API endpoint
+    // In development, you can override this by setting localStorage.devApiUrl
+    const devApiUrl = localStorage.getItem('devApiUrl');
+    if (devApiUrl) {
+      return devApiUrl + endpoint;
+    }
+
+    // Production: Detect if we're on the production domain
+    const isProduction = window.location.hostname === 'www.aurasensehk.com' ||
+                         window.location.hostname === 'aurasensehk.com';
+
+    if (isProduction) {
+      return 'https://api.aurasensehk.com' + endpoint;
+    }
+
+    // Local development fallback
+    return 'http://localhost:3000' + endpoint;
+  };
+
   // Pull tier label from the Stripe session if the session_id is present
   (async () => {
     const params = new URLSearchParams(window.location.search);
