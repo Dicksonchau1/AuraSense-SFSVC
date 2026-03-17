@@ -1185,12 +1185,86 @@
 .cookie-learn:hover { color: var(--accent-cyan); }
 
 /* ═══════════════════════════════════════════════════════════════
+   VERTICAL SOLUTIONS GRIDS & CARDS
+═══════════════════════════════════════════════════════════════ */
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-lg);
+}
+
+.info-card {
+  background: var(--bg-raised);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  transition: border-color var(--transition), transform var(--transition);
+}
+.info-card:hover {
+  border-color: var(--border-glow);
+  transform: translateY(-4px);
+}
+.info-card h3 {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-sm);
+  color: var(--text-primary);
+}
+.info-card p {
+  color: var(--text-muted);
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.endpoint-card {
+  background: var(--bg-raised);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+}
+
+.feature-card {
+  background: var(--bg-raised);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  transition: border-color var(--transition), transform var(--transition);
+}
+.feature-card:hover {
+  border-color: var(--border-glow);
+  transform: translateY(-4px);
+}
+.feature-card h3 {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-sm);
+  color: var(--text-primary);
+}
+.feature-card p {
+  color: var(--text-muted);
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+/* ═══════════════════════════════════════════════════════════════
    RESPONSIVE
 ═══════════════════════════════════════════════════════════════ */
 
 @media (max-width: 1024px) {
   .tech-grid { grid-template-columns: repeat(2, 1fr); }
   .pricing-grid, .pricing-preview-grid { grid-template-columns: repeat(2, 1fr); }
+  .feature-grid { grid-template-columns: repeat(2, 1fr); }
   .pricing-card.featured { transform: none; }
   .benchmark-layout { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr 1fr; gap: var(--space-2xl); }
@@ -1207,6 +1281,7 @@
   .nav-hamburger { display: flex; }
   .hero-content { padding: 120px var(--space-lg) var(--space-3xl); }
   .tech-grid, .pricing-grid, .pricing-preview-grid { grid-template-columns: 1fr; }
+  .feature-grid, .grid-2 { grid-template-columns: 1fr; }
   .trial-steps { flex-direction: column; align-items: center; gap: var(--space-xl); }
   .trial-step::after { display: none; }
   .opportunity-grid, .community-links { grid-template-columns: 1fr; }
