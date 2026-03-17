@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Test — AuraSense SFSVC</title>
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #0a0b0d;
+      color: #edecff;
+    }
+    h1 { color: #00c8f0; margin-bottom: 30px; }
+    .section {
+      background: #1a1b1f;
+      border: 1px solid #2a2b2f;
+      border-radius: 8px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    h2 {
+      font-size: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #999;
+      margin-bottom: 16px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      background: #00c8f0;
+      color: #0a0b0d;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      margin-right: 12px;
+      margin-bottom: 12px;
+    }
+    .btn:hover { background: #00a8d0; }
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid #00c8f0;
+      color: #00c8f0;
+    }
+    .btn-secondary:hover {
+      background: rgba(0,200,240,0.1);
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      background: #0a0b0d;
+      border: 1px solid #2a2b2f;
+      border-radius: 4px;
+      color: #edecff;
+      font-family: 'Courier New', monospace;
+      margin-bottom: 12px;
+    }
+    code {
+      background: #0a0b0d;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+      color: #00c8f0;
+    }
+    .info {
+      background: rgba(0,200,240,0.1);
+      border: 1px solid rgba(0,200,240,0.3);
+      border-radius: 6px;
+      padding: 16px;
+      margin-bottom: 16px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .test-result {
+      background: #0a0b0d;
+      padding: 16px;
+      border-radius: 6px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      margin-top: 16px;
+      white-space: pre-wrap;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🧪 Dashboard Test Suite</h1>
+
+<div class="section">
+  <h2>1. Session ID Validation</h2>
+  <div class="info">
+    The dashboard validates session IDs with the pattern: <code>^cs_[A-Za-z0-9_-]{10,}$</code><br>
+    This tests whether various session ID formats are correctly validated.
+  </div>
+
+  <input type="text" id="test-session-id" placeholder="Enter a session ID to test..." value="cs_test_123456789abcdef">
+  <button class="btn" onclick="testSessionValidation()">Test Validation</button>
+
+  <div id="validation-result" class="test-result" style="display:none;"></div>
+</div>
+
+<div class="section">
+  <h2>2. API URL Configuration</h2>
+  <div class="info">
+    The dashboard auto-detects environment and routes API calls accordingly:<br>
+    • Production: <code>https://api.aurasensehk.com</code><br>
+    • Development: <code>http://localhost:3000</code><br>
+    • Override: Use <code>localStorage.devApiUrl</code>
+  </div>
+
+  <input type="text" id="dev-api-override" placeholder="http://localhost:3000">
+  <button class="btn" onclick="setDevApiUrl()">Set Dev API URL</button>
+  <button class="btn btn-secondary" onclick="clearDevApiUrl()">Clear Override</button>
+  <button class="btn btn-secondary" onclick="testApiUrl()">Test Current Config</button>
+
+  <div id="api-result" class="test-result" style="display:none;"></div>
+</div>
+
+<div class="section">
+  <h2>3. Mock Dashboard Data</h2>
+  <div class="info">
+    Test the dashboard rendering with mock data. This simulates what the API would return.
+  </div>
+
+  <button class="btn" onclick="testMockDashboard()">Render Mock Dashboard</button>
+  <button class="btn btn-secondary" onclick="window.open('./dashboard.html?session_id=cs_test_1234567890_mock', '_blank')">Open Real Dashboard (Mock Session)</button>
+
+  <div id="mock-result" class="test-result" style="display:none;"></div>
+</div>
+
+<div class="section">
+  <h2>4. Quick Links</h2>
+  <a href="./dashboard.html?session_id=cs_test_1234567890_valid" class="btn" target="_blank">Dashboard (Valid Session)</a>
+  <a href="./dashboard.html?session_id=invalid_session" class="btn btn-secondary" target="_blank">Dashboard (Invalid Session)</a>
+  <a href="./trial-success.html?session_id=cs_test_1234567890_valid" class="btn btn-secondary" target="_blank">Trial Success Page</a>
+</div>
+
+<script>
+// Session validation test
+function testSessionValidation() {
+  const sessionId = document.getElementById('test-session-id').value;
+  const pattern = /^cs_[A-Za-z0-9_-]{10,}$/;
+  const isValid = pattern.test(sessionId);
+
+  const result = `Session ID: ${sessionId}
+Pattern: ^cs_[A-Za-z0-9_-]{10,}$
+Valid: ${isValid ? '✓ YES' : '✗ NO'}
+
+Details:
+- Starts with 'cs_': ${sessionId.startsWith('cs_') ? '✓' : '✗'}
+- Length: ${sessionId.length} chars
+- Min required: 13 chars (cs_ + 10 chars)
+- Contains only [A-Za-z0-9_-]: ${/^cs_[A-Za-z0-9_-]+$/.test(sessionId) ? '✓' : '✗'}`;
+
+  document.getElementById('validation-result').style.display = 'block';
+  document.getElementById('validation-result').textContent = result;
+}
+
+// API URL configuration test
+function setDevApiUrl() {
+  const url = document.getElementById('dev-api-override').value;
+  if (url) {
+    localStorage.setItem('devApiUrl', url);
+    alert('Dev API URL set: ' + url);
+  }
+}
+
+function clearDevApiUrl() {
+  localStorage.removeItem('devApiUrl');
+  alert('Dev API URL override cleared');
+}
+
+function testApiUrl() {
+  // Simulate the aurasenseApiUrl function
+  const devApiUrl = localStorage.getItem('devApiUrl');
+  const isProduction = window.location.hostname === 'www.aurasensehk.com' ||
+                       window.location.hostname === 'aurasensehk.com';
+
+  let apiUrl;
+  if (devApiUrl) {
+    apiUrl = devApiUrl;
+  } else if (isProduction) {
+    apiUrl = 'https://api.aurasensehk.com';
+  } else {
+    apiUrl = 'http://localhost:3000';
+  }
+
+  const result = `Current Configuration:
+
+Hostname: ${window.location.hostname}
+Is Production: ${isProduction ? 'YES' : 'NO'}
+Override Set: ${devApiUrl ? 'YES (' + devApiUrl + ')' : 'NO'}
+
+Resolved API Base URL:
+${apiUrl}
+
+Example endpoint:
+${apiUrl}/api/session/cs_test_1234567890
+
+To override in development:
+1. Set localStorage.devApiUrl = 'http://localhost:3000'
+2. Or use the input field above`;
+
+  document.getElementById('api-result').style.display = 'block';
+  document.getElementById('api-result').textContent = result;
+}
+
+// Mock dashboard test
+function testMockDashboard() {
+  const mockData = {
+    plan: 'Professional',
+    drones: 5,
+    email: 'demo@aurasensehk.com',
+    token_suffix: 'a7f9',
+    mission_profiles: ['FACADE_INSPECTION', 'BRIDGE_SCAN', 'BVLOS_CORRIDOR'],
+    docker_url: 'https://hub.docker.com/r/aurasense/sfsvc',
+    docs_url: './docs.html',
+    api_ref_url: './docs.html#api'
+  };
+
+  const result = `Mock API Response:
+${JSON.stringify(mockData, null, 2)}
+
+Dashboard would display:
+• Plan: ${mockData.plan}
+• Drones: ${mockData.drones}
+• Email: ${mockData.email}
+• Token: ••••  ••••  •••• ${mockData.token_suffix}
+• Mission Profiles: ${mockData.mission_profiles.length} profiles
+
+Note: The actual dashboard page would need a real API endpoint
+to return this data format. The API should be at:
+  ${window.location.origin}/api/session/{sessionId}
+
+Or with override:
+  ${localStorage.getItem('devApiUrl') || 'http://localhost:3000'}/api/session/{sessionId}`;
+
+  document.getElementById('mock-result').style.display = 'block';
+  document.getElementById('mock-result').textContent = result;
+}
+
+// Auto-run API config test on load
+window.addEventListener('load', () => {
+  console.log('Dashboard Test Suite loaded');
+  console.log('Current environment:', window.location.hostname);
+});
+</script>
+
+</body>
+</html>
