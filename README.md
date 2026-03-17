@@ -1,179 +1,201 @@
-# AuraSense SFSVC — Neuromorphic Edge Perception SDK
+# NEPA — Neuromorphic Envelope Performance Analytics
 
-**Website**: [www.aurasensehk.com](https://www.aurasensehk.com)
+By AuraSense (Hong Kong)
 
-## Overview
+Deterministic facade inspection infrastructure.
 
-This repository contains:
+## System Overview
 
-1. **SFSVC Commercial Website** — Marketing site for the production neuromorphic perception SDK
-2. **NEPA Research Demo** — Public Python reference implementation (educational/prototyping only)
+NEPA is a neuromorphic perception and inspection pipeline designed for structured facade analysis.
 
-## IMPORTANT: SFSVC vs NEPA
+It operates through deterministic spike processing lanes, version-bound inspection runs, and replay-verifiable outputs.
 
-### SFSVC (Commercial SDK)
-- **Language**: C++
-- **Latency**: 2.50 ms avg, 2.61 ms P95, 2.81 ms P99
-- **Purpose**: Production deployment for edge autonomy
-- **Optimization**: SIMD AVX2, lock-free queues, deterministic scheduling
-- **Support**: Engineering support, SLA available
-- **License**: Commercial licensing (Ed25519 cryptographic validation)
+Core principles:
 
-### NEPA (Research Demo)
-- **Language**: Python
-- **Latency**: ~8 ms/frame
-- **Purpose**: Educational, prototyping, concept demonstration
-- **Optimization**: Standard NumPy
-- **Support**: Community support
-- **License**: Open Source
+- Deterministic execution
+- Replay verification
+- Attributable outputs
+- Structured parallel lanes
+- Version-sealed pipelines
+- No shared mutable state
 
-**The performance benchmarks on [www.aurasensehk.com](https://www.aurasensehk.com) refer to the SFSVC SDK, NOT the NEPA demo.**
+The system is designed for institutional and regulatory-grade environments.
 
-## Architecture
-
-### SFSVC Core Principles
-
-**Spike-Based Encoding**
-- Temporal contrast encoding reduces redundant pixel processing
-- ON/OFF events based on brightness changes
-- Binary representation preserves temporal edges
-
-**Deterministic CPU Execution**
-- SIMD acceleration (AVX2 / NEON)
-- Bounded hot paths, predictable scheduling
-- No GPU dependency, offline-first architecture
-
-**Single-Digit Millisecond Latency**
-- Full 720p pipeline: P50 1.52ms, P95 7.87ms, P99 13.04ms
-- Artifact-backed benchmark data
-- Platform: Linux x86_64 reference hardware
-
-### NEPA Demo (Python Reference)
-
-NEPA demonstrates neuromorphic codec concepts:
-- Frame-delta spike encoding
-- Temporal contrast detection
-- Data compression via sparse representation
-- Basic crack detection pipeline
-
-**Public Repository**: [github.com/Dicksonchau1/AuraSense-NEPA_v1](https://github.com/Dicksonchau1/AuraSense-NEPA_v1)
-
-**Important**: NEPA is a research demo only. For production deployments, use the SFSVC SDK.
-
-## Vertical Solutions
-
-### Façade Risk Engine
-Built on SFSVC SDK for Hong Kong MBIS compliance:
-- AI + LiDAR façade inspection
-- Structured, regulator-aligned reporting
-- Offline-first deployment
-- Edge processing on mini PC or appliance
-
-**Learn more**: [www.aurasensehk.com/solutions/facade.html](https://www.aurasensehk.com/solutions/facade.html)
-
-## Website Structure
+## High-Level Architecture
 
 ```
-/
-├── index.html              # SFSVC platform homepage
-├── technology.html         # Core SDK architecture
-├── solutions.html          # Vertical deployments overview
-├── solutions/
-│   └── facade.html        # Façade Risk Engine details
-├── research.html          # NEPA research demo page
-├── benchmark.html         # Artifact-backed performance data
-├── pricing.html           # SDK licensing
-├── security.html          # Security & data architecture
-├── about.html             # Company information
-├── css/
-│   ├── design.css         # Design tokens and components
-│   ├── animate.css        # Animations and visualizations
-│   └── layout.css         # Layout utilities
-└── js/
-    ├── main.js            # Core site functionality
-    └── neuro-viz.js       # Neuromorphic visualizations
+Raw Signal Input (.spk)
+        │
+        ▼
+Spike Ingestion Layer
+        │
+        ▼
+Clustering + Lane Processing
+        │
+        ▼
+Versioned Spike Pipeline
+        │
+        ▼
+Inspection Run Anchor
+        │
+        ▼
+Output Contract (JSON)
+        │
+        ▼
+Evidence Store + Replay Validation
 ```
 
-## Neuromorphic Visual System
+### Architecture Components
 
-The website features a custom-built visualization system that demonstrates neuromorphic computing principles:
+**Raw Signal Input (.spk)**
+Encoded neuromorphic sensor data. Temporal contrast events captured as sparse spike streams.
 
-### 1. Homepage Hero — Spike Animation
-- Sparse neuron grid with lateral connections
-- Deterministic spike generation based on threshold dynamics
-- Refractory period simulation
-- Visualizes temporal sparse encoding in real-time
+**Spike Ingestion Layer**
+Validates input format, performs boundary checks, and prepares spike data for processing.
 
-### 2. Technology Page — Architecture Visualization
-- 4-layer processing pipeline animation
-- Data packet flow through spike encoding → parallel lanes → fusion → output
-- Real-time visualization of NEPA architecture
+**Clustering + Lane Processing**
+Groups spatially-related spikes into clusters. Processes each cluster through isolated computational lanes to maintain determinism.
 
-### 3. Benchmark Page — Latency Visualization
-- Live latency distribution histogram
-- P50/P95/P99 percentile markers
-- Rolling window sparkline
-- Realistic latency simulation matching benchmark data
+**Versioned Spike Pipeline**
+Version-locked processing pipeline. Each run executes under a specific pipeline version identifier.
 
-### 4. Façade Solution — Crack Detection Sweep
-- Scanning beam animation
-- Real-time defect detection visualization
-- Severity classification (Low/Medium/High)
-- Demonstrates on-site processing capability
+**Inspection Run Anchor**
+Immutable record of execution context: input hash, pipeline version, timestamp, and configuration snapshot.
 
-**Technology Stack**: Vanilla JavaScript + HTML5 Canvas (no frameworks)
-- Deterministic rendering at 60 FPS
-- GPU-accelerated canvas operations
-- Low-latency, sparse-driven visuals matching neuromorphic principles
+**Output Contract (JSON)**
+Structured output conforming to predefined schema. All findings are typed and validated.
 
+**Evidence Store + Replay Validation**
+Stores execution artifacts and golden hashes. Enables bit-exact replay verification against reference outputs.
 
-## Navigation (Consistent Across Site)
+## Core Components
 
-1. Home
-2. Technology
-3. Solutions
-4. Benchmarks
-5. Pricing
-6. Security
-7. Research
-8. About
+### /engine
 
-## Performance Claims
+C++ spike processing and lane metrics logging.
 
-### SFSVC SDK (Commercial)
-- **Core spike lane**: Sub-2ms processing latency
-- **Full 720p pipeline**: P95 7.87ms (artifact v2)
-- **Compression**: 9.97× ratio, 89.97% bandwidth reduction
-- **Power**: Runs on Intel N100-class systems at ~4W
+Handles low-level spike stream parsing, temporal clustering, and deterministic lane execution. Produces structured metrics logs for each processing lane.
 
-### NEPA Demo (Research)
-- **Processing**: ~8 ms/frame on standard CPU
-- **Purpose**: Educational demonstration of concepts only
+### /app
 
-## Deployment
+Pipeline orchestration, ingestion, clustering, replay monitoring.
 
-### SFSVC Production SDK
-- Official Docker image
-- REST API
-- C++ SDK
-- Ed25519 cryptographic licensing
-- Offline operation with periodic HTTPS validation
+Coordinates end-to-end execution flow. Manages input validation, cluster assignment, pipeline versioning, and replay verification workflows.
 
-### NEPA Research Demo
-- Python-based
-- Suitable for prototyping and evaluation
-- Not intended for production use
+### /contracts
 
-## Contact
+Structured output contract definitions.
 
-**Technical Inquiries**: support@aurasensehk.com
+JSON schema definitions for inspection outputs. Enforces output structure, type constraints, and required fields.
 
-**Website**: www.aurasensehk.com
+### /scripts
 
-**Location**: Hong Kong
+Operational and validation scripts.
 
----
+Automation for pipeline deployment, replay execution, and golden hash validation. Supports operational workflows and integrity checks.
 
-© 2026 AuraSense Limited. All rights reserved.
+### /tests
 
-**SFSVC SDK v2.0** — Neuromorphic perception infrastructure for edge autonomy.
+Replay fixtures and deterministic validation tests.
+
+Fixed input datasets and golden output hashes. Validates that pipeline execution remains deterministic across runs and versions.
+
+### /docs
+
+Governance, meeting, and integration documentation.
+
+Records of design decisions, integration protocols, and governance policies. Maintains audit trail for institutional compliance.
+
+## Deterministic Replay Model
+
+Inspection runs are version-bound.
+
+Each run can be replayed against fixture inputs.
+
+Golden output hashes validate invariance.
+
+Pipeline versioning is enforced.
+
+No output is considered valid without replay consistency.
+
+### Replay Workflow
+
+1. Capture input data and pipeline version at execution time
+2. Generate output and compute cryptographic hash
+3. Store hash as golden reference
+4. On replay, execute identical pipeline version against same input
+5. Compare output hash to golden reference
+6. Flag divergence as pipeline integrity failure
+
+Replay validation ensures that outputs remain stable across infrastructure changes, compiler updates, and dependency shifts.
+
+## Output Contract
+
+All findings conform to sfsvc_output_contract.json.
+
+Each finding includes:
+
+- Zone ID
+- Classification
+- Confidence
+- Pipeline version
+- Replay hash reference
+
+Outputs are structured, attributable, and auditable.
+
+### Contract Enforcement
+
+Output schema is validated at runtime. Any output that fails schema validation is rejected. This ensures that downstream consumers receive consistently-structured data.
+
+Contract versioning allows schema evolution while maintaining backward compatibility with archived outputs.
+
+## Governance Model
+
+**Versioned pipeline releases**
+Each pipeline release is tagged with a semantic version. Version identifiers are embedded in all outputs.
+
+**Watchdog threshold policies**
+Automated monitoring detects anomalies in processing metrics. Threshold violations trigger alerts and optional execution halts.
+
+**Failure monitoring**
+Structured logging captures all failure modes. Failures are categorized, indexed, and aggregated for operational review.
+
+**Replay integrity validation**
+Continuous validation of replay consistency. Any deviation from golden hashes triggers investigation and potential rollback.
+
+**Structured change control**
+All pipeline changes follow documented review and approval workflows. Changes are traceable to specific commits and design documents.
+
+The system is designed to withstand external scrutiny.
+
+## Deployment Notes
+
+Production startup script reference: See /scripts for deployment automation.
+
+Environment isolation expectation: Execution environments must be isolated and reproducible.
+
+No secrets committed: API keys, credentials, and sensitive configuration are managed externally.
+
+Deterministic build required: Builds must be reproducible across environments to ensure replay consistency.
+
+## Development Workflow
+
+```bash
+git pull origin main
+git checkout -b feature-branch
+git add .
+git commit -m "Structured commit message"
+git push origin feature-branch
+```
+
+No direct commits to main without validation.
+
+All changes require review and replay validation before merge.
+
+## System Positioning Statement
+
+NEPA is inspection infrastructure.
+
+It is not a prototype, not a visualization layer, and not an experimental AI model.
+
+It is a governed perception pipeline designed for structured institutional deployment.
