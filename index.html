@@ -1,228 +1,238 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AuraSense SFSVC - Neuromorphic Control Codec for Infrastructure Inspection</title>
-  <meta name="description" content="Sub-3 ms deterministic edge control. ~90% bandwidth reduction. Neuromorphic middleware for drone-based infrastructure inspection.">
-  <meta name="theme-color" content="#06060A">
-  <link rel="stylesheet" href="./css/design.css">
-  <link rel="stylesheet" href="./css/animate.css">
-  <link rel="stylesheet" href="./css/layout.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEPA by AURASENSE – Deterministic Inspection Infrastructure</title>
+    <meta name="description" content="A deterministic neuromorphic inspection platform engineered for safety‑critical infrastructure and enterprise deployment.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #ffffff;
+        }
+        
+        header {
+            background: #000;
+            color: #fff;
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8rem 2rem;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            letter-spacing: -2px;
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+        
+        section {
+            margin-bottom: 6rem;
+        }
+        
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+        
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+        
+        .card {
+            padding: 2rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+        footer {
+            background: #000;
+            color: #fff;
+            text-align: center;
+            padding: 3rem 2rem;
+            margin-top: 6rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: #fff;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+    </style>
 </head>
 <body>
 
-<!-- ─── NAV ──────────────────────────────────────────────────── -->
-<nav class="nav" id="main-nav">
-  <div class="nav-inner">
-    <a href="./index.html" class="nav-brand">
-      <span class="brand-name">AURASENSE</span>
-      <span class="brand-badge">SFSVC</span>
-    </a>
-    <ul class="nav-links">
-      <li><a href="./index.html" class="active">Home</a></li>
-      <li><a href="./technology.html">Technology</a></li>
-      <li><a href="./solutions.html">Solutions</a></li>
-      <li><a href="./benchmark.html">Benchmarks</a></li>
-      <li><a href="./security.html">Security</a></li>
-      <li><a href="./research.html">Research</a></li>
-      <li><a href="./about.html">About</a></li>
-    </ul>
-    <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu">
-      <span></span><span></span><span></span>
-    </button>
-  </div>
-</nav>
-<nav class="nav-drawer" id="nav-drawer">
-  <a href="./index.html">Home</a>
-  <a href="./technology.html">Technology</a>
-  <a href="./solutions.html">Solutions</a>
-  <a href="./benchmark.html">Benchmarks</a>
-  <a href="./security.html">Security</a>
-  <a href="./research.html">Research</a>
-  <a href="./about.html">About</a>
-</nav>
+    <header>
+        <nav>
+            <div class="logo">NEPA by AURASENSE</div>
+        </nav>
+    </header>
 
-<!-- ─── HERO ──────────────────────────────────────────────────── -->
-<section class="page-hero" style="position:relative;overflow:hidden;">
-  <div class="container" style="position:relative;z-index:1;">
-    <h1>AuraSense SFSVC</h1>
-    <p class="hero-subtitle">Deterministic Edge Infrastructure for Inspection Fleets.</p>
-    <p style="margin-top:24px;line-height:1.9;">
-      Sub‑3 ms control.<br>
-      ~90% transmission reduction.<br>
-      Deployable on existing hardware.
-    </p>
-    <div style="margin-top:32px;">
-      <a href="./docs.html" class="btn btn-primary">Request Technical Brief</a>
+    <section class="hero">
+        <h1>Inspection Intelligence Built for Accountability</h1>
+        <p>A deterministic neuromorphic inspection platform engineered for safety‑critical infrastructure and enterprise deployment.</p>
+        <p style="margin-top: 2rem;"><strong>Every finding is traceable. Every inspection run is version‑bound. Every result can be independently validated.</strong></p>
+    </section>
+
+    <div class="container">
+        <section>
+            <h2>Purpose‑Built for Infrastructure Environments</h2>
+            <p>Inspection outcomes influence asset valuation, maintenance decisions, regulatory reporting, and operational safety.</p>
+            <p>NEPA is designed for environments where inspection systems must do more than detect — they must withstand scrutiny.</p>
+            <p>The platform introduces deterministic processing, explicit version control, and replay‑certified evidence into inspection workflows.</p>
+            <p><strong>This is infrastructure software, not experimental analytics.</strong></p>
+        </section>
+
+        <section>
+            <h2>Real‑Time Operational Discipline</h2>
+            <p>NEPA operates under a defined real‑time latency contract, separating time‑critical control from secondary analytics.</p>
+            <div class="grid">
+                <div class="card">
+                    <h3>Deterministic Multi‑Lane Architecture</h3>
+                    <p>Predictable processing paths with bounded latency guarantees.</p>
+                </div>
+                <div class="card">
+                    <h3>Continuous Latency Monitoring</h3>
+                    <p>Real‑time watchdog enforcement and per‑frame metrics.</p>
+                </div>
+                <div class="card">
+                    <h3>Stress‑Tested Under Load</h3>
+                    <p>Validated across sustained multi‑hour operational workloads.</p>
+                </div>
+            </div>
+            <p style="margin-top: 2rem;">The result is predictable behavior under operational conditions — a prerequisite for regulated and enterprise environments.</p>
+        </section>
+
+        <section>
+            <h2>Traceability by Design</h2>
+            <p>Each inspection run is cryptographically bound to a unique system configuration.</p>
+            <p><strong>NEPA records:</strong></p>
+            <ul style="font-size: 1.1rem; margin-left: 2rem; margin-bottom: 1.5rem; color: #333;">
+                <li>Exact engine version</li>
+                <li>Configuration contract version</li>
+                <li>Analytical parameter state</li>
+            </ul>
+            <p>This creates a verifiable linkage between system state → processing logic → inspection finding.</p>
+            <p><strong>No output exists without an attributable configuration.</strong></p>
+        </section>
+
+        <section>
+            <h2>Replay‑Certified Evidence</h2>
+            <p>Findings can be independently re‑derived from preserved inspection data.</p>
+            <p><strong>The system enforces:</strong></p>
+            <ul style="font-size: 1.1rem; margin-left: 2rem; margin-bottom: 1.5rem; color: #333;">
+                <li>Immutable evidence storage</li>
+                <li>Version consistency validation</li>
+                <li>Structured replay verification</li>
+                <li>Append‑only audit logging</li>
+                <li>Tamper‑evident chain sealing</li>
+            </ul>
+            <p>Any inconsistency is automatically recorded as a critical validation event.</p>
+            <p><strong>This framework supports enterprise governance, audit requirements, and regulatory defensibility.</strong></p>
+        </section>
+
+        <section>
+            <h2>Enterprise Integration</h2>
+            <p>NEPA integrates into existing camera → edge → cloud architectures.</p>
+            <p><strong>It is designed to:</strong></p>
+            <ul style="font-size: 1.1rem; margin-left: 2rem; margin-bottom: 1.5rem; color: #333;">
+                <li>Operate on standard CPU/GPU hardware</li>
+                <li>Reduce bandwidth and storage pressure</li>
+                <li>Enhance, not replace, existing analytics stacks</li>
+                <li>Scale across distributed inspection operations</li>
+            </ul>
+            <p>The platform aligns with enterprise risk management, compliance, and infrastructure lifecycle oversight.</p>
+        </section>
+
+        <section>
+            <h2>Operational Governance</h2>
+            <p>NEPA is supported by:</p>
+            <ul style="font-size: 1.1rem; margin-left: 2rem; margin-bottom: 1.5rem; color: #333;">
+                <li>Determinism policy documentation</li>
+                <li>Change control discipline</li>
+                <li>Parameter locking per inspection run</li>
+                <li>Structured fault injection testing</li>
+                <li>Defined readiness matrices</li>
+            </ul>
+            <p><strong>The system is engineered to support procurement review, technical due diligence, and regulatory evaluation.</strong></p>
+        </section>
     </div>
-  </div>
-</section>
 
-<!-- ─── INFRASTRUCTURE NOT SOFTWARE ───────────────────────────── -->
-<section class="section">
-  <div class="container">
-    <h2 class="h2">Infrastructure, Not Software</h2>
-    <div style="margin-top:32px;max-width:900px;">
-      <p style="margin-bottom:24px;line-height:1.9;">
-        Inspection fleets generate continuous video streams. Transmission cost scales linearly. Latency variability creates operational risk.
-      </p>
-      <p style="margin-bottom:24px;line-height:1.9;">
-        SFSVC restructures the pipeline at the codec layer. Converts video into sparse, control-relevant signals before cloud ingestion.
-      </p>
-      <p style="margin-bottom:24px;line-height:1.9;">
-        Deterministic control preserved. Transmission load reduced. Auditability preserved.
-      </p>
-      <p style="margin-top:40px;font-weight:600;line-height:1.9;">
-        This is infrastructure. Not an overlay.
-      </p>
-    </div>
-  </div>
-</section>
+    <footer>
+        <h2 style="color: #fff; margin-bottom: 1rem;">Deterministic. Traceable. Accountable.</h2>
+        <p style="color: #ccc;">NEPA by AURASENSE</p>
+        <p style="color: #888; font-size: 0.9rem; margin-top: 2rem;">© 2026 AuraSense Limited. All rights reserved.</p>
+    </footer>
 
-<!-- ─── SYSTEM ARCHITECTURE ───────────────────────────────────── -->
-<section class="section" style="background:var(--bg-surface)">
-  <div class="container">
-    <h2 class="h2">System Architecture</h2>
-    <div style="margin-top:32px;max-width:900px;">
-      <p style="margin-bottom:32px;line-height:1.9;font-family:var(--font-mono);font-size:14px;color:var(--text-muted);">
-        Camera<br>
-        → Neuromorphic Codec Layer<br>
-        → Deterministic Control Loop<br>
-        → Spike Stream + Control State<br>
-        → Existing Edge / Cloud Systems
-      </p>
-      <p style="margin-bottom:16px;line-height:1.9;">
-        No camera replacement.<br>
-        No sensor replacement.<br>
-        No GPU dependency required.
-      </p>
-      <p style="margin-top:32px;line-height:1.9;">
-        Typical deployment: 1–2 days on Linux edge hardware.
-      </p>
-    </div>
-  </div>
-</section>
-
-<!-- ─── MEASURED PERFORMANCE ──────────────────────────────────── -->
-<section class="section">
-  <div class="container">
-    <h2 class="h2">Measured Performance</h2>
-    <p style="margin-top:16px;font-size:14px;color:var(--text-muted);">
-      Production C++ Engine<br>
-      720p inspection dataset
-    </p>
-
-    <div style="margin-top:32px;max-width:900px;">
-      <p style="margin-bottom:24px;line-height:1.9;">
-        2.50 ms average control latency<br>
-        2.81 ms P99<br>
-        0% violations of 6 ms safety contract
-      </p>
-      <p style="margin-bottom:24px;line-height:1.9;">
-        ~10× effective compression<br>
-        ~90% bandwidth reduction
-      </p>
-      <p style="margin-top:40px;font-size:14px;color:var(--text-muted);">
-        Results reproducible via validation package.
-      </p>
-    </div>
-  </div>
-</section>
-
-<!-- ─── OPERATIONAL IMPACT ────────────────────────────────────── -->
-<section class="section" style="background:var(--bg-surface)">
-  <div class="container">
-    <h2 class="h2">Operational Impact</h2>
-    <div style="margin-top:32px;max-width:900px;">
-      <p style="margin-bottom:24px;line-height:1.9;">
-        ~90% transmission reduction. Proportional cloud storage slowdown.
-      </p>
-      <p style="margin-bottom:24px;line-height:1.9;">
-        Deterministic sub‑3 ms control loop. Isolation from non-deterministic workloads.
-      </p>
-      <p style="margin-bottom:24px;line-height:1.9;">
-        No workflow disruption for inspection teams.
-      </p>
-      <p style="margin-top:40px;font-weight:600;line-height:1.9;">
-        This is cost control at the codec layer.
-      </p>
-    </div>
-  </div>
-</section>
-
-<!-- ─── SECURITY & DEPLOYMENT ─────────────────────────────────── -->
-<section class="section">
-  <div class="container">
-    <h2 class="h2">Security &amp; Deployment</h2>
-    <div style="margin-top:32px;max-width:900px;">
-      <p style="margin-bottom:16px;line-height:1.9;">
-        Offline-first edge operation<br>
-        Control loop independent of cloud connectivity<br>
-        TLS 1.3 enforced<br>
-        JWT key rotation supported<br>
-        Audit log export capability
-      </p>
-      <p style="margin-top:40px;font-weight:600;line-height:1.9;">
-        Designed for environments where infrastructure integrity is non-negotiable.
-      </p>
-    </div>
-  </div>
-</section>
-
-<!-- ─── DEPLOYMENT MODEL ──────────────────────────────────────── -->
-<section class="section" style="background:var(--bg-surface)">
-  <div class="container">
-    <h2 class="h2">Deployment Model</h2>
-    <div style="margin-top:32px;max-width:900px;">
-      <p style="margin-bottom:32px;line-height:1.9;">
-        Available as:
-      </p>
-      <p style="margin-bottom:24px;line-height:1.9;padding-left:16px;">
-        • Containerized edge module<br>
-        • Sidecar service<br>
-        • Embedded deployment (custom integration)
-      </p>
-      <p style="margin-bottom:16px;line-height:1.9;">
-        Compatible with:
-      </p>
-      <p style="margin-bottom:24px;line-height:1.9;padding-left:16px;">
-        • x86 edge devices<br>
-        • ARM edge devices<br>
-        • GPU optional
-      </p>
-      <p style="margin-bottom:16px;line-height:1.9;">
-        Integration surface:
-      </p>
-      <p style="line-height:1.9;padding-left:16px;">
-        • RTSP input<br>
-        • JSON control output<br>
-        • Spike stream (binary or gRPC)
-      </p>
-    </div>
-  </div>
-</section>
-
-<!-- ─── FOOTER ────────────────────────────────────────────────── -->
-<footer class="footer">
-  <div class="container">
-    <div style="text-align:center;padding:64px 0;">
-      <p style="font-family:var(--font-sans);font-weight:600;font-size:14px;margin-bottom:8px;">AuraSense Limited</p>
-      <p style="font-size:14px;color:var(--text-muted);margin-bottom:4px;">Hong Kong</p>
-      <p style="font-size:14px;color:var(--text-muted);line-height:1.7;">Deterministic edge systems for inspection infrastructure.</p>
-    </div>
-  </div>
-</footer>
-
-<!-- ─── COOKIE BANNER ─────────────────────────────────────────── -->
-<div class="cookie-banner" id="cookie-banner" role="region" aria-label="Cookie notice">
-  <p>We use essential cookies only. No tracking.</p>
-  <div class="cookie-actions">
-    <button class="btn btn-primary btn-sm" id="cookie-accept">Accept</button>
-    <a href="./cookies.html" class="cookie-learn">Learn more →</a>
-  </div>
-</div>
-
-<script src="./js/main.js"></script>
 </body>
 </html>
