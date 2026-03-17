@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Governance — NEPA by AURASENSE</title>
+  <meta name="description" content="NEPA governance framework: inspection run version control, configuration immutability, audit logging, evidence retention, and change management.">
+  <link rel="stylesheet" href="css/nepa.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-brand">NEPA <span>by AURASENSE</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="platform.html">Platform</a></li>
+      <li><a href="technology.html">Technology</a></li>
+      <li><a href="governance.html" class="active">Governance</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <a href="contact.html" class="nav-cta">Request Briefing</a>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-tag">Governance</div>
+  <h1>Governance Framework</h1>
+  <p>The NEPA governance framework defines the structural controls that ensure inspection outputs are attributable, reproducible, and defensible. This documentation is intended for regulatory reviewers, compliance stakeholders, and enterprise procurement teams conducting technical due diligence.</p>
+</div>
+
+<div class="section">
+  <div class="section-tag">01 — Inspection Run Version Control</div>
+  <div class="two-col">
+    <div>
+      <h2 class="section-title">Inspection Run Version Control</h2>
+      <p class="section-lead">Every inspection run is assigned a unique, immutable run identifier that binds together all components of the system state at the time of execution. This binding is cryptographic and cannot be modified after the run is initiated.</p>
+      <ul class="trace-list">
+        <li class="trace-item"><span class="trace-num">01</span><span class="trace-text"><strong>Run ID Generation</strong> — a unique run identifier is generated at initialisation, incorporating timestamp, engine version, and configuration hash</span></li>
+        <li class="trace-item"><span class="trace-num">02</span><span class="trace-text"><strong>Engine Version Binding</strong> — the SHA-256 fingerprint of the deployed binary is recorded in the run manifest before the first frame is processed</span></li>
+        <li class="trace-item"><span class="trace-num">03</span><span class="trace-text"><strong>Configuration Contract Binding</strong> — the versioned configuration contract is hashed and locked; no parameter modification is possible after binding</span></li>
+        <li class="trace-item"><span class="trace-num">04</span><span class="trace-text"><strong>Operator Authentication Record</strong> — the authenticated operator identity is bound to the run manifest via signed token</span></li>
+        <li class="trace-item"><span class="trace-num">05</span><span class="trace-text"><strong>Hardware Attestation</strong> — the inspection node's hardware identity and sensor calibration certificates are recorded in the run manifest</span></li>
+      </ul>
+    </div>
+    <div>
+      <div class="terminal">
+        <div class="terminal-bar"><div class="terminal-dot" style="background:#FF5F56"></div><div class="terminal-dot" style="background:#FFBD2E"></div><div class="terminal-dot" style="background:#27C93F"></div></div>
+        <div class="terminal-line"><span class="t-comment"># Run Manifest — Sealed</span></div>
+        <div class="terminal-line"><span class="t-key">run_id</span>: <span class="t-val">"nepa-2026-03-17-HK"</span></div>
+        <div class="terminal-line"><span class="t-key">engine_version</span>: <span class="t-val">"2.4.1"</span></div>
+        <div class="terminal-line"><span class="t-key">engine_sha</span>: <span class="t-val">"a7f3c8d4..."</span></div>
+        <div class="terminal-line"><span class="t-key">config_contract</span>: <span class="t-val">"v2.4.1-stable"</span></div>
+        <div class="terminal-line"><span class="t-key">config_hash</span>: <span class="t-val">"e2b9f1c3..."</span></div>
+        <div class="terminal-line"><span class="t-key">operator_token</span>: <span class="t-val">"SIGNED"</span></div>
+        <div class="terminal-line"><span class="t-key">manifest_seal</span>: <span class="t-ok">IMMUTABLE</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-panel">
+  <div class="section-panel-inner">
+    <div class="section-tag">02 — Configuration Immutability</div>
+    <h2 class="section-title">Configuration Immutability</h2>
+    <p class="section-lead">The analytical configuration governing each inspection run is sealed at run-start and cannot be modified during execution. This property is enforced at the architecture level, not by access controls.</p>
+    <div class="card-grid-3">
+      <div class="data-card"><div class="card-icon">&#9632;</div><h3>Pre-Run Parameter Locking</h3><p>All analytical parameters — detection thresholds, lane weights, fusion coefficients, and confidence bounds — are hashed and sealed before the first frame enters the pipeline.</p></div>
+      <div class="data-card"><div class="card-icon">&#9670;</div><h3>Immutability Enforcement</h3><p>Parameter modification after run-start is architecturally prevented. Any attempt to alter parameters mid-run is logged as a critical governance violation and terminates the run.</p></div>
+      <div class="data-card"><div class="card-icon">&#9671;</div><h3>Configuration Versioning</h3><p>Every configuration contract is stored under a versioned identifier. The full history of configuration changes is maintained with structured diffs and approval records.</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-tag">03 — Audit Logging Structure</div>
+  <h2 class="section-title">Audit Logging Structure</h2>
+  <p class="section-lead">The NEPA audit log is an append-only, hash-linked record of all system events from run initialisation to evidence archival. It is designed to support independent forensic analysis without requiring access to internal tooling.</p>
+  <div class="two-col">
+    <ul class="trace-list">
+      <li class="trace-item"><span class="trace-num">01</span><span class="trace-text"><strong>Append-Only Write Model</strong> — log entries cannot be modified or deleted; the log grows monotonically throughout the run</span></li>
+      <li class="trace-item"><span class="trace-num">02</span><span class="trace-text"><strong>Hash-Linked Block Structure</strong> — each log entry includes the hash of its predecessor, creating a tamper-evident chain</span></li>
+      <li class="trace-item"><span class="trace-num">03</span><span class="trace-text"><strong>Structured Event Schema</strong> — every event type has a defined schema; free-text entries are prohibited</span></li>
+      <li class="trace-item"><span class="trace-num">04</span><span class="trace-text"><strong>Timestamp Authority</strong> — all log entries are timestamped against a hardware time source; drift is detected and logged</span></li>
+      <li class="trace-item"><span class="trace-num">05</span><span class="trace-text"><strong>Chain Seal Verification</strong> — the complete audit chain is sealed at run-end; post-run verification is available to authorised auditors</span></li>
+    </ul>
+    <div>
+      <div class="callout"><p>The audit log is designed to be self-describing. An authorised third-party auditor with access to the log, the run manifest, and the replay package has sufficient information to independently validate any finding without further access to internal systems.</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="section-panel">
+  <div class="section-panel-inner">
+    <div class="section-tag">04 — Evidence Retention Model</div>
+    <h2 class="section-title">Evidence Retention Model</h2>
+    <p class="section-lead">All inspection evidence is retained in a structured, queryable archive with defined retention periods, access controls, and integrity verification schedules.</p>
+    <table class="gov-table">
+      <thead><tr><th>Evidence Type</th><th>Retention Period</th><th>Integrity Check</th><th>Auditor Access</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Raw Sensor Frames</strong><small>Original camera, LiDAR, thermal data</small></td><td>7 years</td><td>Weekly SHA-256 verification</td><td><span class="badge badge-green">Available</span></td></tr>
+        <tr><td><strong>Processed Spike Representations</strong><small>Neuromorphic encoded data</small></td><td>7 years</td><td>Weekly SHA-256 verification</td><td><span class="badge badge-green">Available</span></td></tr>
+        <tr><td><strong>Inspection Findings</strong><small>Derived defect records with confidence scores</small></td><td>Indefinite</td><td>Daily integrity scan</td><td><span class="badge badge-green">Available</span></td></tr>
+        <tr><td><strong>Audit Chain Logs</strong><small>Complete event logs with hash linkage</small></td><td>Indefinite</td><td>Continuous chain validation</td><td><span class="badge badge-green">Available</span></td></tr>
+        <tr><td><strong>Configuration Contracts</strong><small>Versioned analytical parameter records</small></td><td>Indefinite</td><td>On-access hash verification</td><td><span class="badge badge-green">Available</span></td></tr>
+        <tr><td><strong>Replay Attestation Packages</strong><small>Third-party auditor evidence packages</small></td><td>10 years</td><td>On-generation signing</td><td><span class="badge badge-green">Available</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-tag">05 — Change Management Discipline</div>
+  <h2 class="section-title">Change Management Discipline</h2>
+  <p class="section-lead">All changes to the NEPA platform — including engine updates, configuration modifications, and infrastructure changes — follow a structured change management process designed to maintain the integrity of the audit and evidence systems.</p>
+  <div class="two-col">
+    <ul class="trace-list">
+      <li class="trace-item"><span class="trace-num">01</span><span class="trace-text"><strong>Change Request Documentation</strong> — every proposed change is documented with rationale, scope, and risk assessment before review</span></li>
+      <li class="trace-item"><span class="trace-num">02</span><span class="trace-text"><strong>Impact Assessment</strong> — changes are assessed for their effect on determinism guarantees, audit chain integrity, and evidence compatibility</span></li>
+      <li class="trace-item"><span class="trace-num">03</span><span class="trace-text"><strong>Regression Validation</strong> — all changes must pass the full automated regression suite before approval, including determinism verification and replay validation</span></li>
+      <li class="trace-item"><span class="trace-num">04</span><span class="trace-text"><strong>Signed Release Records</strong> — approved changes are released under signed, immutable release records with full diff documentation</span></li>
+      <li class="trace-item"><span class="trace-num">05</span><span class="trace-text"><strong>Change Audit Trail</strong> — every approved change is recorded in the governance audit trail, accessible to authorised reviewers</span></li>
+    </ul>
+    <div>
+      <table class="gov-table">
+        <thead><tr><th>Control</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Determinism Policy Documentation</td><td><span class="badge badge-green">Active</span></td></tr>
+          <tr><td>Change Control Process</td><td><span class="badge badge-green">Active</span></td></tr>
+          <tr><td>Parameter Locking Enforcement</td><td><span class="badge badge-green">Active</span></td></tr>
+          <tr><td>Fault Injection Test Suite</td><td><span class="badge badge-green">Active</span></td></tr>
+          <tr><td>Readiness Matrix Review</td><td><span class="badge">In Progress</span></td></tr>
+          <tr><td>Third-Party Audit Program</td><td><span class="badge">Available on Request</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="cta-section">
+  <h2>Governance Documentation Available</h2>
+  <p>Full governance documentation packages are available for regulatory reviewers and enterprise procurement teams upon formal request.</p>
+  <div class="hero-actions" style="justify-content:center;">
+    <a href="contact.html" class="btn-primary">Request Documentation</a>
+    <a href="technology.html" class="btn-secondary">Technical Architecture</a>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-left">
+      <div class="footer-brand-text">AURASENSE</div>
+      <div class="footer-tagline">Deterministic Inspection Infrastructure</div>
+    </div>
+    <div class="footer-copy">&#169; 2026 AURASENSE. All rights reserved.</div>
+  </div>
+</footer>
+
+</body>
+</html>

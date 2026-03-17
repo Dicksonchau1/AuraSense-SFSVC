@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Platform — NEPA by AURASENSE</title>
+  <meta name="description" content="NEPA platform architecture: deterministic multi-lane processing, evidence framework, and enterprise deployment model.">
+  <link rel="stylesheet" href="css/nepa.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-brand">NEPA <span>by AURASENSE</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="platform.html" class="active">Platform</a></li>
+      <li><a href="technology.html">Technology</a></li>
+      <li><a href="governance.html">Governance</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <a href="contact.html" class="nav-cta">Request Briefing</a>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-tag">Platform</div>
+  <h1>The NEPA Inspection Platform</h1>
+  <p>NEPA is a deterministic inspection infrastructure platform engineered for auditability, replay verification, and governance control. Designed for safety-critical environments where inspection systems must withstand independent scrutiny.</p>
+</div>
+
+<div class="section">
+  <div class="section-tag">01 — System Overview</div>
+  <div class="two-col-wide">
+    <div>
+      <h2 class="section-title">System Overview</h2>
+      <p class="section-lead">The NEPA platform processes sensor data through a structured, deterministic pipeline that produces inspection findings with full attributable provenance. Every finding references the exact engine version, configuration state, and sensor calibration record that produced it.</p>
+      <div class="callout"><p>The system is designed not merely to detect — but to produce findings that can be independently validated, replayed, and defended in regulatory, legal, or procurement contexts.</p></div>
+    </div>
+    <div>
+      <div class="metrics-grid" style="grid-template-columns:1fr 1fr;">
+        <div class="metric-cell"><div class="metric-num">8</div><div class="metric-desc">Processing Lanes</div></div>
+        <div class="metric-cell"><div class="metric-num">&lt;2<span class="metric-unit">ms</span></div><div class="metric-desc">P95 Latency</div></div>
+        <div class="metric-cell" style="border-top:1px solid var(--border);"><div class="metric-num">0</div><div class="metric-desc">Shared Mutable State</div></div>
+        <div class="metric-cell" style="border-top:1px solid var(--border);"><div class="metric-num">TRL 6</div><div class="metric-desc">Readiness Level</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="section-panel">
+  <div class="section-panel-inner">
+    <div class="section-tag">02 — Real-Time Operational Discipline</div>
+    <h2 class="section-title">Real-Time Operational Discipline</h2>
+    <p class="section-lead">The platform operates under a formal real-time latency contract. Time-critical detection and secondary analytics are separated by design, ensuring that control-path behavior is never degraded by reporting or logging activity.</p>
+    <div class="card-grid-3">
+      <div class="data-card"><div class="card-icon">&#9632;</div><h3>Latency Contract Enforcement</h3><p>Each processing lane maintains an independent watchdog. Latency exceedance events are logged and escalated without affecting adjacent lanes.</p></div>
+      <div class="data-card"><div class="card-icon">&#9671;</div><h3>Control-Path Isolation</h3><p>The real-time control path is isolated from analytics, logging, and reporting subsystems. No secondary process can introduce jitter into the detection pipeline.</p></div>
+      <div class="data-card"><div class="card-icon">&#9670;</div><h3>Sustained Load Validation</h3><p>The platform is validated under multi-hour sustained operational workloads at peak drone inspection throughput, with automated regression benchmarking on every release.</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="section">
+  <div class="section-tag">03 — Deterministic Multi-Lane Architecture</div>
+  <div class="two-col">
+    <div>
+      <h2 class="section-title">Deterministic Multi-Lane Architecture</h2>
+      <p class="section-lead">Eight independent processing lanes operate in parallel, each handling a dedicated sensor modality or processing function. Independence is enforced at the data, memory, and scheduling levels.</p>
+      <ul class="trace-list">
+        <li class="trace-item"><span class="trace-num">L1</span><span class="trace-text"><strong>RGB Visual Processing</strong> — crack and surface defect detection from high-resolution camera frames</span></li>
+        <li class="trace-item"><span class="trace-num">L2</span><span class="trace-text"><strong>LiDAR Point Cloud Analysis</strong> — geometric deviation and structural deformation detection</span></li>
+        <li class="trace-item"><span class="trace-num">L3</span><span class="trace-text"><strong>Thermal Imaging Branch</strong> — subsurface defect and moisture ingress detection</span></li>
+        <li class="trace-item"><span class="trace-num">L4</span><span class="trace-text"><strong>Spike Encoding Lane</strong> — neuromorphic spike-domain representation for bandwidth reduction</span></li>
+        <li class="trace-item"><span class="trace-num">L5–L8</span><span class="trace-text"><strong>Fusion and Aggregation Lanes</strong> — evidence-weighted multi-modal fusion with confidence scoring</span></li>
+      </ul>
+    </div>
+    <div>
+      <div class="terminal">
+        <div class="terminal-bar"><div class="terminal-dot" style="background:#FF5F56"></div><div class="terminal-dot" style="background:#FFBD2E"></div><div class="terminal-dot" style="background:#27C93F"></div></div>
+        <div class="terminal-line"><span class="t-comment"># Lane Status Report</span></div>
+        <div class="terminal-line"><span class="t-key">lane[1]</span>: <span class="t-val">RGB</span> <span class="t-ok">OK</span> <span class="t-comment">0.41ms</span></div>
+        <div class="terminal-line"><span class="t-key">lane[2]</span>: <span class="t-val">LiDAR</span> <span class="t-ok">OK</span> <span class="t-comment">0.38ms</span></div>
+        <div class="terminal-line"><span class="t-key">lane[3]</span>: <span class="t-val">Thermal</span> <span class="t-ok">OK</span> <span class="t-comment">0.44ms</span></div>
+        <div class="terminal-line"><span class="t-key">lane[4]</span>: <span class="t-val">Spike</span> <span class="t-ok">OK</span> <span class="t-comment">0.29ms</span></div>
+        <div class="terminal-line"><span class="t-key">lane[5]</span>: <span class="t-val">Fusion</span> <span class="t-ok">OK</span> <span class="t-comment">0.72ms</span></div>
+        <div class="terminal-line"><span class="t-key">p95_overall</span>: <span class="t-ok">0.72ms</span></div>
+        <div class="terminal-line"><span class="t-key">violations</span>: <span class="t-val">0</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-panel">
+  <div class="section-panel-inner">
+    <div class="section-tag">04 — Evidence &amp; Replay Framework</div>
+    <h2 class="section-title">Evidence &amp; Replay Framework</h2>
+    <p class="section-lead">All inspection findings are stored with sufficient provenance to support independent re-derivation. The replay system allows any finding to be reconstructed from preserved sensor data using the original engine version and configuration state.</p>
+    <div class="card-grid-2">
+      <div class="data-card"><div class="card-icon">&#11042;</div><h3>Immutable Evidence Storage</h3><p>Raw sensor frames, processed representations, and derived findings are written to append-only storage with cryptographic sealing. No record can be modified without detection.</p></div>
+      <div class="data-card"><div class="card-icon">&#9678;</div><h3>Structured Replay Verification</h3><p>Byte-level deterministic replay reproduces every intermediate processing state. Auditors receive a signed attestation package alongside replay artifacts.</p></div>
+      <div class="data-card"><div class="card-icon">&#9711;</div><h3>Version Consistency Validation</h3><p>Before replay, the system validates that stored configuration hashes match the requested engine version. Mismatches halt replay and generate a compliance incident.</p></div>
+      <div class="data-card"><div class="card-icon">&#9632;</div><h3>Tamper-Evident Audit Chain</h3><p>Every system event enters a hash-linked chain. Each block references its predecessor, making retrospective modification detectable at any audit depth.</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-tag">05 — Enterprise Deployment Model</div>
+  <h2 class="section-title">Enterprise Deployment Model</h2>
+  <p class="section-lead">NEPA integrates into existing camera-to-edge-to-cloud architectures. It is designed to operate on standard hardware and enhance existing analytics stacks without replacing them.</p>
+  <ul class="trace-list">
+    <li class="trace-item"><span class="trace-num">L1</span><span class="trace-text"><strong>Edge Node</strong> — drone-mounted NEPA engine running real-time spike processing under the latency contract</span></li>
+    <li class="trace-item"><span class="trace-num">L2</span><span class="trace-text"><strong>Site Gateway</strong> — multi-drone aggregation, local evidence store, site-level audit chain management</span></li>
+    <li class="trace-item"><span class="trace-num">L3</span><span class="trace-text"><strong>Enterprise Hub</strong> — centralised governance, cross-site analytics, compliance reporting dashboards</span></li>
+    <li class="trace-item"><span class="trace-num">L4</span><span class="trace-text"><strong>Audit Vault</strong> — immutable long-term evidence storage with third-party auditor access portal</span></li>
+  </ul>
+</div>
+
+<div class="cta-section">
+  <h2>Ready to Evaluate NEPA for Your Infrastructure?</h2>
+  <p>Request a formal technical briefing for procurement review, regulatory evaluation, or enterprise integration assessment.</p>
+  <div class="hero-actions" style="justify-content:center;">
+    <a href="contact.html" class="btn-primary">Request Briefing</a>
+    <a href="governance.html" class="btn-secondary">Governance Framework</a>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-left">
+      <div class="footer-brand-text">AURASENSE</div>
+      <div class="footer-tagline">Deterministic Inspection Infrastructure</div>
+    </div>
+    <div class="footer-copy">&#169; 2026 AURASENSE. All rights reserved.</div>
+  </div>
+</footer>
+
+</body>
+</html>

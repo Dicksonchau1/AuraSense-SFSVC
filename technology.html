@@ -3,219 +3,140 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Technology — AuraSense SFSVC</title>
-  <meta name="description" content="SFSVC inspection pipeline and neuromorphic codec layer. Deterministic control with neuromorphic compression.">
-  <meta name="theme-color" content="#06060A">
-  <link rel="stylesheet" href="./css/design.css">
-  <link rel="stylesheet" href="./css/animate.css">
-  <link rel="stylesheet" href="./css/layout.css">
+  <title>Technology — NEPA by AURASENSE</title>
+  <meta name="description" content="NEPA technology architecture: deterministic execution model, version binding, configuration governance, and change control.">
+  <link rel="stylesheet" href="css/nepa.css">
 </head>
 <body>
 
-<!-- ─── NAV ──────────────────────────────────────────────────── -->
-<nav class="nav" id="main-nav">
+<nav class="nav">
   <div class="nav-inner">
-    <a href="./index.html" class="nav-brand">
-      <span class="brand-name">AURASENSE</span>
-      <span class="brand-badge">SFSVC</span>
-    </a>
+    <a href="index.html" class="nav-brand">NEPA <span>by AURASENSE</span></a>
     <ul class="nav-links">
-      <li><a href="./index.html">Home</a></li>
-      <li><a href="./technology.html" class="active">Technology</a></li>
-      <li><a href="./solutions.html">Solutions</a></li>
-      <li><a href="./benchmark.html">Benchmarks</a></li>
-      <li><a href="./pricing.html">Pricing</a></li>
-      <li><a href="./security.html">Security</a></li>
-      <li><a href="./research.html">Research</a></li>
-      <li><a href="./about.html">About</a></li>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="platform.html">Platform</a></li>
+      <li><a href="technology.html" class="active">Technology</a></li>
+      <li><a href="governance.html">Governance</a></li>
+      <li><a href="contact.html">Contact</a></li>
     </ul>
-    <a href="./pricing.html" class="btn btn-primary">Start Free Trial</a>
-    <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu">
-      <span></span><span></span><span></span>
-    </button>
+    <a href="contact.html" class="nav-cta">Request Briefing</a>
   </div>
 </nav>
-<nav class="nav-drawer" id="nav-drawer">
-  <a href="./index.html">Home</a>
-  <a href="./technology.html">Technology</a>
-  <a href="./solutions.html">Solutions</a>
-  <a href="./benchmark.html">Benchmarks</a>
-  <a href="./pricing.html">Pricing</a>
-  <a href="./security.html">Security</a>
-  <a href="./research.html">Research</a>
-  <a href="./about.html">About</a>
-  <a href="./pricing.html" class="text-cyan">Start Free Trial →</a>
-</nav>
 
-<!-- ─── HERO ──────────────────────────────────────────────────── -->
-<section class="page-hero">
-  <div class="container">
-    <h1>Technology</h1>
-    <p>Inspection pipeline and neuromorphic codec layer.</p>
-  </div>
-</section>
+<div class="page-hero">
+  <div class="page-hero-tag">Technology</div>
+  <h1>Architecture, Not Hype</h1>
+  <p>The technical foundations of the NEPA platform are documented here for the purpose of procurement review, technical due diligence, and regulatory evaluation. Every architectural decision serves the platform's core requirement: deterministic, auditable, replay-verifiable inspection output.</p>
+</div>
 
-<!-- ─── PIPELINE - TRADITIONAL ───────────────────────────────── -->
-<section class="section">
-  <div class="container">
-    <span class="section-label reveal">Inspection Pipeline</span>
-    <h2 class="h2 reveal reveal-delay-1">Traditional Architecture</h2>
-    <p class="reveal reveal-delay-2" style="margin-top:24px;font-size:18px;line-height:1.7;max-width:900px;">
-      Camera → Edge Model → Cloud → Decision
-    </p>
-    <p class="reveal" style="margin-top:16px;font-size:16px;line-height:1.7;max-width:900px;color:var(--text-muted);">
-      Latency variability accumulates across the stack.
-    </p>
-  </div>
-</section>
-
-<!-- ─── PIPELINE - SFSVC ──────────────────────────────────────── -->
-<section class="section" style="background:var(--bg-surface);position:relative;">
-  <div class="container">
-    <span class="section-label reveal">SFSVC Architecture</span>
-
-    <div class="reveal reveal-delay-2" style="margin:32px 0;max-width:900px;">
-      <video
-        src="./videos/neuromorphic-architecture.mp4"
-        controls
-        style="width:100%;border-radius:8px;border:1px solid rgba(255,255,255,0.1);"
-        poster=""
-        preload="metadata">
-        Your browser does not support the video tag.
-      </video>
+<div class="section">
+  <div class="section-tag">01 — Deterministic Execution Model</div>
+  <div class="two-col">
+    <div>
+      <h2 class="section-title">Deterministic Execution Model</h2>
+      <p class="section-lead">The NEPA engine is designed to produce identical output for identical input, independent of execution time, hardware state, or concurrent load. This property is enforced by architectural constraints, not by convention.</p>
+      <div class="callout"><p>Determinism is not a feature that can be toggled. It is the foundational constraint from which the entire processing architecture is derived. Any deviation from deterministic behavior is treated as a critical fault.</p></div>
+      <ul class="trace-list">
+        <li class="trace-item"><span class="trace-num">01</span><span class="trace-text"><strong>No Floating-Point Non-Determinism</strong> — all arithmetic operations use fixed ordering and rounding modes enforced at compile time</span></li>
+        <li class="trace-item"><span class="trace-num">02</span><span class="trace-text"><strong>Seeded Stochastic Processes</strong> — any process involving randomness uses deterministic seeding bound to the run ID</span></li>
+        <li class="trace-item"><span class="trace-num">03</span><span class="trace-text"><strong>Locked Thread Scheduling</strong> — processing lane scheduling is fixed at run-start; no dynamic rebalancing during execution</span></li>
+        <li class="trace-item"><span class="trace-num">04</span><span class="trace-text"><strong>Memory Isolation</strong> — each lane operates in isolated memory regions with no shared mutable state across lane boundaries</span></li>
+      </ul>
     </div>
-
-    <div class="neuro-viz-container" style="margin:32px 0;">
-      <canvas id="arch-viz-canvas" style="height:400px;"></canvas>
-    </div>
-
-    <div class="endpoint-card reveal" style="margin-top:32px;max-width:700px;">
-      <p style="margin:0;font-size:16px;line-height:1.9;">
-        Camera<br>
-        ↓<br>
-        Neuromorphic Codec Layer (SFSVC)<br>
-        ↓<br>
-        Deterministic Control Loop (&lt;3 ms)<br>
-        ↓<br>
-        Background Semantic Lanes<br>
-        ↓<br>
-        Cloud Analytics &amp; Storage
-      </p>
-    </div>
-
-    <p class="reveal" style="margin-top:32px;font-size:16px;line-height:1.7;max-width:900px;">
-      The safety loop is isolated from non‑deterministic workloads.
-      No heavy inference is allowed to block control.
-    </p>
-  </div>
-</section>
-
-<!-- ─── NEUROMORPHIC CODEC ────────────────────────────────────── -->
-<section class="section">
-  <div class="container">
-    <span class="section-label reveal">Neuromorphic Codec Layer</span>
-    <h2 class="h2 reveal reveal-delay-1">SFSVC converts frame‑to‑frame changes into sparse ON/OFF spike representations.</h2>
-    <p class="reveal reveal-delay-2" style="margin-top:24px;font-size:18px;line-height:1.7;max-width:900px;">
-      Instead of transmitting full frames, the system transmits:
-    </p>
-
-    <div class="feature-grid stagger" style="margin-top:32px;">
-      <div class="feature-card">
-        <h3>Control‑relevant deltas</h3>
-      </div>
-      <div class="feature-card">
-        <h3>Crack severity metrics</h3>
-      </div>
-      <div class="feature-card">
-        <h3>Audit metadata</h3>
+    <div>
+      <div class="terminal">
+        <div class="terminal-bar"><div class="terminal-dot" style="background:#FF5F56"></div><div class="terminal-dot" style="background:#FFBD2E"></div><div class="terminal-dot" style="background:#27C93F"></div></div>
+        <div class="terminal-line"><span class="t-comment"># Determinism Verification</span></div>
+        <div class="terminal-line"><span class="t-key">run_a_hash</span>: <span class="t-val">"c3f8a21d..."</span></div>
+        <div class="terminal-line"><span class="t-key">run_b_hash</span>: <span class="t-val">"c3f8a21d..."</span></div>
+        <div class="terminal-line"><span class="t-key">match</span>: <span class="t-ok">true</span></div>
+        <div class="terminal-line"><span class="t-key">fp_mode</span>: <span class="t-val">IEEE754_STRICT</span></div>
+        <div class="terminal-line"><span class="t-key">thread_sched</span>: <span class="t-val">FIXED</span></div>
+        <div class="terminal-line"><span class="t-key">shared_state</span>: <span class="t-val">NONE</span></div>
+        <div class="terminal-line"><span class="t-key">determinism_cert</span>: <span class="t-ok">PASS</span></div>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- ─── MEASURED PERFORMANCE ──────────────────────────────────── -->
-<section class="section" style="background:var(--bg-surface)">
-  <div class="container">
-    <span class="section-label reveal">Measured Performance (C++ Engine)</span>
-
-    <div class="grid-2 stagger" style="margin-top:32px;">
-      <div class="info-card">
-        <h3>Latency</h3>
-        <p style="margin-top:16px;line-height:1.9;">
-          2.50 ms average<br>
-          2.81 ms P99<br>
-          0% violations of 6 ms contract
-        </p>
-      </div>
-      <div class="info-card">
-        <h3>Compression</h3>
-        <p style="margin-top:16px;line-height:1.9;">
-          ~10× effective compression<br>
-          ~90% bandwidth reduction
-        </p>
-      </div>
-    </div>
-
-    <p class="reveal" style="margin-top:32px;font-size:14px;color:var(--text-muted);max-width:900px;">
-      Measured on 720p inspection video.
-    </p>
-  </div>
-</section>
-
-<!-- ─── FOOTER ────────────────────────────────────────────────── -->
-<footer class="footer">
-  <div class="container">
-    <div class="footer-grid">
-      <div class="footer-col">
-        <div class="nav-brand" style="margin-bottom:16px">
-          <span class="brand-name">AURASENSE</span>
-          <span class="brand-badge">SFSVC</span>
-        </div>
-        <p class="footer-tagline">SFSVC — Neuromorphic perception infrastructure for edge autonomy.<br>Built in Hong Kong. Designed for global deployment.</p>
-        <p class="footer-copy">© 2026 AuraSense Limited. All rights reserved.</p>
-      </div>
-      <div class="footer-col">
-        <h4>Product</h4>
-        <ul>
-          <li><a href="./technology.html">Technology</a></li>
-          <li><a href="./solutions.html">Solutions</a></li>
-          <li><a href="./benchmark.html">Benchmarks</a></li>
-          <li><a href="./pricing.html">Pricing</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Company</h4>
-        <ul>
-          <li><a href="./about.html">About</a></li>
-          <li><a href="./security.html">Security</a></li>
-          <li><a href="./research.html">Research</a></li>
-          <li><a href="mailto:support@aurasensehk.com">Contact</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Legal</h4>
-        <ul>
-          <li><a href="./privacy.html">Privacy</a></li>
-          <li><a href="./terms.html">Terms</a></li>
-          <li><a href="./refund.html">Refund</a></li>
-          <li><a href="./cookies.html">Cookies</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">SFSVC SDK v2.0 — Ed25519 Licensed — Built in Hong Kong 🇭🇰</div>
-  </div>
-</footer>
-
-<!-- ─── COOKIE BANNER ─────────────────────────────────────────── -->
-<div class="cookie-banner" id="cookie-banner" role="region" aria-label="Cookie notice">
-  <p>We use essential cookies only. No tracking.</p>
-  <div class="cookie-actions">
-    <button class="btn btn-primary btn-sm" id="cookie-accept">Accept</button>
-    <a href="./cookies.html" class="cookie-learn">Learn more →</a>
   </div>
 </div>
 
-<script src="./js/main.js"></script>
-<script src="./js/neuro-viz.js"></script>
+<div class="section-panel">
+  <div class="section-panel-inner">
+    <div class="section-tag">02 — Version Binding Mechanism</div>
+    <h2 class="section-title">Version Binding Mechanism</h2>
+    <p class="section-lead">Every inspection run is cryptographically bound to a unique, immutable system state. The binding mechanism ensures that findings cannot be attributed to an ambiguous or unverifiable configuration.</p>
+    <div class="card-grid-3">
+      <div class="data-card"><div class="card-icon">&#9632;</div><h3>Binary Fingerprinting</h3><p>Every engine build is SHA-256 fingerprinted before deployment. The fingerprint is embedded in the audit record and cannot be altered post-hoc.</p></div>
+      <div class="data-card"><div class="card-icon">&#9670;</div><h3>Configuration Hashing</h3><p>The complete analytical parameter set — thresholds, lane weights, fusion coefficients — is hashed at run-start and recorded in the audit chain.</p></div>
+      <div class="data-card"><div class="card-icon">&#9671;</div><h3>Sensor Certificate Binding</h3><p>Camera intrinsics, LiDAR extrinsics, and thermal calibration records are linked to the run ID before the first frame is processed.</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-tag">03 — Configuration Governance</div>
+  <h2 class="section-title">Configuration Governance</h2>
+  <p class="section-lead">Analytical configuration is treated as a versioned artifact subject to formal change control. No configuration change may enter a production run without a corresponding version record.</p>
+  <div class="two-col">
+    <ul class="trace-list">
+      <li class="trace-item"><span class="trace-num">01</span><span class="trace-text"><strong>Configuration Contracts</strong> — each deployment uses a named, versioned configuration contract that defines all analytical parameters</span></li>
+      <li class="trace-item"><span class="trace-num">02</span><span class="trace-text"><strong>Parameter Locking</strong> — parameters are sealed at run-start; mid-inspection modification is architecturally prevented</span></li>
+      <li class="trace-item"><span class="trace-num">03</span><span class="trace-text"><strong>Diff-Auditable History</strong> — every configuration version is stored with a structured diff against its predecessor</span></li>
+      <li class="trace-item"><span class="trace-num">04</span><span class="trace-text"><strong>Rollback Capability</strong> — any prior configuration version can be reinstated with full audit trail preservation</span></li>
+    </ul>
+    <div>
+      <div class="callout"><p><strong>Configuration governance is not optional.</strong> Any inspection run that cannot be attributed to a known, versioned configuration state is flagged as non-compliant and excluded from the auditable evidence set.</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="section-panel">
+  <div class="section-panel-inner">
+    <div class="section-tag">04 — Replay Validation Logic</div>
+    <h2 class="section-title">Replay Validation Logic</h2>
+    <p class="section-lead">The replay system allows any inspection finding to be independently re-derived from preserved sensor data. Replay is not a debugging tool — it is a formal validation mechanism with its own audit trail.</p>
+    <div class="card-grid-2">
+      <div class="data-card"><div class="card-icon">&#9711;</div><h3>Pre-Replay State Verification</h3><p>Before replay begins, the system verifies that the requested engine version, configuration hash, and sensor calibration records match the stored run manifest. Any discrepancy halts the replay and generates a compliance incident.</p></div>
+      <div class="data-card"><div class="card-icon">&#9632;</div><h3>Byte-Level Deterministic Reconstruction</h3><p>The replay engine reconstructs every intermediate processing state at the byte level. Output is compared to stored findings using a structured diff that flags any divergence as a critical validation failure.</p></div>
+      <div class="data-card"><div class="card-icon">&#9670;</div><h3>Third-Party Auditor Interface</h3><p>Auditors receive a signed attestation package containing the run manifest, replay output, diff report, and chain seal verification. No internal tooling is required on the auditor side.</p></div>
+      <div class="data-card"><div class="card-icon">&#9671;</div><h3>Replay Audit Trail</h3><p>Every replay attempt is itself logged in the audit chain, including who initiated it, when, the result, and whether any discrepancies were found.</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-tag">05 — Change Control Framework</div>
+  <h2 class="section-title">Change Control Framework</h2>
+  <p class="section-lead">All changes to the NEPA engine, configuration system, and evidence framework follow a structured change control process. No change reaches production without a signed release record and regression validation.</p>
+  <table class="gov-table">
+    <thead><tr><th>Change Type</th><th>Control Mechanism</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Engine Binary Updates</strong><small>Core processing logic modifications</small></td><td>Git-tagged signed release + automated regression suite + fingerprint update</td><td><span class="badge badge-green">Active</span></td></tr>
+      <tr><td><strong>Configuration Contract Changes</strong><small>Analytical parameter modifications</small></td><td>Version increment + structured diff + approval gate before deployment</td><td><span class="badge badge-green">Active</span></td></tr>
+      <tr><td><strong>Audit Chain Schema Changes</strong><small>Evidence storage format modifications</small></td><td>Schema versioning + migration validation + backward compatibility test</td><td><span class="badge badge-green">Active</span></td></tr>
+      <tr><td><strong>Sensor Calibration Updates</strong><small>Hardware calibration record changes</small></td><td>Certificate versioning + binding validation before next run</td><td><span class="badge badge-green">Active</span></td></tr>
+      <tr><td><strong>Deployment Architecture Changes</strong><small>Infrastructure and topology modifications</small></td><td>Architecture review board sign-off + integration test suite</td><td><span class="badge">In Review</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="cta-section">
+  <h2>Technical Briefing Available</h2>
+  <p>Detailed architecture documentation is available for procurement reviewers, technical due diligence teams, and regulatory evaluators upon request.</p>
+  <div class="hero-actions" style="justify-content:center;">
+    <a href="contact.html" class="btn-primary">Request Briefing</a>
+    <a href="governance.html" class="btn-secondary">Governance Framework</a>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-left">
+      <div class="footer-brand-text">AURASENSE</div>
+      <div class="footer-tagline">Deterministic Inspection Infrastructure</div>
+    </div>
+    <div class="footer-copy">&#169; 2026 AURASENSE. All rights reserved.</div>
+  </div>
+</footer>
+
 </body>
 </html>
