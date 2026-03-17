@@ -5,49 +5,80 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NEPA by AURASENSE — Deterministic Inspection Infrastructure</title>
   <meta name="description" content="NEPA is a deterministic inspection infrastructure platform engineered for auditability, replay verification, and governance control.">
-  <link rel="stylesheet" href="css/nepa.css">
+  <link rel="stylesheet" href="./css/nepa.css">
 </head>
 <body>
 
-<nav class="nav">
-  <div class="nav-inner">
-    <a href="index.html" class="nav-brand">NEPA <span>by AURASENSE</span></a>
-    <ul class="nav-links">
-      <li><a href="index.html" class="active">Home</a></li>
-      <li><a href="platform.html">Platform</a></li>
-      <li><a href="technology.html">Technology</a></li>
-      <li><a href="governance.html">Governance</a></li>
-      <li><a href="contact.html">Contact</a></li>
+<!-- ═══ NAV ═══════════════════════════════════════════════════ -->
+<header class="site-nav" id="site-nav">
+  <div class="site-nav__inner">
+    <a href="./index.html" class="site-nav__logo">AURASENSE <span>/ NEPA</span></a>
+    <ul class="site-nav__links">
+      <li><a href="./platform.html">Platform</a></li>
+      <li><a href="./technology.html">Technology</a></li>
+      <li><a href="./governance.html">Governance</a></li>
+      <li class="company-dropdown" id="company-dd">
+        <button aria-haspopup="true" aria-expanded="false" id="company-btn">
+          Company <span class="site-nav__chevron"></span>
+        </button>
+        <div class="site-nav__dropdown" role="menu">
+          <a href="./about.html" role="menuitem">About</a>
+          <a href="./careers.html" role="menuitem">Careers</a>
+          <a href="./contact.html" role="menuitem">Contact</a>
+        </div>
+      </li>
     </ul>
-    <a href="contact.html" class="nav-cta">Request Briefing</a>
+    <a href="./contact.html" class="site-nav__cta">Request Briefing</a>
+    <button class="site-nav__hamburger" id="hamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
+</header>
+<nav class="site-nav__drawer" id="mobile-drawer">
+  <a href="./platform.html">Platform</a>
+  <a href="./technology.html">Technology</a>
+  <a href="./governance.html">Governance</a>
+  <a href="./about.html">About</a>
+  <a href="./careers.html">Careers</a>
+  <a href="./contact.html">Contact</a>
+  <a href="./contact.html" style="color:#FFB020">Request Briefing →</a>
 </nav>
 
+<!-- ═══ HERO ════════════════════════════════════════════════════ -->
 <section class="hero">
-  <video class="hero-video" autoplay muted loop playsinline>
-    <source src="veo2_video (3).mp4" type="video/mp4">
-  </video>
-  <div class="hero-overlay"></div>
-  <div class="hero-content">
-    <div class="hero-eyebrow">Deterministic Inspection Infrastructure</div>
-    <h1>Inspection Intelligence Built for Accountability</h1>
-    <p class="hero-sub">NEPA is a deterministic inspection infrastructure platform engineered for auditability, replay verification, and governance control.</p>
-    <div class="hero-actions">
-      <a href="platform.html" class="btn-primary">Explore the Platform</a>
-      <a href="governance.html" class="btn-secondary">Governance Framework</a>
+  <div class="hero__inner">
+    <div class="hero__left">
+      <div class="hero__eyebrow fade-up">Neuromorphic Inspection Infrastructure</div>
+      <h1 class="hero__h1 fade-up">Neuromorphic Inspection Intelligence</h1>
+      <p class="hero__sub fade-up">
+        <span>Deterministic</span>
+        <span>Attributable</span>
+        <span>Replay-Verified</span>
+        <span>Governed</span>
+        <span>Secure</span>
+      </p>
+      <div class="hero__actions fade-up">
+        <a href="./contact.html" class="btn-primary">Request Briefing</a>
+        <a href="./platform.html" class="btn-outline">Explore Platform</a>
+      </div>
+    </div>
+    <div class="hero__right">
+      <canvas id="spike-canvas"></canvas>
     </div>
   </div>
 </section>
 
+<!-- ═══ STATUS BAR ═════════════════════════════════════════════ -->
 <div class="status-bar">
   <div class="status-item"><div class="status-dot"></div><span class="status-label">Engine</span><span class="status-value">OPERATIONAL</span></div>
-  <div class="status-item"><span class="status-label">P95 Latency</span><span class="status-value">&lt;0.8ms</span></div>
-  <div class="status-item"><span class="status-label">Lanes</span><span class="status-value">8 Active</span></div>
-  <div class="status-item"><span class="status-label">Audit Chain</span><span class="status-value">SEALED</span></div>
+  <div class="status-item"><span class="status-label">P95 Latency</span><span class="status-value">&lt;2ms</span></div>
+  <div class="status-item"><span class="status-label">Lanes</span><span class="status-value">8 ACTIVE</span></div>
+  <div class="status-item"><span class="status-label">Shared State</span><span class="status-value">0</span></div>
+  <div class="status-item"><span class="status-label">Chain Seal</span><span class="status-value">INTACT</span></div>
   <div class="status-item"><span class="status-label">Replay Cert</span><span class="status-value">VERIFIED</span></div>
-  <div class="status-item"><span class="status-label">Tamper Events</span><span class="status-value">0</span></div>
 </div>
 
+<!-- ═══ SECTION 1: OVERVIEW ══════════════════════════════════════ -->
 <div class="divider"></div>
 <div class="section">
   <div class="section-tag">Platform Overview</div>
@@ -55,85 +86,368 @@
     <div>
       <h2 class="section-title">Purpose-Built for Infrastructure Environments</h2>
       <p class="section-lead">Inspection outcomes influence asset valuation, maintenance decisions, regulatory reporting, and operational safety. NEPA is designed for environments where inspection systems must do more than detect — they must withstand scrutiny.</p>
-      <div class="callout"><p>The platform introduces deterministic processing, explicit version control, and replay-certified evidence into inspection workflows. <strong>This is infrastructure software, not experimental analytics.</strong></p></div>
+      <div class="callout">
+        <p>NEPA is a deterministic inspection infrastructure platform engineered for auditability, replay verification, and governance control. This is infrastructure software, not exploratory analytics.</p>
+      </div>
     </div>
     <div>
-      <div class="metrics-grid" style="grid-template-columns:1fr 1fr;">
-        <div class="metric-cell"><div class="metric-num">8</div><div class="metric-desc">Processing Lanes</div></div>
-        <div class="metric-cell"><div class="metric-num">&lt;2<span class="metric-unit">ms</span></div><div class="metric-desc">P95 Latency</div></div>
-        <div class="metric-cell" style="border-top:1px solid var(--border);"><div class="metric-num">100<span class="metric-unit">%</span></div><div class="metric-desc">Deterministic</div></div>
-        <div class="metric-cell" style="border-top:1px solid var(--border);"><div class="metric-num">TRL 6</div><div class="metric-desc">Readiness Level</div></div>
+      <div class="metrics-block">
+        <div class="metric-cell">
+          <div class="metric-num">8</div>
+          <div class="metric-label">Parallel Processing Lanes</div>
+        </div>
+        <div class="metric-cell">
+          <div class="metric-num">&lt;2<span class="unit">ms</span></div>
+          <div class="metric-label">Real-Time Target (P95)*</div>
+        </div>
+        <div class="metric-cell">
+          <div class="metric-num">0</div>
+          <div class="metric-label">Shared Mutable State</div>
+        </div>
+      </div>
+      <p class="metrics-footnote">*Observed under controlled runtime configuration.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SECTION 2: REAL-TIME OPERATIONS ═════════════════════════ -->
+<div class="section-full">
+  <div class="section-full__inner">
+    <div class="section-tag">Real-Time Operations</div>
+    <h2 class="section-title">Operational Discipline Under Load</h2>
+    <p class="section-lead">NEPA operates under a defined real-time latency contract, separating time-critical control from secondary analytics. Predictable behavior under operational conditions is a prerequisite for regulated and enterprise environments.</p>
+    <div class="card-grid-3">
+      <div class="data-card">
+        <div class="data-card__icon">◈</div>
+        <h3>Deterministic Multi-Lane Architecture</h3>
+        <p>Eight parallel processing lanes with hard-bounded latency guarantees. Each lane operates independently with its own watchdog and telemetry channel. No shared mutable state between lanes.</p>
+      </div>
+      <div class="data-card">
+        <div class="data-card__icon">◎</div>
+        <h3>Continuous Latency Monitoring</h3>
+        <p>Per-frame metric capture and watchdog enforcement. Latency exceedance events are flagged, logged, and escalated before affecting downstream reporting pipelines.</p>
+      </div>
+      <div class="data-card">
+        <div class="data-card__icon">◧</div>
+        <h3>Validated Under Sustained Load</h3>
+        <p>Performance characteristics confirmed across multi-hour operational workloads at representative inspection throughput. Benchmark suites run continuously in CI with regression detection.</p>
+      </div>
+      <div class="data-card">
+        <div class="data-card__icon">⊕</div>
+        <h3>Structured Spike Processing</h3>
+        <p>Spike-timing-dependent plasticity rules govern adaptive weight updates. Gated modulation signals preserve stability on safety-critical processing pathways under variable load conditions.</p>
+      </div>
+      <div class="data-card">
+        <div class="data-card__icon">⊞</div>
+        <h3>GPU-Accelerated Edge Inference</h3>
+        <p>C++ core engine with hardware-accelerated inference delivers sub-threshold latency on edge-class devices. Deployable without cloud round-trips on standard embedded compute hardware.</p>
+      </div>
+      <div class="data-card">
+        <div class="data-card__icon">⊟</div>
+        <h3>Multi-Modal Sensor Fusion</h3>
+        <p>Simultaneous ingestion of RGB, LiDAR point cloud, and thermal imaging streams. Each modality processed in a dedicated lane before evidence-weighted fusion at the aggregation stage.</p>
       </div>
     </div>
   </div>
 </div>
 
-<div class="section-panel">
-  <div class="section-panel-inner">
-    <div class="section-tag">Core Capabilities</div>
-    <h2 class="section-title">Operational Discipline at Every Layer</h2>
-    <p class="section-lead">The platform separates time-critical control from secondary analytics, enforcing predictable behavior under sustained operational conditions.</p>
-    <div class="card-grid-3">
-      <div class="data-card"><div class="card-icon">&#11041;</div><h3>Deterministic Multi-Lane Architecture</h3><p>Eight parallel processing lanes with bounded latency guarantees. No shared mutable state between lanes.</p></div>
-      <div class="data-card"><div class="card-icon">&#9678;</div><h3>Replay-Certified Evidence</h3><p>Findings are independently re-derivable from preserved inspection data. Third-party auditor access is supported.</p></div>
-      <div class="data-card"><div class="card-icon">&#11070;</div><h3>Configuration Immutability</h3><p>Analytical parameters are locked at run-start and version-bound. No mid-inspection drift is possible.</p></div>
-      <div class="data-card"><div class="card-icon">&#9711;</div><h3>Cryptographic Audit Chains</h3><p>Every system event enters a tamper-evident chain. Each block references its predecessor hash.</p></div>
-      <div class="data-card"><div class="card-icon">&#9632;</div><h3>Multi-Modal Sensor Fusion</h3><p>RGB, LiDAR, and thermal inputs are processed in dedicated lanes before evidence-weighted fusion.</p></div>
-      <div class="data-card"><div class="card-icon">&#9670;</div><h3>Enterprise Deployment Model</h3><p>Integrates into existing camera-to-edge-to-cloud architectures without replacing incumbent analytics stacks.</p></div>
-    </div>
-  </div>
-</div>
-
+<!-- ═══ SECTION 3: TRACEABILITY ══════════════════════════════════ -->
 <div class="divider"></div>
 <div class="section">
   <div class="section-tag">Audit Infrastructure</div>
   <div class="two-col">
     <div>
       <h2 class="section-title">Traceability by Design</h2>
-      <p class="section-lead">Each inspection run is cryptographically bound to a unique system configuration. No output exists without an attributable configuration.</p>
+      <p class="section-lead">Each inspection run is cryptographically bound to a unique system configuration. No output exists without an attributable configuration state.</p>
       <ul class="trace-list">
         <li class="trace-item"><span class="trace-num">01</span><span class="trace-text"><strong>Engine Version Hash</strong> — every binary build is fingerprinted before deployment to any inspection node</span></li>
-        <li class="trace-item"><span class="trace-num">02</span><span class="trace-text"><strong>Configuration Contract Version</strong> — parameter sets are versioned and locked at run-start</span></li>
-        <li class="trace-item"><span class="trace-num">03</span><span class="trace-text"><strong>Analytical Parameter State</strong> — threshold values, lane weights, and fusion coefficients are recorded verbatim</span></li>
-        <li class="trace-item"><span class="trace-num">04</span><span class="trace-text"><strong>Sensor Calibration Certificate</strong> — intrinsics, extrinsics, and thermal offsets are linked to each run ID</span></li>
-        <li class="trace-item"><span class="trace-num">05</span><span class="trace-text"><strong>Operator Chain of Custody</strong> — signed tokens bind every finding to an authenticated inspector session</span></li>
+        <li class="trace-item"><span class="trace-num">02</span><span class="trace-text"><strong>Configuration Contract Version</strong> — parameter sets are versioned and locked at run-start, preventing mid-inspection drift</span></li>
+        <li class="trace-item"><span class="trace-num">03</span><span class="trace-text"><strong>Analytical Parameter State</strong> — threshold values, lane weights, and fusion coefficients are recorded verbatim in the audit trail</span></li>
+        <li class="trace-item"><span class="trace-num">04</span><span class="trace-text"><strong>Sensor Calibration Certificate</strong> — camera intrinsics, LiDAR extrinsics, and thermal offset records are linked to each run ID</span></li>
+        <li class="trace-item"><span class="trace-num">05</span><span class="trace-text"><strong>Operator Identity & Chain of Custody</strong> — signed operator tokens bind every finding to an authenticated inspector session</span></li>
       </ul>
     </div>
     <div>
       <div class="terminal">
-        <div class="terminal-bar"><div class="terminal-dot" style="background:#FF5F56"></div><div class="terminal-dot" style="background:#FFBD2E"></div><div class="terminal-dot" style="background:#27C93F"></div></div>
-        <div class="terminal-line"><span class="t-comment"># NEPA Audit Record</span></div>
-        <div class="terminal-line"><span class="t-key">run_id</span>: <span class="t-val">"nepa-2026-03-17-09:41Z"</span></div>
-        <div class="terminal-line"><span class="t-key">engine_sha</span>: <span class="t-val">"a7f3c8d..."</span></div>
-        <div class="terminal-line"><span class="t-key">config_version</span>: <span class="t-val">"v2.4.1-stable"</span></div>
-        <div class="terminal-line"><span class="t-key">lanes_active</span>: <span class="t-val">8</span></div>
-        <div class="terminal-line"><span class="t-key">p95_latency_ms</span>: <span class="t-val">0.72</span></div>
-        <div class="terminal-line"><span class="t-key">chain_sealed</span>: <span class="t-ok">true</span></div>
-        <div class="terminal-line"><span class="t-key">replay_cert</span>: <span class="t-ok">VERIFIED</span></div>
-        <div class="terminal-line"><span class="t-key">status</span>: <span class="t-ok">AUDIT_PASS</span></div>
+        <div class="terminal__bar">
+          <div class="terminal__dot" style="background:#ff5f56"></div>
+          <div class="terminal__dot" style="background:#ffbd2e"></div>
+          <div class="terminal__dot" style="background:#27c93f"></div>
+        </div>
+        <div class="terminal__line"><span class="t-comment"># NEPA Audit Record</span></div>
+        <div class="terminal__line"><span class="t-key">run_id</span>: <span class="t-val">"nepa-2026-03-17-09:41Z"</span></div>
+        <div class="terminal__line"><span class="t-key">engine_sha</span>: <span class="t-val">"a7f3c8d..."</span></div>
+        <div class="terminal__line"><span class="t-key">config_version</span>: <span class="t-val">"v2.4.1-stable"</span></div>
+        <div class="terminal__line"><span class="t-key">lanes_active</span>: <span class="t-val">8</span></div>
+        <div class="terminal__line"><span class="t-key">p95_latency_ms</span>: <span class="t-val">1.84</span></div>
+        <div class="terminal__line"><span class="t-key">findings_count</span>: <span class="t-val">14</span></div>
+        <div class="terminal__line"><span class="t-key">chain_sealed</span>: <span class="t-ok">true</span></div>
+        <div class="terminal__line"><span class="t-key">replay_cert</span>: <span class="t-ok">VERIFIED</span></div>
+        <div class="terminal__line"><span class="t-key">tamper_events</span>: <span class="t-val">0</span></div>
+        <div class="terminal__line"><span class="t-key">status</span>: <span class="t-ok">AUDIT_PASS</span></div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="cta-section">
-  <h2>Deterministic. Traceable. Accountable.</h2>
-  <p>Request a formal technical briefing for procurement review, regulatory evaluation, or enterprise integration assessment.</p>
-  <div class="hero-actions" style="justify-content:center;">
-    <a href="contact.html" class="btn-primary">Request Briefing</a>
-    <a href="platform.html" class="btn-secondary">Platform Overview</a>
+<!-- ═══ SECTION 4: EVIDENCE ══════════════════════════════════════ -->
+<div class="section-full">
+  <div class="section-full__inner">
+    <div class="section-tag">Evidence Framework</div>
+    <h2 class="section-title">Replay-Certified Evidence</h2>
+    <p class="section-lead">Findings can be independently re-derived from preserved inspection data. Any inconsistency is automatically recorded as a critical validation event, supporting enterprise governance, audit requirements, and regulatory defensibility.</p>
+    <div class="card-grid-2">
+      <div class="data-card">
+        <div class="data-card__icon">⬡</div>
+        <h3>Immutable Evidence Storage</h3>
+        <p>All raw sensor frames, processed spike representations, and derived findings are written to append-only storage with cryptographic sealing. No record can be modified without detection.</p>
+      </div>
+      <div class="data-card">
+        <div class="data-card__icon">◇</div>
+        <h3>Version Consistency Validation</h3>
+        <p>Before any replay attempt, the system validates that stored configuration hashes match the requested engine version. Mismatches halt replay and generate a compliance incident record.</p>
+      </div>
+      <div class="data-card">
+        <div class="data-card__icon">⊛</div>
+        <h3>Structured Replay Verification</h3>
+        <p>Byte-level deterministic replay reproduces every intermediate processing state. Third-party auditors receive a signed attestation package alongside the replay artifacts.</p>
+      </div>
+      <div class="data-card">
+        <div class="data-card__icon">◉</div>
+        <h3>Tamper-Evident Chain Sealing</h3>
+        <p>Every system event enters a tamper-evident chain. Each block references its predecessor hash, making retrospective modification detectable during any subsequent audit review.</p>
+      </div>
+    </div>
   </div>
 </div>
 
-<footer class="footer">
-  <div class="footer-inner">
-    <div class="footer-left">
-      <div class="footer-brand-text">AURASENSE</div>
-      <div class="footer-tagline">Deterministic Inspection Infrastructure</div>
+<!-- ═══ SECTION 5: ENTERPRISE ════════════════════════════════════ -->
+<div class="divider"></div>
+<div class="section">
+  <div class="section-tag">Enterprise Integration</div>
+  <div class="two-col-wide">
+    <div>
+      <h2 class="section-title">Designed to Integrate. Not to Replace.</h2>
+      <p class="section-lead">NEPA integrates into existing camera → edge → cloud architectures. Standard hardware. Standard interfaces. Structured accountability layer added at the inspection processing stage.</p>
+      <div class="callout">
+        <p>The platform aligns with enterprise risk management, compliance, and infrastructure lifecycle oversight requirements without requiring changes to upstream sensor or downstream reporting systems.</p>
+      </div>
+      <ul class="trace-list" style="margin-top:2rem">
+        <li class="trace-item"><span class="trace-num">L1</span><span class="trace-text"><strong>Edge Node</strong> — NEPA engine at drone, real-time spike processing, latency contract enforced</span></li>
+        <li class="trace-item"><span class="trace-num">L2</span><span class="trace-text"><strong>Site Gateway</strong> — Multi-node aggregation, local evidence store, site-level audit chain</span></li>
+        <li class="trace-item"><span class="trace-num">L3</span><span class="trace-text"><strong>Enterprise Hub</strong> — Centralised governance, cross-site analytics, compliance reporting</span></li>
+        <li class="trace-item"><span class="trace-num">L4</span><span class="trace-text"><strong>Audit Vault</strong> — Immutable long-term evidence storage, third-party auditor access portal</span></li>
+      </ul>
     </div>
-    <div class="footer-copy">&#169; 2026 AURASENSE. All rights reserved.</div>
+    <div>
+      <div class="card-grid-2" style="border:1px solid var(--border);">
+        <div class="data-card" style="border-bottom:1px solid var(--border);border-right:1px solid var(--border);">
+          <h3 style="font-size:0.82rem">Hardware Agnostic</h3>
+          <p>Operates on standard CPU/GPU hardware. No proprietary silicon required.</p>
+        </div>
+        <div class="data-card" style="border-bottom:1px solid var(--border);">
+          <h3 style="font-size:0.82rem">Bandwidth Reduction</h3>
+          <p>Spike-encoded representations substantially reduce bandwidth versus raw video streaming.</p>
+        </div>
+        <div class="data-card" style="border-right:1px solid var(--border);">
+          <h3 style="font-size:0.82rem">REST + gRPC APIs</h3>
+          <p>Standard programmatic interfaces for CMMS, ERP, and GIS integration.</p>
+        </div>
+        <div class="data-card">
+          <h3 style="font-size:0.82rem">Distributed Scale</h3>
+          <p>Coordinate inspection operations across multiple nodes with centralised evidence aggregation.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SECTION 6: GOVERNANCE ════════════════════════════════════ -->
+<div class="section-full">
+  <div class="section-full__inner">
+    <div class="section-tag">Governance Framework</div>
+    <h2 class="section-title">Engineered for Procurement Review</h2>
+    <p class="section-lead">NEPA is supported by structured governance documentation designed to meet enterprise procurement review, technical due diligence, and regulatory evaluation standards.</p>
+    <table class="gov-table">
+      <thead>
+        <tr>
+          <th>Governance Capability</th>
+          <th>Mechanism</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Determinism Policy</strong><br><span style="font-size:.73rem;color:var(--faint)">Formal documentation of deterministic processing guarantees</span></td><td>Policy document v2.1 + automated regression tests</td><td><span class="badge badge-green">Active</span></td></tr>
+        <tr><td><strong>Change Control Discipline</strong><br><span style="font-size:.73rem;color:var(--faint)">Structured change management for all platform updates</span></td><td>Git-tagged releases with signed changelogs and approval gates</td><td><span class="badge badge-green">Active</span></td></tr>
+        <tr><td><strong>Parameter Locking</strong><br><span style="font-size:.73rem;color:var(--faint)">Freeze analytical parameters at run-start</span></td><td>Configuration contract binding at run initialisation</td><td><span class="badge badge-green">Active</span></td></tr>
+        <tr><td><strong>Fault Injection Testing</strong><br><span style="font-size:.73rem;color:var(--faint)">Structured adversarial testing of failure modes</span></td><td>Automated fault injection suite run in CI on every release</td><td><span class="badge badge-green">Active</span></td></tr>
+        <tr><td><strong>Readiness Review</strong><br><span style="font-size:.73rem;color:var(--faint)">Deployment readiness signoff criteria</span></td><td>Operational readiness review checklist and assessment matrix</td><td><span class="badge badge-amber">In Review</span></td></tr>
+        <tr><td><strong>Third-Party Audit Support</strong><br><span style="font-size:.73rem;color:var(--faint)">External validation of audit trail and replay system</span></td><td>Auditor access portal with signed evidence packages</td><td><span class="badge">On Request</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══ CTA ═══════════════════════════════════════════════════════ -->
+<div class="cta-block">
+  <h2>Deterministic. Traceable. Accountable.</h2>
+  <p>Request a formal briefing for procurement review, regulatory evaluation, or technical due diligence.</p>
+  <div class="btn-actions">
+    <a href="./contact.html" class="btn-primary">Request Briefing</a>
+    <a href="./platform.html" class="btn-outline">Explore Platform</a>
+  </div>
+</div>
+
+<!-- ═══ FOOTER ════════════════════════════════════════════════════ -->
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <div class="site-footer__brand">AURASENSE</div>
+      <div class="site-footer__tagline">Deterministic Inspection Infrastructure</div>
+    </div>
+    <div class="site-footer__copy">© 2026 AURASENSE. All rights reserved.</div>
   </div>
 </footer>
+
+<!-- ═══ SPIKE MAP CANVAS ═══════════════════════════════════════ -->
+<script>
+(function(){
+  const canvas = document.getElementById('spike-canvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, nodes, frame;
+
+  function resize(){
+    const rect = canvas.parentElement.getBoundingClientRect();
+    W = canvas.width  = rect.width  || 480;
+    H = canvas.height = rect.height || 420;
+    initNodes();
+  }
+
+  function initNodes(){
+    nodes = [];
+    const cols = 12, rows = 9;
+    for(let r=0; r<rows; r++){
+      for(let c=0; c<cols; c++){
+        nodes.push({
+          x: (c/(cols-1))*(W*0.92)+W*0.04,
+          y: (r/(rows-1))*(H*0.88)+H*0.06,
+          phase: Math.random()*Math.PI*2,
+          speed: 0.004 + Math.random()*0.003,
+          type: Math.random() < 0.3 ? 'amber' : 'blue',
+          baseAlpha: 0.08 + Math.random()*0.12,
+          spikeTimer: Math.random()*300,
+          spikeInterval: 180 + Math.random()*300,
+          spiking: false,
+          spikeAge: 0,
+          spikeDur: 22 + Math.floor(Math.random()*18),
+        });
+      }
+    }
+  }
+
+  function drawEdges(){
+    const maxDist = W * 0.14;
+    for(let i=0; i<nodes.length; i++){
+      for(let j=i+1; j<nodes.length; j++){
+        const dx=nodes[i].x-nodes[j].x, dy=nodes[i].y-nodes[j].y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        if(d < maxDist){
+          const alpha = (1 - d/maxDist) * 0.07;
+          ctx.strokeStyle = `rgba(58,134,255,${alpha})`;
+          ctx.lineWidth = 0.5;
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+  }
+
+  function tick(t){
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = '#0B0F14';
+    ctx.fillRect(0,0,W,H);
+    drawEdges();
+    for(const n of nodes){
+      n.phase += n.speed;
+      n.spikeTimer++;
+      if(n.spikeTimer >= n.spikeInterval && !n.spiking){
+        n.spiking = true;
+        n.spikeAge = 0;
+        n.spikeTimer = 0;
+        n.spikeInterval = 200 + Math.random()*320;
+      }
+      if(n.spiking){
+        n.spikeAge++;
+        if(n.spikeAge > n.spikeDur) n.spiking = false;
+      }
+      const base = n.baseAlpha + Math.sin(n.phase)*0.04;
+      let r, g, b, a;
+      if(n.spiking){
+        const p = n.spikeAge/n.spikeDur;
+        const env = p < 0.3 ? p/0.3 : 1-(p-0.3)/0.7;
+        if(n.type === 'amber'){
+          r=255; g=176+Math.floor(env*40); b=32;
+          a = base + env*0.72;
+          if(env > 0.4){
+            const gr = ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,18*env);
+            gr.addColorStop(0,`rgba(255,176,32,${env*0.22})`);
+            gr.addColorStop(1,`rgba(255,176,32,0)`);
+            ctx.fillStyle=gr;
+            ctx.beginPath(); ctx.arc(n.x,n.y,18*env,0,Math.PI*2); ctx.fill();
+          }
+        } else {
+          r=58; g=134; b=255;
+          a = base + env*0.68;
+          if(env > 0.4){
+            const gr = ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,16*env);
+            gr.addColorStop(0,`rgba(58,134,255,${env*0.18})`);
+            gr.addColorStop(1,`rgba(58,134,255,0)`);
+            ctx.fillStyle=gr;
+            ctx.beginPath(); ctx.arc(n.x,n.y,16*env,0,Math.PI*2); ctx.fill();
+          }
+        }
+        const rad = 2 + env*3.5;
+        ctx.fillStyle = `rgba(${r},${g},${b},${Math.min(a,0.95)})`;
+        ctx.beginPath(); ctx.arc(n.x,n.y,rad,0,Math.PI*2); ctx.fill();
+      } else {
+        const pulse = base + Math.sin(n.phase)*0.04;
+        const col = n.type==='amber' ? `rgba(255,176,32,${pulse})` : `rgba(58,134,255,${pulse})`;
+        ctx.fillStyle = col;
+        ctx.beginPath(); ctx.arc(n.x,n.y,1.8,0,Math.PI*2); ctx.fill();
+      }
+    }
+    frame = requestAnimationFrame(tick);
+  }
+
+  window.addEventListener('resize', ()=>{ cancelAnimationFrame(frame); resize(); tick(0); });
+  resize();
+  tick(0);
+})();
+</script>
+
+<!-- ═══ NAV DROPDOWN + MOBILE ══════════════════════════════════ -->
+<script>
+(function(){
+  const dd = document.getElementById('company-dd');
+  const btn = document.getElementById('company-btn');
+  if(dd && btn){
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      const open = dd.classList.toggle('open');
+      btn.setAttribute('aria-expanded', open);
+    });
+    document.addEventListener('click', ()=>{ dd.classList.remove('open'); btn.setAttribute('aria-expanded','false'); });
+  }
+  const ham = document.getElementById('hamburger');
+  const drawer = document.getElementById('mobile-drawer');
+  if(ham && drawer){
+    ham.addEventListener('click', ()=> drawer.classList.toggle('open'));
+  }
+})();
+</script>
 
 </body>
 </html>

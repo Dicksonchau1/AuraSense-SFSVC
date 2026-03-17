@@ -3,96 +3,156 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contact — NEPA by AURASENSE</title>
-  <meta name="description" content="Request a formal technical briefing, procurement documentation, or enterprise evaluation for the NEPA inspection platform.">
-  <link rel="stylesheet" href="css/nepa.css">
+  <title>Contact — AURASENSE</title>
+  <meta name="description" content="Request a formal briefing for procurement review, regulatory evaluation, or technical due diligence.">
+  <link rel="stylesheet" href="./css/nepa.css">
+  <style>
+    .contact-form { max-width: 640px; }
+    .form-field { margin-bottom: 1.5rem; }
+    .form-field label {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--faint);
+      margin-bottom: 0.5rem;
+      font-family: var(--mono);
+    }
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border-2);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 0.88rem;
+      padding: 0.75rem 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-field input:focus,
+    .form-field select:focus,
+    .form-field textarea:focus { border-color: var(--blue); }
+    .form-field textarea { resize: vertical; min-height: 120px; }
+    .form-field select option { background: var(--surface); }
+  </style>
 </head>
 <body>
 
-<nav class="nav">
-  <div class="nav-inner">
-    <a href="index.html" class="nav-brand">NEPA <span>by AURASENSE</span></a>
-    <ul class="nav-links">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="platform.html">Platform</a></li>
-      <li><a href="technology.html">Technology</a></li>
-      <li><a href="governance.html">Governance</a></li>
-      <li><a href="contact.html" class="active">Contact</a></li>
+<!-- ═══ NAV ═══════════════════════════════════════════════════ -->
+<header class="site-nav" id="site-nav">
+  <div class="site-nav__inner">
+    <a href="./index.html" class="site-nav__logo">AURASENSE <span>/ NEPA</span></a>
+    <ul class="site-nav__links">
+      <li><a href="./platform.html">Platform</a></li>
+      <li><a href="./technology.html">Technology</a></li>
+      <li><a href="./governance.html">Governance</a></li>
+      <li class="company-dropdown" id="company-dd">
+        <button aria-haspopup="true" aria-expanded="false" id="company-btn">
+          Company <span class="site-nav__chevron"></span>
+        </button>
+        <div class="site-nav__dropdown" role="menu">
+          <a href="./about.html" role="menuitem">About</a>
+          <a href="./careers.html" role="menuitem">Careers</a>
+          <a href="./contact.html" class="active" role="menuitem">Contact</a>
+        </div>
+      </li>
     </ul>
-    <a href="contact.html" class="nav-cta">Request Briefing</a>
+    <a href="./contact.html" class="site-nav__cta">Request Briefing</a>
+    <button class="site-nav__hamburger" id="hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
   </div>
+</header>
+<nav class="site-nav__drawer" id="mobile-drawer">
+  <a href="./platform.html">Platform</a>
+  <a href="./technology.html">Technology</a>
+  <a href="./governance.html">Governance</a>
+  <a href="./about.html">About</a>
+  <a href="./careers.html">Careers</a>
+  <a href="./contact.html">Contact</a>
+  <a href="./contact.html" style="color:#FFB020">Request Briefing →</a>
 </nav>
 
-<div class="page-hero">
-  <div class="page-hero-tag">Contact</div>
-  <h1>Request a Briefing</h1>
-  <p>Use this form to request a formal technical briefing, procurement documentation package, or enterprise evaluation engagement. All inquiries are reviewed by the AURASENSE technical team within two business days.</p>
+<!-- ═══ PAGE HERO ═════════════════════════════════════════════ -->
+<div class="page-hero" style="padding-top:7rem">
+  <div class="page-hero__inner">
+    <div class="section-tag">Contact</div>
+    <h1>Request a Formal Briefing</h1>
+    <p>For procurement review, regulatory evaluation, technical due diligence, or enterprise deployment inquiries.</p>
+  </div>
 </div>
 
+<!-- ═══ CONTACT FORM ══════════════════════════════════════════ -->
 <div class="section">
   <div class="two-col">
     <div>
-      <h2 class="section-title" style="font-size:1.6rem;">Briefing Request</h2>
-      <p style="font-size:0.88rem; color:var(--muted); line-height:1.85; margin-bottom:2rem;">Select the briefing type that corresponds to your review context. Supporting documentation will be provided in accordance with the request type.</p>
-      <form style="max-width:520px;" onsubmit="return false;">
-        <div class="form-group">
-          <label>Organisation</label>
-          <input type="text" placeholder="Organisation name">
+      <div class="section-tag">Briefing Request</div>
+      <h2 class="section-title">Get in Touch</h2>
+      <p class="section-lead" style="margin-bottom:2rem">All inquiries are handled directly by the AURASENSE team. We respond to qualified requests within two business days.</p>
+      <form class="contact-form" id="briefing-form" action="https://formspree.io/f/placeholder" method="POST">
+        <div class="form-field">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" name="name" required autocomplete="name">
         </div>
-        <div class="form-group">
-          <label>Name</label>
-          <input type="text" placeholder="Full name">
+        <div class="form-field">
+          <label for="org">Organisation</label>
+          <input type="text" id="org" name="organisation" required>
         </div>
-        <div class="form-group">
-          <label>Email Address</label>
-          <input type="email" placeholder="your@organisation.com">
+        <div class="form-field">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" required autocomplete="email">
         </div>
-        <div class="form-group">
-          <label>Briefing Type</label>
-          <select>
-            <option value="">Select briefing type</option>
-            <option>Technical Architecture Review</option>
-            <option>Governance &amp; Compliance Documentation</option>
-            <option>Procurement Evaluation Package</option>
-            <option>Regulatory Assessment Briefing</option>
-            <option>Enterprise Integration Assessment</option>
-            <option>General Inquiry</option>
+        <div class="form-field">
+          <label for="type">Inquiry Type</label>
+          <select id="type" name="inquiry_type" required>
+            <option value="">Select one</option>
+            <option value="procurement">Procurement Review</option>
+            <option value="regulatory">Regulatory Evaluation</option>
+            <option value="technical">Technical Due Diligence</option>
+            <option value="enterprise">Enterprise Deployment</option>
+            <option value="other">Other</option>
           </select>
         </div>
-        <div class="form-group">
-          <label>Context (Optional)</label>
-          <textarea placeholder="Briefly describe the evaluation context or specific documentation required."></textarea>
+        <div class="form-field">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="5"></textarea>
         </div>
-        <button type="submit" class="btn-primary" style="cursor:pointer; font-family:inherit;">Submit Request</button>
-        <p class="form-note">Response within two business days. All submissions are handled under the AURASENSE data handling policy.</p>
+        <button type="submit" class="btn-primary" style="width:100%">Submit Request</button>
       </form>
     </div>
     <div>
-      <div class="section-tag" style="margin-bottom:1.5rem;">Documentation Available</div>
-      <ul class="trace-list">
-        <li class="trace-item"><span class="trace-num">&#9632;</span><span class="trace-text"><strong>Technical Architecture Document</strong> — full system design, lane architecture, and integration specifications</span></li>
-        <li class="trace-item"><span class="trace-num">&#9632;</span><span class="trace-text"><strong>Governance Framework Document</strong> — version control, audit logging, evidence retention, and change management policies</span></li>
-        <li class="trace-item"><span class="trace-num">&#9632;</span><span class="trace-text"><strong>Determinism Policy v2.1</strong> — formal documentation of deterministic processing guarantees and verification methodology</span></li>
-        <li class="trace-item"><span class="trace-num">&#9632;</span><span class="trace-text"><strong>Replay Verification Protocol</strong> — procedures for independent third-party replay validation</span></li>
-        <li class="trace-item"><span class="trace-num">&#9632;</span><span class="trace-text"><strong>Operational Readiness Matrix</strong> — deployment readiness criteria and current assessment status</span></li>
-        <li class="trace-item"><span class="trace-num">&#9632;</span><span class="trace-text"><strong>Enterprise Integration Guide</strong> — API specifications, deployment architecture, and hardware requirements</span></li>
-      </ul>
-      <div class="callout" style="margin-top:2rem;">
-        <p>Documentation packages are provided under non-disclosure agreement for procurement and regulatory review purposes. Contact the technical team to initiate an NDA prior to documentation release.</p>
+      <div class="callout">
+        <p>AURASENSE does not operate a sales development function. Briefings are conducted by the technical team and are intended for qualified procurement, compliance, or engineering stakeholders.</p>
       </div>
+      <ul class="trace-list" style="margin-top:2rem">
+        <li class="trace-item"><span class="trace-num">01</span><span class="trace-text"><strong>Platform Briefing</strong> — technical overview of NEPA architecture and governance framework</span></li>
+        <li class="trace-item"><span class="trace-num">02</span><span class="trace-text"><strong>Regulatory Review Package</strong> — documentation bundle for compliance and audit evaluation</span></li>
+        <li class="trace-item"><span class="trace-num">03</span><span class="trace-text"><strong>Enterprise Integration Scoping</strong> — architecture review for deployment into existing inspection infrastructure</span></li>
+        <li class="trace-item"><span class="trace-num">04</span><span class="trace-text"><strong>Due Diligence Support</strong> — structured responses to technical or governance due diligence questionnaires</span></li>
+      </ul>
     </div>
   </div>
 </div>
 
-<footer class="footer">
-  <div class="footer-inner">
-    <div class="footer-left">
-      <div class="footer-brand-text">AURASENSE</div>
-      <div class="footer-tagline">Deterministic Inspection Infrastructure</div>
+<!-- ═══ FOOTER ════════════════════════════════════════════════ -->
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <div class="site-footer__brand">AURASENSE</div>
+      <div class="site-footer__tagline">Deterministic Inspection Infrastructure</div>
     </div>
-    <div class="footer-copy">&#169; 2026 AURASENSE. All rights reserved.</div>
+    <div class="site-footer__copy">© 2026 AURASENSE. All rights reserved.</div>
   </div>
 </footer>
 
+<script>
+(function(){
+  const dd=document.getElementById('company-dd'),btn=document.getElementById('company-btn');
+  if(dd&&btn){btn.addEventListener('click',function(e){e.stopPropagation();const o=dd.classList.toggle('open');btn.setAttribute('aria-expanded',o);});document.addEventListener('click',()=>{dd.classList.remove('open');btn.setAttribute('aria-expanded','false');});}
+  const ham=document.getElementById('hamburger'),drawer=document.getElementById('mobile-drawer');
+  if(ham&&drawer){ham.addEventListener('click',()=>drawer.classList.toggle('open'));}
+})();
+</script>
 </body>
 </html>
