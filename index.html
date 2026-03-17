@@ -24,12 +24,10 @@
       <li><a href="./technology.html">Technology</a></li>
       <li><a href="./solutions.html">Solutions</a></li>
       <li><a href="./benchmark.html">Benchmarks</a></li>
-      <li><a href="./pricing.html">Pricing</a></li>
       <li><a href="./security.html">Security</a></li>
       <li><a href="./research.html">Research</a></li>
       <li><a href="./about.html">About</a></li>
     </ul>
-    <a href="./pricing.html" class="btn btn-primary">Start Free Trial</a>
     <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu">
       <span></span><span></span><span></span>
     </button>
@@ -40,155 +38,167 @@
   <a href="./technology.html">Technology</a>
   <a href="./solutions.html">Solutions</a>
   <a href="./benchmark.html">Benchmarks</a>
-  <a href="./pricing.html">Pricing</a>
   <a href="./security.html">Security</a>
   <a href="./research.html">Research</a>
   <a href="./about.html">About</a>
-  <a href="./pricing.html" class="text-cyan">Start Free Trial →</a>
 </nav>
 
 <!-- ─── HERO ──────────────────────────────────────────────────── -->
 <section class="page-hero" style="position:relative;overflow:hidden;">
-  <canvas id="hero-spike-canvas" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;opacity:0.6;"></canvas>
   <div class="container" style="position:relative;z-index:1;">
     <h1>AuraSense SFSVC</h1>
-    <p class="hero-subtitle">Neuromorphic Control Codec for Infrastructure Inspection</p>
-    <p>Sub‑3 ms deterministic edge control. ~90% bandwidth reduction. Runs on standard hardware.</p>
-    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:32px;">
-      <a href="./technology.html" class="btn btn-primary">Technical Overview</a>
-      <a href="./benchmark.html" class="btn btn-outline">View Benchmarks</a>
+    <p class="hero-subtitle">Deterministic Edge Infrastructure for Inspection Fleets.</p>
+    <p style="margin-top:24px;line-height:1.9;">
+      Sub‑3 ms control.<br>
+      ~90% transmission reduction.<br>
+      Deployable on existing hardware.
+    </p>
+    <div style="margin-top:32px;">
+      <a href="./docs.html" class="btn btn-primary">Request Technical Brief</a>
     </div>
   </div>
 </section>
 
-<!-- ─── WHY IT EXISTS ─────────────────────────────────────────── -->
+<!-- ─── INFRASTRUCTURE NOT SOFTWARE ───────────────────────────── -->
 <section class="section">
   <div class="container">
-    <span class="section-label reveal">The Constraint</span>
-    <h2 class="h2 reveal reveal-delay-1">Inspection drones operating near critical infrastructure face three hard limits:</h2>
-    <div class="grid-2 stagger" style="margin-top:32px;">
-      <div class="info-card">
-        <p>Control latency</p>
-      </div>
-      <div class="info-card">
-        <p>Bandwidth cost</p>
-      </div>
-      <div class="info-card">
-        <p>Edge power budget</p>
-      </div>
+    <h2 class="h2">Infrastructure, Not Software</h2>
+    <div style="margin-top:32px;max-width:900px;">
+      <p style="margin-bottom:24px;line-height:1.9;">
+        Inspection fleets generate continuous video streams. Transmission cost scales linearly. Latency variability creates operational risk.
+      </p>
+      <p style="margin-bottom:24px;line-height:1.9;">
+        SFSVC restructures the pipeline at the codec layer. Converts video into sparse, control-relevant signals before cloud ingestion.
+      </p>
+      <p style="margin-bottom:24px;line-height:1.9;">
+        Deterministic control preserved. Transmission load reduced. Auditability preserved.
+      </p>
+      <p style="margin-top:40px;font-weight:600;line-height:1.9;">
+        This is infrastructure. Not an overlay.
+      </p>
     </div>
-    <p class="reveal" style="margin-top:32px;font-size:18px;line-height:1.7;max-width:900px;">
-      Most systems optimize models.
-      We optimize the control layer.
-    </p>
   </div>
 </section>
 
-<!-- ─── CORE CAPABILITIES ─────────────────────────────────────── -->
+<!-- ─── SYSTEM ARCHITECTURE ───────────────────────────────────── -->
 <section class="section" style="background:var(--bg-surface)">
   <div class="container">
-    <span class="section-label reveal">What SFSVC Is</span>
-    <h2 class="h2 reveal reveal-delay-1">SFSVC is a neuromorphic middleware layer that:</h2>
-    <div class="feature-grid stagger" style="margin-top:32px;">
-      <div class="feature-card">
-        <h3>Converts video into sparse spike representations</h3>
-      </div>
-      <div class="feature-card">
-        <h3>Executes a deterministic real‑time control loop</h3>
-      </div>
-      <div class="feature-card">
-        <h3>Transmits only control‑relevant information</h3>
-      </div>
+    <h2 class="h2">System Architecture</h2>
+    <div style="margin-top:32px;max-width:900px;">
+      <p style="margin-bottom:32px;line-height:1.9;font-family:var(--font-mono);font-size:14px;color:var(--text-muted);">
+        Camera<br>
+        → Neuromorphic Codec Layer<br>
+        → Deterministic Control Loop<br>
+        → Spike Stream + Control State<br>
+        → Existing Edge / Cloud Systems
+      </p>
+      <p style="margin-bottom:16px;line-height:1.9;">
+        No camera replacement.<br>
+        No sensor replacement.<br>
+        No GPU dependency required.
+      </p>
+      <p style="margin-top:32px;line-height:1.9;">
+        Typical deployment: 1–2 days on Linux edge hardware.
+      </p>
     </div>
-    <p class="reveal" style="margin-top:32px;font-size:18px;line-height:1.7;max-width:900px;">
-      Integrates into existing camera → edge → cloud stacks.
-      No hardware lock‑in.
-      No sensor replacement.
-    </p>
   </div>
 </section>
 
-<!-- ─── VERTICAL DEPLOYMENTS ──────────────────────────────────── -->
+<!-- ─── MEASURED PERFORMANCE ──────────────────────────────────── -->
 <section class="section">
   <div class="container">
-    <span class="section-label reveal">Measured Performance</span>
-
-    <div class="grid-2 stagger" style="margin-top:32px;">
-      <div class="info-card">
-        <h3>Real‑Time Control (C++ Engine)</h3>
-        <p style="margin-top:16px;line-height:1.9;">
-          2.50 ms average<br>
-          2.81 ms P99<br>
-          0% violations of 6 ms contract
-        </p>
-      </div>
-      <div class="info-card">
-        <h3>Neuromorphic Compression</h3>
-        <p style="margin-top:16px;line-height:1.9;">
-          ~10× effective reduction<br>
-          ~90% bandwidth savings
-        </p>
-      </div>
-    </div>
-
-    <p class="reveal" style="margin-top:32px;font-size:14px;color:var(--text-muted);max-width:900px;">
-      Measured on 720p inspection video using production engine.
+    <h2 class="h2">Measured Performance</h2>
+    <p style="margin-top:16px;font-size:14px;color:var(--text-muted);">
+      Production C++ Engine<br>
+      720p inspection dataset
     </p>
+
+    <div style="margin-top:32px;max-width:900px;">
+      <p style="margin-bottom:24px;line-height:1.9;">
+        2.50 ms average control latency<br>
+        2.81 ms P99<br>
+        0% violations of 6 ms safety contract
+      </p>
+      <p style="margin-bottom:24px;line-height:1.9;">
+        ~10× effective compression<br>
+        ~90% bandwidth reduction
+      </p>
+      <p style="margin-top:40px;font-size:14px;color:var(--text-muted);">
+        Results reproducible via validation package.
+      </p>
+    </div>
   </div>
 </section>
 
-<!-- ─── ARCHITECTURE ──────────────────────────────────────────── -->
+<!-- ─── OPERATIONAL IMPACT ────────────────────────────────────── -->
 <section class="section" style="background:var(--bg-surface)">
   <div class="container">
-    <span class="section-label reveal">Architecture</span>
-    <h2 class="h2 reveal reveal-delay-1">The safety loop is isolated from non‑deterministic workloads.</h2>
-
-    <div class="feature-grid stagger" style="margin-top:32px;">
-      <div class="feature-card">
-        <h3>Hard real‑time lane (&lt;3 ms)</h3>
-      </div>
-      <div class="feature-card">
-        <h3>Background semantic lanes</h3>
-      </div>
-      <div class="feature-card">
-        <h3>Cloud analytics layer</h3>
-      </div>
+    <h2 class="h2">Operational Impact</h2>
+    <div style="margin-top:32px;max-width:900px;">
+      <p style="margin-bottom:24px;line-height:1.9;">
+        ~90% transmission reduction. Proportional cloud storage slowdown.
+      </p>
+      <p style="margin-bottom:24px;line-height:1.9;">
+        Deterministic sub‑3 ms control loop. Isolation from non-deterministic workloads.
+      </p>
+      <p style="margin-bottom:24px;line-height:1.9;">
+        No workflow disruption for inspection teams.
+      </p>
+      <p style="margin-top:40px;font-weight:600;line-height:1.9;">
+        This is cost control at the codec layer.
+      </p>
     </div>
   </div>
 </section>
 
-<!-- ─── APPLICATIONS ──────────────────────────────────────────── -->
+<!-- ─── SECURITY & DEPLOYMENT ─────────────────────────────────── -->
 <section class="section">
   <div class="container">
-    <span class="section-label reveal">Applications</span>
-    <div class="grid-2 stagger" style="margin-top:32px;">
-      <div class="info-card">
-        <p>Runway inspection</p>
-      </div>
-      <div class="info-card">
-        <p>Bridge and highway monitoring</p>
-      </div>
-      <div class="info-card">
-        <p>Utility corridor inspection</p>
-      </div>
-      <div class="info-card">
-        <p>Industrial facility assessment</p>
-      </div>
+    <h2 class="h2">Security &amp; Deployment</h2>
+    <div style="margin-top:32px;max-width:900px;">
+      <p style="margin-bottom:16px;line-height:1.9;">
+        Offline-first edge operation<br>
+        Control loop independent of cloud connectivity<br>
+        TLS 1.3 enforced<br>
+        JWT key rotation supported<br>
+        Audit log export capability
+      </p>
+      <p style="margin-top:40px;font-weight:600;line-height:1.9;">
+        Designed for environments where infrastructure integrity is non-negotiable.
+      </p>
     </div>
   </div>
 </section>
 
-<!-- ─── REPOSITORY ────────────────────────────────────────────── -->
+<!-- ─── DEPLOYMENT MODEL ──────────────────────────────────────── -->
 <section class="section" style="background:var(--bg-surface)">
   <div class="container">
-    <span class="section-label reveal">Repository</span>
-    <p class="reveal" style="margin-top:24px;font-size:18px;line-height:1.7;max-width:900px;">
-      The public repository contains a simplified Python reference implementation (~8 ms/frame).
-      The production C++ engine is deployed in pilot environments.
-    </p>
-
-    <div style="margin-top:40px;" class="reveal">
-      <a href="./research.html" class="btn btn-outline">View Repository</a>
+    <h2 class="h2">Deployment Model</h2>
+    <div style="margin-top:32px;max-width:900px;">
+      <p style="margin-bottom:32px;line-height:1.9;">
+        Available as:
+      </p>
+      <p style="margin-bottom:24px;line-height:1.9;padding-left:16px;">
+        • Containerized edge module<br>
+        • Sidecar service<br>
+        • Embedded deployment (custom integration)
+      </p>
+      <p style="margin-bottom:16px;line-height:1.9;">
+        Compatible with:
+      </p>
+      <p style="margin-bottom:24px;line-height:1.9;padding-left:16px;">
+        • x86 edge devices<br>
+        • ARM edge devices<br>
+        • GPU optional
+      </p>
+      <p style="margin-bottom:16px;line-height:1.9;">
+        Integration surface:
+      </p>
+      <p style="line-height:1.9;padding-left:16px;">
+        • RTSP input<br>
+        • JSON control output<br>
+        • Spike stream (binary or gRPC)
+      </p>
     </div>
   </div>
 </section>
@@ -196,44 +206,11 @@
 <!-- ─── FOOTER ────────────────────────────────────────────────── -->
 <footer class="footer">
   <div class="container">
-    <div class="footer-grid">
-      <div class="footer-col">
-        <div class="nav-brand" style="margin-bottom:16px">
-          <span class="brand-name">AURASENSE</span>
-          <span class="brand-badge">SFSVC</span>
-        </div>
-        <p class="footer-tagline">SFSVC — Neuromorphic perception infrastructure for edge autonomy.<br>Built in Hong Kong. Designed for global deployment.</p>
-        <p class="footer-copy">© 2026 AuraSense Limited. All rights reserved.</p>
-      </div>
-      <div class="footer-col">
-        <h4>Product</h4>
-        <ul>
-          <li><a href="./technology.html">Technology</a></li>
-          <li><a href="./solutions.html">Solutions</a></li>
-          <li><a href="./benchmark.html">Benchmarks</a></li>
-          <li><a href="./pricing.html">Pricing</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Company</h4>
-        <ul>
-          <li><a href="./about.html">About</a></li>
-          <li><a href="./security.html">Security</a></li>
-          <li><a href="./research.html">Research</a></li>
-          <li><a href="mailto:support@aurasensehk.com">Contact</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Legal</h4>
-        <ul>
-          <li><a href="./privacy.html">Privacy</a></li>
-          <li><a href="./terms.html">Terms</a></li>
-          <li><a href="./refund.html">Refund</a></li>
-          <li><a href="./cookies.html">Cookies</a></li>
-        </ul>
-      </div>
+    <div style="text-align:center;padding:64px 0;">
+      <p style="font-family:var(--font-sans);font-weight:600;font-size:14px;margin-bottom:8px;">AuraSense Limited</p>
+      <p style="font-size:14px;color:var(--text-muted);margin-bottom:4px;">Hong Kong</p>
+      <p style="font-size:14px;color:var(--text-muted);line-height:1.7;">Deterministic edge systems for inspection infrastructure.</p>
     </div>
-    <div class="footer-bottom">SFSVC SDK v2.0 — Ed25519 Licensed — Built in Hong Kong 🇭🇰</div>
   </div>
 </footer>
 
@@ -247,6 +224,5 @@
 </div>
 
 <script src="./js/main.js"></script>
-<script src="./js/neuro-viz.js"></script>
 </body>
 </html>
