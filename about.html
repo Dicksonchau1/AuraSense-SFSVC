@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — AuraSense SFSVC</title>
+  <meta name="description" content="AuraSense was founded in Hong Kong to solve drone inspection's cloud dependency problem. SFSVC is neuromorphic perception at the edge.">
+  <meta name="theme-color" content="#06060A">
+  <link rel="stylesheet" href="./css/design.css">
+  <link rel="stylesheet" href="./css/animate.css">
+  <link rel="stylesheet" href="./css/layout.css">
+</head>
+<body>
+
+<!-- ─── NAV ──────────────────────────────────────────────────── -->
+<nav class="nav" id="main-nav">
+  <div class="nav-inner">
+    <a href="https://www.aurasensehk.com/index.html" class="nav-brand">
+      <span class="brand-name">AURASENSE</span>
+      <span class="brand-badge">SFSVC</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="https://www.aurasensehk.com/index.html#technology">Technology</a></li>
+      <li><a href="https://www.aurasensehk.com/why-neuromorphic.html">Why Neuromorphic</a></li>
+      <li><a href="https://www.aurasensehk.com/pricing.html">Pricing</a></li>
+      <li><a href="https://www.aurasensehk.com/about.html" class="active">About</a></li>
+      <li><a href="https://www.aurasensehk.com/community.html">Join Us</a></li>
+    </ul>
+    <a href="https://www.aurasensehk.com/pricing.html" class="btn btn-primary">Start Free Trial</a>
+    <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<nav class="nav-drawer" id="nav-drawer">
+  <a href="https://www.aurasensehk.com/index.html#technology">Technology</a>
+  <a href="https://www.aurasensehk.com/why-neuromorphic.html">Why Neuromorphic</a>
+  <a href="https://www.aurasensehk.com/pricing.html">Pricing</a>
+  <a href="https://www.aurasensehk.com/about.html">About</a>
+  <a href="https://www.aurasensehk.com/community.html">Join Us</a>
+  <a href="https://www.aurasensehk.com/pricing.html" class="text-cyan">Start Free Trial →</a>
+</nav>
+
+<!-- ─── HERO ──────────────────────────────────────────────────── -->
+<section class="page-hero">
+  <div class="container">
+    <h1>We built the retina.</h1>
+    <p>Because drone inspection deserved better than a GPU in the cloud.</p>
+  </div>
+</section>
+
+<!-- ─── OUR STORY ─────────────────────────────────────────────── -->
+<section class="section">
+  <div class="container">
+    <span class="section-label reveal">Our Story</span>
+    <div class="about-story reveal reveal-delay-1">
+      <p>
+        AuraSense was founded in Hong Kong to solve a problem that kept appearing
+        in drone inspection deployments: the moment a drone flies beyond line of
+        sight, into a tunnel, or under a bridge, cloud-dependent CV pipelines fail.
+        Latency spikes. Connectivity drops. The mission stops.
+      </p>
+      <p>
+        We asked a different question. What if the drone's vision system worked the
+        way a biological retina works — processing only change, not every pixel, at
+        the edge, in real time?
+      </p>
+      <p>
+        SFSVC is the answer. A spike-based frequency spatial video codec that
+        encodes drone video as sparse neural events, processes them through
+        independent parallel lanes, and outputs structural defect detection in
+        under 2 milliseconds — on a mini PC drawing 4.2 watts.
+      </p>
+      <p style="font-weight:600;color:var(--text-primary)">
+        No cloud. No GPU. No compromise.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── OUR PRINCIPLES ────────────────────────────────────────── -->
+<section class="section" style="background:var(--bg-surface);padding-top:40px">
+  <div class="container">
+    <span class="section-label reveal">Principles</span>
+    <h2 class="h2 reveal reveal-delay-1">How we think.</h2>
+    <div class="principles-grid stagger">
+      <div class="principle-card">
+        <div class="principle-number">01 — EDGE OR NOTHING</div>
+        <h3>If it needs the cloud, it's not done yet.</h3>
+        <p>Every feature we ship must work fully offline. BVLOS mission capability
+           is a hard requirement, not a future roadmap item.</p>
+      </div>
+      <div class="principle-card">
+        <div class="principle-number">02 — BIOLOGY FIRST</div>
+        <h3>The retina solved this 500 million years ago.</h3>
+        <p>Neuromorphic computation is not a research curiosity. It is the
+           correct architecture for low-power, high-speed visual processing.
+           SFSVC is proof.</p>
+      </div>
+      <div class="principle-card">
+        <div class="principle-number">03 — ONE PROBLEM</div>
+        <h3>We do structural defect detection. That's it.</h3>
+        <p>We are not building a general-purpose drone platform. Deep focus on
+           one problem is how you get to 99.2% accuracy at sub-2ms latency.</p>
+      </div>
+      <div class="principle-card">
+        <div class="principle-number">04 — HONEST BENCHMARKS</div>
+        <h3>Real hardware. Real conditions.</h3>
+        <p>All performance figures are measured on production hardware — Intel N100,
+           Raspberry Pi 5, Jetson Orin — under real inspection conditions.
+           Not lab synthetic benchmarks.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── TEAM ──────────────────────────────────────────────────── -->
+<section class="section about-team-section">
+  <div class="container">
+    <div class="about-team-content">
+      <span class="section-label" style="display:block;text-align:center;margin-bottom:24px">The Team</span>
+      <h2 class="h2" style="text-align:center;margin-bottom:32px">A small team.<br>A focused mission.</h2>
+      <p>
+        We are engineers and researchers who believe the most important AI runs
+        at the edge, not in a data centre. Every member of the team has shipped
+        hardware products and understands what it means to operate under real
+        physical constraints.
+      </p>
+      <p>
+        We are actively hiring. If you are excited by neuromorphic computing,
+        real-time systems, or drone autonomy — read on.
+      </p>
+      <a href="https://www.aurasensehk.com/community.html#roles" class="btn btn-outline">See open roles →</a>
+
+      <div class="about-location">
+        <p>Headquartered in Hong Kong SAR, China.</p>
+        <p>Building for Asia-Pacific infrastructure inspection.</p>
+      </div>
+
+      <div class="about-contact">
+        <a href="mailto:support@aurasensehk.com">support@aurasensehk.com</a>
+        <a href="https://github.com/Dicksonchau1/AuraSense-SFSVC-Engine" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://linkedin.com/company/aurasense" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ────────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="nav-brand" style="margin-bottom:16px">
+          <span class="brand-name">AURASENSE</span>
+          <span class="brand-badge">SFSVC</span>
+        </div>
+        <p class="footer-tagline">Neuromorphic perception SDK for autonomous drone inspection. Edge-native. Sub-2ms. No GPU.</p>
+        <p class="footer-copy">© 2026 AuraSense Limited. All rights reserved.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="https://www.aurasensehk.com/index.html#technology">Technology</a></li>
+          <li><a href="https://www.aurasensehk.com/index.html#benchmark">Benchmark</a></li>
+          <li><a href="https://www.aurasensehk.com/pricing.html">Pricing</a></li>
+          <li><a href="https://www.aurasensehk.com/faq.html">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="https://www.aurasensehk.com/about.html">About</a></li>
+          <li><a href="https://www.aurasensehk.com/community.html">Community</a></li>
+          <li><a href="mailto:support@aurasensehk.com">Contact</a></li>
+          <li><a href="https://www.aurasensehk.com/community.html#roles">Careers</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="./legal/privacy.html">Privacy</a></li>
+          <li><a href="./legal/terms.html">Terms</a></li>
+          <li><a href="./legal/refund.html">Refund</a></li>
+          <li><a href="./legal/cookies.html">Cookies</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">SFSVC SDK v2.0 — Ed25519 Licensed — Built in Hong Kong 🇭🇰</div>
+  </div>
+</footer>
+
+<!-- ─── COOKIE BANNER ─────────────────────────────────────────── -->
+<div class="cookie-banner" id="cookie-banner" role="region" aria-label="Cookie notice">
+  <p>We use essential cookies only. No tracking.</p>
+  <div class="cookie-actions">
+    <button class="btn btn-primary btn-sm" id="cookie-accept">Accept</button>
+    <a href="./legal/cookies.html" class="cookie-learn">Learn more →</a>
+  </div>
+</div>
+
+<script src="./js/main.js"></script>
+</body>
+</html>

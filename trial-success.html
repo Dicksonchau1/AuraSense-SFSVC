@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trial Started — AuraSense SFSVC</title>
+  <meta name="description" content="Your SFSVC license key is on its way. Check your email.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#06060A">
+  <link rel="stylesheet" href="./css/design.css">
+  <link rel="stylesheet" href="./css/animate.css">
+  <link rel="stylesheet" href="./css/layout.css">
+  <style>
+    .success-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 100px var(--space-xl) var(--space-4xl);
+    }
+    .success-content {
+      max-width: 640px;
+      width: 100%;
+      text-align: center;
+    }
+    .success-icon {
+      font-size: 56px;
+      margin-bottom: var(--space-lg);
+      line-height: 1;
+    }
+    .success-content h1 {
+      font-family: var(--font-sans);
+      font-weight: 700;
+      font-size: clamp(28px, 4vw, 44px);
+      letter-spacing: -0.025em;
+      line-height: 1.1;
+      margin-bottom: var(--space-lg);
+    }
+    .success-plan-tag {
+      display: inline-block;
+      background: rgba(0,200,240,0.12);
+      border: 1px solid rgba(0,200,240,0.3);
+      color: var(--accent-cyan);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 100px;
+      margin-bottom: var(--space-lg);
+    }
+    .success-content > p {
+      font-size: 17px;
+      color: rgba(237,236,255,0.75);
+      line-height: 1.65;
+      margin-bottom: 12px;
+    }
+    .success-steps {
+      background: var(--bg-raised);
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      margin: var(--space-2xl) 0;
+      text-align: left;
+    }
+    .success-steps h3 {
+      font-family: var(--font-sans);
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: var(--space-lg);
+    }
+    .success-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-dim);
+      font-size: 15px;
+      color: var(--text-primary);
+      line-height: 1.55;
+    }
+    .success-step:last-child { border-bottom: none; }
+    .success-step-num {
+      flex-shrink: 0;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: rgba(0,200,240,0.12);
+      border: 1px solid rgba(0,200,240,0.3);
+      color: var(--accent-cyan);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .success-actions {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: var(--space-xl);
+    }
+    .success-note {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: var(--space-lg);
+    }
+    .success-note a { color: var(--accent-cyan); }
+  </style>
+</head>
+<body>
+
+<!-- ─── NAV ──────────────────────────────────────────────────── -->
+<nav class="nav scrolled" id="main-nav">
+  <div class="nav-inner">
+    <a href="https://www.aurasensehk.com/index.html" class="nav-brand">
+      <span class="brand-name">AURASENSE</span>
+      <span class="brand-badge">SFSVC</span>
+    </a>
+  </div>
+</nav>
+
+<!-- ─── SUCCESS ───────────────────────────────────────────────── -->
+<div class="success-page">
+  <div class="success-content">
+    <div class="success-icon">✓</div>
+    <div class="success-plan-tag" id="plan-label">SFSVC License</div>
+    <h1>Trial started.<br>Check your inbox.</h1>
+    <p>Your SFSVC license key will arrive within 5 minutes.</p>
+    <p>Your 7-day free trial is now active — no charge until day 8.</p>
+
+    <div class="success-steps">
+      <h3>What happens next</h3>
+      <div class="success-step">
+        <div class="success-step-num">1</div>
+        <span>License key delivered to your inbox within 5 minutes via Resend</span>
+      </div>
+      <div class="success-step">
+        <div class="success-step-num">2</div>
+        <span>Follow the setup instructions in the email to install the SFSVC SDK on your drone companion computer</span>
+      </div>
+      <div class="success-step">
+        <div class="success-step-num">3</div>
+        <span>Run <code style="font-family:var(--font-mono);font-size:12px;color:var(--accent-cyan)">sfsvc::initialize(config, "YOUR-KEY")</code> — the SDK binds to your hardware fingerprint automatically</span>
+      </div>
+      <div class="success-step">
+        <div class="success-step-num">4</div>
+        <span>Cancel any time before day 7 via the Stripe billing portal (link is in the email) — zero charge, guaranteed</span>
+      </div>
+    </div>
+
+    <div class="success-actions">
+      <a href="https://www.aurasensehk.com/docs.html" class="btn btn-primary">Read the docs →</a>
+      <a href="https://www.aurasensehk.com/index.html" class="btn btn-outline">Back to homepage</a>
+    </div>
+
+    <p class="success-note">
+      Questions? Email <a href="mailto:support@aurasensehk.com">support@aurasensehk.com</a>
+    </p>
+  </div>
+</div>
+
+<script src="./js/main.js"></script>
+<script>
+  // Pull tier label from the Stripe session if the session_id is present
+  (async () => {
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get('session_id');
+    if (!sessionId || !/^cs_[A-Za-z0-9_-]{10,200}$/.test(sessionId)) return;
+    try {
+      const endpoint = '/api/session/' + encodeURIComponent(sessionId);
+      const apiUrl = typeof window.aurasenseApiUrl === 'function'
+        ? window.aurasenseApiUrl(endpoint)
+        : endpoint;
+      const data = await fetch(apiUrl).then(r => r.json());
+      if (data.plan) {
+        document.getElementById('plan-label').textContent = data.plan + ' Plan';
+      }
+    } catch (_) { /* non-critical */ }
+  })();
+</script>
+</body>
+</html>

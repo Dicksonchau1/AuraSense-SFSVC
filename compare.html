@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compare: SFSVC vs Edge GPU vs Cloud AI — AuraSense Neuromorphic Codec</title>
+  <meta name="description" content="Honest comparison: AuraSense SFSVC neuromorphic codec vs Edge CNN on GPU vs Cloud AI. Sub-1mm crack detection, no GPU, sub-millisecond latency, STDP learning.">
+  <meta name="keywords" content="neuromorphic video codec comparison, spike-based perception, drone inspection, edge AI no GPU, sub-millisecond latency, sub-millimetre crack detection">
+  <meta name="theme-color" content="#06060A">
+  <link rel="stylesheet" href="./css/design.css">
+  <link rel="stylesheet" href="./css/animate.css">
+  <link rel="stylesheet" href="./css/layout.css">
+  <style>
+    .compare-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .compare-table {
+      width: 100%; border-collapse: collapse; font-size: 15px;
+      border: 1px solid var(--border-dim); border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+    .compare-table thead tr { background: var(--bg-raised); }
+    .compare-table th {
+      padding: 16px 20px; text-align: left; font-family: var(--font-sans);
+      font-weight: 600; font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase;
+      color: var(--text-muted); border-bottom: 1px solid var(--border-dim);
+    }
+    .compare-table th:first-child { color: var(--text-primary); width: 38%; }
+    .compare-table th.col-sfsvc { color: var(--accent-cyan); }
+    .compare-table td {
+      padding: 14px 20px; border-bottom: 1px solid var(--border-dim);
+      vertical-align: middle; line-height: 1.5;
+    }
+    .compare-table td:first-child { font-weight: 500; }
+    .compare-table tbody tr:last-child td { border-bottom: none; }
+    .compare-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+    .compare-table .col-sfsvc { background: rgba(0,200,240,0.04); }
+    .c-yes  { color: #4ade80; font-weight: 600; }
+    .c-no   { color: #f87171; }
+    .c-warn { color: #fbbf24; }
+    .c-na   { color: var(--text-muted); }
+    .compare-note {
+      font-size: 13px; color: var(--text-muted); margin-top: 20px; line-height: 1.6;
+    }
+    .cta-banner {
+      background: var(--bg-surface); border: 1px solid var(--border-glow);
+      border-radius: var(--radius-lg); padding: 48px 40px; text-align: center;
+      margin-top: 64px;
+    }
+    .cta-banner h2 { margin-bottom: 16px; }
+    .cta-banner p { color: var(--text-muted); max-width: 480px; margin: 0 auto 32px; }
+  </style>
+</head>
+<body>
+
+<!-- ─── NAV ──────────────────────────────────────────────────── -->
+<nav class="nav" id="main-nav">
+  <div class="nav-inner">
+    <a href="https://www.aurasensehk.com/index.html" class="nav-brand">
+      <span class="brand-name">AURASENSE</span>
+      <span class="brand-badge">SFSVC</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="https://www.aurasensehk.com/index.html#technology">Technology</a></li>
+      <li><a href="https://www.aurasensehk.com/pricing.html">Pricing</a></li>
+      <li><a href="https://www.aurasensehk.com/why-neuromorphic.html">Why Neuromorphic</a></li>
+      <li><a href="https://www.aurasensehk.com/compare.html" class="active">Compare</a></li>
+      <li><a href="https://www.aurasensehk.com/docs.html">Docs</a></li>
+      <li><a href="https://www.aurasensehk.com/about.html">About</a></li>
+    </ul>
+    <a href="https://www.aurasensehk.com/pricing.html" class="btn btn-primary">Subscribe</a>
+    <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<nav class="nav-drawer" id="nav-drawer">
+  <a href="https://www.aurasensehk.com/index.html#technology">Technology</a>
+  <a href="https://www.aurasensehk.com/pricing.html">Pricing</a>
+  <a href="https://www.aurasensehk.com/why-neuromorphic.html">Why Neuromorphic</a>
+  <a href="https://www.aurasensehk.com/compare.html">Compare</a>
+  <a href="https://www.aurasensehk.com/docs.html">Docs</a>
+  <a href="https://www.aurasensehk.com/about.html">About</a>
+  <a href="https://www.aurasensehk.com/pricing.html" class="text-cyan">Subscribe →</a>
+</nav>
+
+<!-- ─── PAGE HERO ─────────────────────────────────────────────── -->
+<section class="page-hero">
+  <div class="container">
+    <span class="badge" style="margin-bottom:32px"><span class="badge-dot"></span> Honest Comparison</span>
+    <h1>SFSVC vs the alternatives.</h1>
+    <p>No marketing language — just the capabilities that matter for drone inspection workloads.</p>
+  </div>
+</section>
+
+<!-- ─── COMPARISON TABLE ──────────────────────────────────────── -->
+<section class="section">
+  <div class="container">
+    <span class="section-label reveal">Feature Comparison</span>
+    <h2 class="h2 reveal reveal-delay-1">Built for edge deployment,<br>not cloud dependency.</h2>
+
+    <div class="compare-wrap reveal reveal-delay-2">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th class="col-sfsvc">SFSVC (AuraSense)</th>
+            <th>Edge CNN on GPU</th>
+            <th>Cloud AI</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Sub-1 mm crack detection</td>
+            <td class="col-sfsvc"><span class="c-yes">✅ Yes</span></td>
+            <td><span class="c-warn">⚠️ Depends on model</span></td>
+            <td><span class="c-warn">⚠️ Depends on model</span></td>
+          </tr>
+          <tr>
+            <td>No GPU required</td>
+            <td class="col-sfsvc"><span class="c-yes">✅ CPU-only</span></td>
+            <td><span class="c-no">❌ Requires GPU</span></td>
+            <td><span class="c-na">N/A (server-side)</span></td>
+          </tr>
+          <tr>
+            <td>Works fully offline (BVLOS)</td>
+            <td class="col-sfsvc"><span class="c-yes">✅ Yes</span></td>
+            <td><span class="c-yes">✅ Yes</span></td>
+            <td><span class="c-no">❌ Requires connectivity</span></td>
+          </tr>
+          <tr>
+            <td>Under 2 ms per frame</td>
+            <td class="col-sfsvc"><span class="c-yes">✅ &lt; 2 ms P95</span></td>
+            <td><span class="c-no">❌ ~20–80 ms typical</span></td>
+            <td><span class="c-no">❌ 80–300 ms round-trip</span></td>
+          </tr>
+          <tr>
+            <td>Learns from operator feedback (STDP)</td>
+            <td class="col-sfsvc"><span class="c-yes">✅ Yes — per-asset</span></td>
+            <td><span class="c-no">❌ Requires retraining</span></td>
+            <td><span class="c-no">❌ No on-device learning</span></td>
+          </tr>
+          <tr>
+            <td>Shadow / stain invariance</td>
+            <td class="col-sfsvc"><span class="c-yes">✅ Temporal coding</span></td>
+            <td><span class="c-warn">⚠️ Training-dependent</span></td>
+            <td><span class="c-warn">⚠️ Training-dependent</span></td>
+          </tr>
+          <tr>
+            <td>Thermal sensor fusion</td>
+            <td class="col-sfsvc"><span class="c-yes">✅ Pro + Enterprise</span></td>
+            <td><span class="c-warn">⚠️ Custom integration</span></td>
+            <td><span class="c-warn">⚠️ Custom integration</span></td>
+          </tr>
+          <tr>
+            <td>Power consumption</td>
+            <td class="col-sfsvc"><span class="c-yes">✅ 4.2 W (x86)</span></td>
+            <td><span class="c-no">❌ 50–200 W GPU</span></td>
+            <td><span class="c-na">N/A (remote)</span></td>
+          </tr>
+          <tr>
+            <td>Data sovereignty (raw video leaves device)</td>
+            <td class="col-sfsvc"><span class="c-yes">✅ Never — spikes only</span></td>
+            <td><span class="c-yes">✅ On-device</span></td>
+            <td><span class="c-no">❌ Video sent to cloud</span></td>
+          </tr>
+          <tr>
+            <td>Per-drone licensing model</td>
+            <td class="col-sfsvc"><span class="c-yes">✅ From $9.90/drone/mo</span></td>
+            <td><span class="c-na">Proprietary / per-deployment</span></td>
+            <td><span class="c-na">Per-inference pricing</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="compare-note reveal">
+      ✅ = supported out of the box &nbsp;|&nbsp;
+      ⚠️ = possible but requires additional work or hardware &nbsp;|&nbsp;
+      ❌ = not supported by design &nbsp;|&nbsp;
+      N/A = not applicable to this deployment model
+    </p>
+
+    <!-- CTA -->
+    <div class="cta-banner reveal reveal-delay-2">
+      <h2 class="h2">Ready to run SFSVC on your fleet?</h2>
+      <p>Start with a 7-day free trial. Cancel before day 7 and you won't be charged.</p>
+      <a href="https://www.aurasensehk.com/pricing.html" class="btn btn-primary" style="margin-right:12px">View Pricing</a>
+      <a href="https://www.aurasensehk.com/benchmark.html" class="btn btn-outline">See Live Benchmarks →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ────────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="nav-brand" style="margin-bottom:16px">
+          <span class="brand-name">AURASENSE</span>
+          <span class="brand-badge">SFSVC</span>
+        </div>
+        <p class="footer-tagline">Neuromorphic perception codec for autonomous drone and robot inspection. Edge-native. Sub-2ms. No GPU.</p>
+        <p class="footer-copy">© 2026 AuraSense Limited. All rights reserved.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="https://www.aurasensehk.com/index.html#technology">Technology</a></li>
+          <li><a href="https://www.aurasensehk.com/benchmark.html">Benchmark</a></li>
+          <li><a href="https://www.aurasensehk.com/pricing.html">Pricing</a></li>
+          <li><a href="https://www.aurasensehk.com/compare.html">Compare</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="https://www.aurasensehk.com/why-neuromorphic.html">Why Neuromorphic?</a></li>
+          <li><a href="https://www.aurasensehk.com/docs.html">Docs</a></li>
+          <li><a href="https://www.aurasensehk.com/faq.html">FAQ</a></li>
+          <li><a href="https://www.aurasensehk.com/about.html">About</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="./legal/privacy.html">Privacy</a></li>
+          <li><a href="./legal/terms.html">Terms</a></li>
+          <li><a href="./legal/refund.html">Refund</a></li>
+          <li><a href="./legal/cookies.html">Cookies</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">SFSVC SDK v2.0 — Ed25519 Licensed — Built in Hong Kong 🇭🇰</div>
+  </div>
+</footer>
+
+<script src="./js/main.js"></script>
+</body>
+</html>

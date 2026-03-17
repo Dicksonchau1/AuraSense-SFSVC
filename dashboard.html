@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>License Dashboard — AuraSense SFSVC</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#06060A">
+  <link rel="stylesheet" href="./css/design.css">
+  <link rel="stylesheet" href="./css/animate.css">
+  <link rel="stylesheet" href="./css/layout.css">
+  <style>
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px; margin: 40px 0;
+    }
+    .dash-card {
+      background: var(--bg-surface); border: 1px solid var(--border-dim);
+      border-radius: var(--radius-md); padding: 24px 28px;
+    }
+    .dash-card.primary { border-color: var(--border-glow); }
+    .dash-card-label {
+      font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px;
+    }
+    .dash-card-value {
+      font-family: var(--font-sans); font-size: 28px; font-weight: 700;
+      color: var(--text-primary); letter-spacing: -0.02em; margin-bottom: 4px;
+    }
+    .dash-card-sublabel { font-size: 13px; color: var(--text-muted); }
+
+    .license-status {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.3);
+      border-radius: 20px; padding: 6px 16px; font-size: 13px; color: #4ade80;
+      font-family: var(--font-mono); font-weight: 600;
+    }
+    .license-status::before {
+      content: ''; width: 7px; height: 7px; border-radius: 50%;
+      background: #4ade80; display: inline-block;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+    .token-display {
+      font-family: var(--font-mono); font-size: 15px;
+      background: var(--bg-raised); border: 1px solid var(--border-dim);
+      border-radius: var(--radius-sm); padding: 10px 16px;
+      margin: 12px 0; letter-spacing: 0.15em;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .token-dots { color: var(--text-muted); }
+
+    .download-list { list-style: none; padding: 0; margin-top: 16px; }
+    .download-list li { margin-bottom: 10px; }
+    .download-list a {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 16px; border-radius: var(--radius-sm);
+      border: 1px solid var(--border-dim); font-size: 14px;
+      color: var(--text-primary); transition: all var(--transition);
+      background: var(--bg-raised);
+    }
+    .download-list a:hover { border-color: var(--border-glow); color: var(--accent-cyan); }
+
+    .mission-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .mission-tag {
+      font-family: var(--font-mono); font-size: 11px; padding: 4px 10px;
+      background: rgba(0,200,240,0.08); border: 1px solid var(--border-glow);
+      border-radius: 4px; color: var(--accent-cyan);
+    }
+
+    .loading-state {
+      text-align: center; padding: 80px 20px;
+      color: var(--text-muted); font-family: var(--font-mono);
+    }
+    .error-state {
+      background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.3);
+      border-radius: var(--radius-md); padding: 24px 28px; margin: 40px 0;
+    }
+    .error-state h3 { color: #f87171; margin-bottom: 8px; }
+    .error-state p { font-size: 14px; color: var(--text-muted); }
+  </style>
+</head>
+<body>
+
+<!-- ─── NAV (minimal — post-checkout) ──────────────────────────── -->
+<nav class="nav" id="main-nav">
+  <div class="nav-inner">
+    <a href="https://www.aurasensehk.com/index.html" class="nav-brand">
+      <span class="brand-name">AURASENSE</span>
+      <span class="brand-badge">SFSVC</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="https://www.aurasensehk.com/docs.html">Docs</a></li>
+      <li><a href="https://www.aurasensehk.com/pricing.html">Pricing</a></li>
+      <li><a href="https://www.aurasensehk.com/about.html">About</a></li>
+    </ul>
+    <a href="mailto:support@aurasensehk.com" class="btn btn-outline">Support</a>
+  </div>
+</nav>
+
+<!-- ─── MAIN ──────────────────────────────────────────────────── -->
+<section class="section" style="padding-top: 40px;">
+  <div class="container" style="max-width: 860px;">
+
+    <div id="dashboard-loading" class="loading-state">Loading your license…</div>
+    <div id="dashboard-error"   class="error-state" style="display:none">
+      <h3>Could not load license details</h3>
+      <p id="error-msg">Please contact <a href="mailto:support@aurasensehk.com" style="color:var(--accent-cyan)">support@aurasensehk.com</a> with your order number.</p>
+    </div>
+
+    <div id="dashboard-content" style="display:none">
+      <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap; margin-bottom:8px;">
+        <h1 class="h1" style="font-size:clamp(28px,4vw,44px); margin:0">License Dashboard</h1>
+        <span class="license-status" id="license-status">Active</span>
+      </div>
+      <p style="color:var(--text-muted); margin-bottom:40px; font-size:15px">
+        Welcome back. Your subscription is active and ready.
+        Questions? <a href="mailto:support@aurasensehk.com" style="color:var(--accent-cyan)">support@aurasensehk.com</a>
+      </p>
+
+      <!-- Plan + Drone info -->
+      <div class="dashboard-grid">
+        <div class="dash-card primary">
+          <div class="dash-card-label">Active Plan</div>
+          <div class="dash-card-value" id="dash-plan">—</div>
+          <div class="dash-card-sublabel">Monthly subscription</div>
+        </div>
+        <div class="dash-card">
+          <div class="dash-card-label">Drones Licensed</div>
+          <div class="dash-card-value" id="dash-drones">—</div>
+          <div class="dash-card-sublabel">Active activations</div>
+        </div>
+        <div class="dash-card">
+          <div class="dash-card-label">Account Email</div>
+          <div class="dash-card-value" style="font-size:16px; padding-top:4px" id="dash-email">—</div>
+          <div class="dash-card-sublabel">Subscription email</div>
+        </div>
+      </div>
+
+      <!-- Token -->
+      <div class="dash-card" style="margin-bottom:20px">
+        <div class="dash-card-label">API Token (last 4 characters)</div>
+        <div class="token-display">
+          <span class="token-dots">••••  ••••  ••••</span>
+          <strong id="dash-token-suffix">????</strong>
+        </div>
+        <div class="dash-card-sublabel" style="margin-top:8px">
+          Your full token ID was delivered to your subscription email.
+          Keep it private — do not commit to version control.
+        </div>
+      </div>
+
+      <!-- Mission profiles -->
+      <div class="dash-card" style="margin-bottom:20px" id="mission-card">
+        <div class="dash-card-label">Mission Profiles</div>
+        <div class="mission-tags" id="dash-missions"></div>
+      </div>
+
+      <!-- Downloads -->
+      <div class="dash-card">
+        <div class="dash-card-label">Downloads &amp; Resources</div>
+        <ul class="download-list" id="download-list">
+          <li><a id="link-docker" href="#" target="_blank" rel="noopener">
+            ↓ Docker Image — <span style="font-family:var(--font-mono);font-size:12px">aurasense/sfsvc:latest</span>
+          </a></li>
+          <li><a id="link-docs" href="https://www.aurasensehk.com/docs.html">
+            📖 Documentation &amp; API Reference
+          </a></li>
+          <li><a id="link-apiref" href="https://www.aurasensehk.com/docs.html#api">
+            ⚡ API Quickstart
+          </a></li>
+        </ul>
+      </div>
+
+      <p style="font-size:13px; color:var(--text-muted); margin-top:24px; text-align:center">
+        To manage your subscription, cancel, or upgrade:
+        <a href="mailto:support@aurasensehk.com" style="color:var(--accent-cyan)">contact support</a>.
+        Stripe customer portal coming soon.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom" style="text-align:center">
+      SFSVC SDK v2.0 — Ed25519 Licensed — Built in Hong Kong 🇭🇰 &nbsp;|&nbsp;
+      <a href="./legal/privacy.html">Privacy</a> &nbsp;|&nbsp;
+      <a href="./legal/terms.html">Terms</a>
+    </div>
+  </div>
+</footer>
+
+<script src="./js/main.js"></script>
+<script>
+'use strict';
+
+async function loadDashboard() {
+  const params = new URLSearchParams(window.location.search);
+  const sessionId = params.get('session_id') || '';
+
+  // Validate client-side: must start with cs_
+  if (!/^cs_[A-Za-z0-9_-]{10,}$/.test(sessionId)) {
+    showError('No valid session ID found in URL. If you just subscribed, please check your email for your license key.');
+    return;
+  }
+
+  try {
+    const endpoint = `/api/session/${encodeURIComponent(sessionId)}`;
+    const apiUrl = typeof window.aurasenseApiUrl === 'function'
+      ? window.aurasenseApiUrl(endpoint)
+      : endpoint;
+    const resp = await fetch(apiUrl);
+    const data = await resp.json();
+
+    if (!resp.ok) {
+      throw new Error(data.error || `HTTP ${resp.status}`);
+    }
+
+    renderDashboard(data);
+  } catch (err) {
+    showError(err.message);
+  }
+}
+
+function renderDashboard(d) {
+  document.getElementById('dashboard-loading').style.display = 'none';
+  document.getElementById('dashboard-content').style.display = 'block';
+
+  document.getElementById('dash-plan').textContent    = d.plan  || '—';
+  document.getElementById('dash-drones').textContent  = d.drones || '—';
+  document.getElementById('dash-email').textContent   = d.email  || '—';
+  document.getElementById('dash-token-suffix').textContent = d.token_suffix || '????';
+
+  // Mission profile tags
+  const missionsEl = document.getElementById('dash-missions');
+  const profiles = Array.isArray(d.mission_profiles) ? d.mission_profiles : [];
+  if (profiles.length) {
+    profiles.forEach(p => {
+      const tag = document.createElement('span');
+      tag.className = 'mission-tag';
+      tag.textContent = p;
+      missionsEl.appendChild(tag);
+    });
+  } else {
+    document.getElementById('mission-card').style.display = 'none';
+  }
+
+  // Download links
+  if (d.docker_url) document.getElementById('link-docker').href = d.docker_url;
+  if (d.docs_url)   document.getElementById('link-docs').href   = d.docs_url;
+  if (d.api_ref_url) document.getElementById('link-apiref').href = d.api_ref_url;
+}
+
+function showError(msg) {
+  document.getElementById('dashboard-loading').style.display = 'none';
+  document.getElementById('dashboard-error').style.display   = 'block';
+  document.getElementById('error-msg').textContent = msg + ' — please contact support@aurasensehk.com';
+}
+
+loadDashboard();
+</script>
+</body>
+</html>

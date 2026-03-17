@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing — AuraSense SFSVC</title>
+  <meta name="description" content="7 days free. Then per-drone. SFSVC Starter from $9.9/drone/month. Cancel before day 7 — zero charge guaranteed.">
+  <meta name="theme-color" content="#06060A">
+  <link rel="stylesheet" href="./css/design.css">
+  <link rel="stylesheet" href="./css/animate.css">
+  <link rel="stylesheet" href="./css/layout.css">
+  <style>
+    .mission-profile-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+    .mission-pill { display: inline-flex; align-items: center; cursor: pointer; }
+    .mission-pill input[type="checkbox"] {
+      position: absolute; opacity: 0; width: 0; height: 0;
+    }
+    .mission-pill span {
+      display: inline-block;
+      padding: 7px 16px;
+      border: 1.5px solid var(--border-dim);
+      border-radius: 999px;
+      font-size: 13px;
+      color: var(--text-muted);
+      background: var(--bg-raised);
+      transition: all 200ms ease;
+      user-select: none;
+    }
+    .mission-pill input[type="checkbox"]:checked + span {
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+      background: rgba(0,200,240,0.10);
+    }
+    .mission-pill:hover span {
+      border-color: rgba(0,200,240,0.4);
+      color: var(--text-primary);
+    }
+    .mission-pill input[type="checkbox"]:focus-visible + span {
+      outline: 2px solid var(--accent-cyan);
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── NAV ──────────────────────────────────────────────────── -->
+<nav class="nav" id="main-nav">
+  <div class="nav-inner">
+    <a href="https://www.aurasensehk.com/index.html" class="nav-brand">
+      <span class="brand-name">AURASENSE</span>
+      <span class="brand-badge">SFSVC</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="https://www.aurasensehk.com/index.html#why-neuromorphic">Technology</a></li>
+      <li><a href="https://www.aurasensehk.com/docs.html">Docs</a></li>
+      <li><a href="https://www.aurasensehk.com/benchmark.html">Benchmark</a></li>
+      <li><a href="https://www.aurasensehk.com/pricing.html" class="active">Pricing</a></li>
+    </ul>
+    <a href="https://www.aurasensehk.com/pricing.html" class="btn btn-primary">Start Free Trial</a>
+    <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<nav class="nav-drawer" id="nav-drawer">
+  <a href="https://www.aurasensehk.com/index.html#why-neuromorphic">Technology</a>
+  <a href="https://www.aurasensehk.com/docs.html">Docs</a>
+  <a href="https://www.aurasensehk.com/benchmark.html">Benchmark</a>
+  <a href="https://www.aurasensehk.com/pricing.html">Pricing</a>
+  <a href="https://www.aurasensehk.com/pricing.html" class="text-cyan">Start Free Trial →</a>
+</nav>
+
+<!-- ─── HERO ──────────────────────────────────────────────────── -->
+<section class="page-hero">
+  <div class="container">
+    <span class="badge" style="margin-bottom:32px"><span class="badge-dot"></span> 7-Day Free Trial · No Risk</span>
+    <h1>7 days free.<br>Then per-drone.</h1>
+    <p>Your card is charged at trial end. Cancel any time before day 7 — no charge. No questions asked.</p>
+  </div>
+</section>
+
+<!-- ─── HOW THE TRIAL WORKS ──────────────────────────────────── -->
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <span class="section-label reveal">How It Works</span>
+    <div class="trial-steps stagger">
+      <div class="trial-step">
+        <div class="step-number">1</div>
+        <h4>Select your tier</h4>
+        <p>Choose the plan that fits your fleet size and click Start Free Trial.</p>
+      </div>
+      <div class="trial-step">
+        <div class="step-number">2</div>
+        <h4>Add payment method</h4>
+        <p>Stripe's secure hosted checkout collects your card. Nothing is charged yet.</p>
+      </div>
+      <div class="trial-step">
+        <div class="step-number">3</div>
+        <h4>License delivered instantly</h4>
+        <p>Your SFSVC Ed25519 license key arrives in your inbox within minutes.</p>
+      </div>
+      <div class="trial-step">
+        <div class="step-number">4</div>
+        <h4>Cancel before day 7</h4>
+        <p>Zero charge, guaranteed. After day 7, monthly billing begins automatically.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PRICING CARDS ─────────────────────────────────────────── -->
+<section class="section" style="background:var(--bg-surface);padding-top:40px" id="plans">
+  <div class="container">
+    <span class="section-label reveal">Plans</span>
+    <h2 class="h2 reveal reveal-delay-1">Pick your fleet size.</h2>
+    <div class="pricing-grid stagger">
+
+      <!-- STARTER -->
+      <div class="pricing-card" id="starter">
+        <div class="pricing-tier">Starter</div>
+        <div class="pricing-trial">Free for 7 days</div>
+        <div class="pricing-then">then $9.90/drone/mo</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li>1 drone activation</li>
+          <li>Ed25519 license key</li>
+          <li>Offline validation</li>
+          <li>Email delivery</li>
+          <li>Cancel anytime</li>
+        </ul>
+        <button class="btn btn-outline" data-trial-tier="starter">Start Free Trial</button>
+      </div>
+
+      <!-- GROWTH (featured) -->
+      <div class="pricing-card featured" id="growth">
+        <div class="featured-badge">Most Popular</div>
+        <div class="pricing-tier">Growth</div>
+        <div class="pricing-trial">Free for 7 days</div>
+        <div class="pricing-then">then $19.90/mo</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li>2–5 drone activations</li>
+          <li>API access</li>
+          <li>Docker deployment</li>
+          <li>Floating license</li>
+          <li>Ed25519 license key</li>
+          <li>Offline validation</li>
+          <li>Email support</li>
+          <li>Cancel anytime</li>
+        </ul>
+        <button class="btn btn-primary" data-trial-tier="growth">Start Free Trial</button>
+      </div>
+
+      <!-- PRO -->
+      <div class="pricing-card" id="pro">
+        <div class="pricing-tier">Pro</div>
+        <div class="pricing-trial">Free for 7 days</div>
+        <div class="pricing-then">then $29.90/mo</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li>6–10 drone activations</li>
+          <li>RGB codec + thermal branch</li>
+          <li>STDP learning enabled</li>
+          <li>Floating license</li>
+          <li>Ed25519 license key</li>
+          <li>Offline validation</li>
+          <li>Priority support</li>
+          <li>Cancel anytime</li>
+        </ul>
+        <button class="btn btn-outline" data-trial-tier="pro">Start Free Trial</button>
+      </div>
+
+      <!-- ENTERPRISE -->
+      <div class="pricing-card" id="enterprise">
+        <div class="pricing-tier">Enterprise</div>
+        <div class="pricing-trial">Free for 7 days</div>
+        <div class="pricing-then">then $99.90/mo</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li>10+ drone activations</li>
+          <li>RGB + thermal sensor fusion</li>
+          <li>STDP + DA/5-HT neuromodulation</li>
+          <li>Floating license</li>
+          <li>Ed25519 license key</li>
+          <li>Offline validation</li>
+          <li>Dedicated onboarding</li>
+          <li>Custom fleet config</li>
+          <li>On-prem deployment option</li>
+          <li>SLA guarantee</li>
+          <li>Priority support</li>
+        </ul>
+        <button class="btn btn-outline" data-trial-tier="enterprise">Start Free Trial</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── FEATURE COMPARISON TABLE ─────────────────────────────── -->
+<section class="section">
+  <div class="container">
+    <span class="section-label reveal">Compare</span>
+    <h2 class="h2 reveal reveal-delay-1">Full feature comparison.</h2>
+    <div class="comparison-table-wrap reveal reveal-delay-2">
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Starter</th>
+            <th>Growth</th>
+            <th>Pro</th>
+            <th>Enterprise</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Drone activations</td><td>1</td><td>2–5</td><td>6–10</td><td>10+</td></tr>
+          <tr><td>Floating license</td><td><span class="check-no">—</span></td><td><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td></tr>
+          <tr><td>Ed25519 key</td><td><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td></tr>
+          <tr><td>Offline validation</td><td><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td></tr>
+          <tr><td>7-day free trial</td><td><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td></tr>
+          <tr><td>Email support</td><td><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td></tr>
+          <tr><td>Priority support</td><td><span class="check-no">—</span></td><td><span class="check-no">—</span></td><td><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td></tr>
+          <tr><td>Dedicated onboarding</td><td><span class="check-no">—</span></td><td><span class="check-no">—</span></td><td><span class="check-no">—</span></td><td><span class="check-yes">✓</span></td></tr>
+          <tr><td>Custom fleet config</td><td><span class="check-no">—</span></td><td><span class="check-no">—</span></td><td><span class="check-no">—</span></td><td><span class="check-yes">✓</span></td></tr>
+          <tr><td>SLA guarantee</td><td><span class="check-no">—</span></td><td><span class="check-no">—</span></td><td><span class="check-no">—</span></td><td><span class="check-yes">✓</span></td></tr>
+          <tr class="price-row"><td>Price / month</td><td>$9.90</td><td>$19.90</td><td>$29.90</td><td>$99.90</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Refund callout -->
+    <div class="refund-callout reveal">
+      <div class="refund-icon">💚</div>
+      <div>
+        <h3>7-Day Free Trial Guarantee</h3>
+        <p>
+          Cancel before day 7: zero charge, guaranteed.<br>
+          After trial: 3-day refund window if SFSVC doesn't perform as
+          benchmarked on your reference hardware.
+        </p>
+        <a href="./legal/refund.html">→ Full details: refund policy</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ────────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="nav-brand" style="margin-bottom:16px">
+          <span class="brand-name">AURASENSE</span>
+          <span class="brand-badge">SFSVC</span>
+        </div>
+        <p class="footer-tagline">Neuromorphic perception SDK for autonomous drone inspection. Edge-native. Sub-2ms. No GPU.</p>
+        <p class="footer-copy">© 2026 AuraSense Limited. All rights reserved.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="https://www.aurasensehk.com/index.html#technology">Technology</a></li>
+          <li><a href="https://www.aurasensehk.com/index.html#benchmark">Benchmark</a></li>
+          <li><a href="https://www.aurasensehk.com/pricing.html">Pricing</a></li>
+          <li><a href="https://www.aurasensehk.com/faq.html">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="https://www.aurasensehk.com/about.html">About</a></li>
+          <li><a href="https://www.aurasensehk.com/community.html">Community</a></li>
+          <li><a href="mailto:support@aurasensehk.com">Contact</a></li>
+          <li><a href="https://www.aurasensehk.com/community.html#roles">Careers</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="./legal/privacy.html">Privacy</a></li>
+          <li><a href="./legal/terms.html">Terms</a></li>
+          <li><a href="./legal/refund.html">Refund</a></li>
+          <li><a href="./legal/cookies.html">Cookies</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">SFSVC SDK v2.0 — Ed25519 Licensed — Built in Hong Kong 🇭🇰</div>
+  </div>
+</footer>
+
+<!-- ─── TRIAL MODAL ───────────────────────────────────────────── -->
+<div class="trial-modal" id="trial-modal" role="dialog" aria-modal="true" aria-labelledby="modal-heading">
+  <div class="modal-content">
+    <button class="modal-close" id="modal-close-btn" aria-label="Close">✕</button>
+    <div class="modal-header">
+      <span class="modal-tier" id="modal-tier-label">SFSVC Starter</span>
+      <h2 id="modal-heading">Start your 7-day free trial</h2>
+      <p>Cancel before day 7 and you won't be charged.</p>
+    </div>
+    <form id="trial-form" novalidate>
+      <div class="form-group">
+        <label for="f-name">Full Name *</label>
+        <input type="text" id="f-name" name="name" required autocomplete="name" placeholder="John Smith" maxlength="120">
+      </div>
+      <div class="form-group">
+        <label for="f-company">Company *</label>
+        <input type="text" id="f-company" name="company" required autocomplete="organization" placeholder="Drone Inspection Co." maxlength="120">
+      </div>
+      <div class="form-group">
+        <label for="f-email">Work Email *</label>
+        <input type="email" id="f-email" name="email" required autocomplete="email" placeholder="john@company.com">
+      </div>
+      <div class="form-group">
+        <label for="f-usecase">Use Case *</label>
+        <select id="f-usecase" name="usecase" required>
+          <option value="">Select your inspection type</option>
+          <option>Building facade inspection</option>
+          <option>Pipeline inspection</option>
+          <option>Bridge/tunnel inspection</option>
+          <option>Solar panel inspection</option>
+          <option>Rooftop inspection</option>
+          <option>Research / Development</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="f-drones">Number of Drones</label>
+        <input type="number" id="f-drones" name="drones" min="1" max="50" placeholder="e.g. 3">
+      </div>
+      <div class="form-group">
+        <label>Mission Profiles <span style="font-size:12px;color:var(--text-muted)">(select all that apply)</span></label>
+        <div class="mission-profile-pills" style="margin-top:8px">
+          <label class="mission-pill">
+            <input type="checkbox" name="mission_profiles" value="CriticalBridge">
+            <span>Critical Bridge</span>
+          </label>
+          <label class="mission-pill">
+            <input type="checkbox" name="mission_profiles" value="PipelineGas">
+            <span>Pipeline / Gas</span>
+          </label>
+          <label class="mission-pill">
+            <input type="checkbox" name="mission_profiles" value="Facade">
+            <span>Facade</span>
+          </label>
+          <label class="mission-pill">
+            <input type="checkbox" name="mission_profiles" value="Demo">
+            <span>Demo / R&amp;D</span>
+          </label>
+        </div>
+      </div>
+      <div class="trial-terms">
+        <input type="checkbox" id="terms-check" required>
+        <label for="terms-check">
+          I agree to the
+          <a href="./legal/terms.html" target="_blank" rel="noopener">Terms of Service</a>,
+          <a href="./legal/privacy.html" target="_blank" rel="noopener">Privacy Policy</a>,
+          and understand my card will be charged after 7 days unless I cancel.
+        </label>
+      </div>
+      <button type="submit" class="btn-trial-submit">Continue to Payment →</button>
+    </form>
+    <p class="modal-security">🔒 Payment secured by Stripe. AuraSense never stores card details.</p>
+  </div>
+</div>
+
+<!-- ─── COOKIE BANNER ─────────────────────────────────────────── -->
+<div class="cookie-banner" id="cookie-banner" role="region" aria-label="Cookie notice">
+  <p>We use essential cookies only. No tracking.</p>
+  <div class="cookie-actions">
+    <button class="btn btn-primary btn-sm" id="cookie-accept">Accept</button>
+    <a href="./legal/cookies.html" class="cookie-learn">Learn more →</a>
+  </div>
+</div>
+
+<script src="./js/main.js"></script>
+<script src="./js/trial.js"></script>
+</body>
+</html>

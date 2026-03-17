@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Docs — AuraSense SFSVC Neuromorphic Codec SDK</title>
+  <meta name="description" content="SFSVC quickstart: Docker image, API endpoints, and integration guide for neuromorphic drone inspection. Spike-based perception, no GPU required.">
+  <meta name="keywords" content="SFSVC docs, neuromorphic video codec SDK, drone inspection API, spike-based perception, edge AI Docker">
+  <meta name="theme-color" content="#06060A">
+  <link rel="stylesheet" href="./css/design.css">
+  <link rel="stylesheet" href="./css/animate.css">
+  <link rel="stylesheet" href="./css/layout.css">
+  <style>
+    .docs-layout {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+    @media (max-width: 768px) { .docs-layout { grid-template-columns: 1fr; } }
+
+    .docs-sidebar {
+      position: sticky; top: 80px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius-md);
+      padding: 20px;
+    }
+    .docs-sidebar h4 {
+      font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text-muted); font-family: var(--font-mono);
+      margin-bottom: 12px; padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-dim);
+    }
+    .docs-sidebar ul { list-style: none; padding: 0; }
+    .docs-sidebar ul li { margin-bottom: 4px; }
+    .docs-sidebar ul li a {
+      display: block; padding: 5px 8px; border-radius: 6px;
+      font-size: 14px; color: var(--text-muted);
+      transition: all var(--transition);
+    }
+    .docs-sidebar ul li a:hover,
+    .docs-sidebar ul li a.active { color: var(--text-primary); background: var(--bg-raised); }
+
+    .docs-content section { margin-bottom: 64px; scroll-margin-top: 88px; }
+    .docs-content h2 {
+      font-family: var(--font-sans); font-size: 26px; font-weight: 700;
+      margin-bottom: 20px; padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-dim);
+    }
+    .docs-content h3 {
+      font-family: var(--font-sans); font-size: 18px; font-weight: 600;
+      margin: 32px 0 12px; color: var(--text-primary);
+    }
+    .docs-content p { font-size: 16px; line-height: 1.75; color: var(--text-primary); margin-bottom: 16px; }
+
+    .code-block {
+      background: var(--bg-raised); border: 1px solid var(--border-dim);
+      border-radius: var(--radius-md); padding: 20px 24px;
+      font-family: var(--font-mono); font-size: 13px; line-height: 1.7;
+      overflow-x: auto; margin: 20px 0; position: relative;
+    }
+    .code-block .copy-btn {
+      position: absolute; top: 10px; right: 12px;
+      font-size: 11px; font-family: var(--font-mono); color: var(--accent-cyan);
+      background: none; border: 1px solid var(--border-glow);
+      border-radius: 4px; padding: 3px 8px; cursor: pointer;
+      transition: background var(--transition);
+    }
+    .code-block .copy-btn:hover { background: rgba(0,200,240,0.1); }
+    .code-block .comment { color: var(--text-muted); }
+    .code-block .cmd-prompt { color: var(--accent-cyan); }
+
+    .endpoint-card {
+      background: var(--bg-surface); border: 1px solid var(--border-dim);
+      border-radius: var(--radius-md); padding: 20px 24px; margin-bottom: 20px;
+    }
+    .endpoint-method {
+      display: inline-block; padding: 3px 10px; border-radius: 4px;
+      font-family: var(--font-mono); font-size: 12px; font-weight: 700;
+      letter-spacing: 0.05em; margin-right: 12px;
+    }
+    .method-post { background: rgba(251,191,36,0.15); color: #fbbf24; }
+    .method-get  { background: rgba(74,222,128,0.15); color: #4ade80; }
+    .endpoint-path { font-family: var(--font-mono); font-size: 15px; font-weight: 600; }
+    .endpoint-desc { font-size: 14px; color: var(--text-muted); margin-top: 8px; }
+
+    .param-table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 14px; }
+    .param-table th {
+      text-align: left; padding: 8px 12px;
+      font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text-muted);
+      border-bottom: 1px solid var(--border-dim);
+    }
+    .param-table td { padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .param-table td:first-child { font-family: var(--font-mono); color: var(--accent-cyan); }
+
+    .callout {
+      background: rgba(0,200,240,0.06); border-left: 3px solid var(--accent-cyan);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 14px 18px; margin: 20px 0; font-size: 14px;
+    }
+    .callout.warn { background: rgba(251,191,36,0.06); border-color: #fbbf24; }
+  </style>
+</head>
+<body>
+
+<!-- ─── NAV ──────────────────────────────────────────────────── -->
+<nav class="nav" id="main-nav">
+  <div class="nav-inner">
+    <a href="https://www.aurasensehk.com/index.html" class="nav-brand">
+      <span class="brand-name">AURASENSE</span>
+      <span class="brand-badge">SFSVC</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="https://www.aurasensehk.com/index.html#why-neuromorphic">Technology</a></li>
+      <li><a href="https://www.aurasensehk.com/docs.html" class="active">Docs</a></li>
+      <li><a href="https://www.aurasensehk.com/benchmark.html">Benchmark</a></li>
+      <li><a href="https://www.aurasensehk.com/pricing.html">Pricing</a></li>
+    </ul>
+    <a href="https://www.aurasensehk.com/pricing.html" class="btn btn-primary">Subscribe</a>
+    <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<nav class="nav-drawer" id="nav-drawer">
+  <a href="https://www.aurasensehk.com/index.html#why-neuromorphic">Technology</a>
+  <a href="https://www.aurasensehk.com/docs.html">Docs</a>
+  <a href="https://www.aurasensehk.com/benchmark.html">Benchmark</a>
+  <a href="https://www.aurasensehk.com/pricing.html">Pricing</a>
+  <a href="https://www.aurasensehk.com/pricing.html" class="text-cyan">Start Free Trial →</a>
+</nav>
+
+<!-- ─── PAGE HERO ─────────────────────────────────────────────── -->
+<section class="page-hero">
+  <div class="container">
+    <span class="badge" style="margin-bottom:32px"><span class="badge-dot"></span> SDK v2.0</span>
+    <h1>Documentation</h1>
+    <p>Get SFSVC running in minutes with Docker, then integrate via the REST API.</p>
+  </div>
+</section>
+
+<!-- ─── DOCS BODY ─────────────────────────────────────────────── -->
+<section class="section">
+  <div class="container">
+    <div class="docs-layout">
+
+      <!-- Sidebar -->
+      <aside class="docs-sidebar">
+        <h4>Contents</h4>
+        <ul>
+          <li><a href="#quickstart" class="active">Quickstart</a></li>
+          <li><a href="#requirements">Requirements</a></li>
+          <li><a href="#configuration">Configuration</a></li>
+          <li><a href="#api">API Reference</a></li>
+          <li><a href="#api-v1-facade">Facade Mode API v1</a></li>
+          <li><a href="#api-frames">POST /v1/frames (Legacy)</a></li>
+          <li><a href="#api-events">GET /v1/events (Legacy)</a></li>
+          <li><a href="#risk-responsibility">Risk &amp; Responsibility</a></li>
+          <li><a href="#roadmap">Roadmap</a></li>
+          <li><a href="#licensing">Licensing</a></li>
+          <li><a href="#support">Support</a></li>
+        </ul>
+      </aside>
+
+      <!-- Main content -->
+      <div class="docs-content">
+
+        <section id="quickstart">
+          <h2>Quickstart</h2>
+          <p>
+            The fastest way to run SFSVC is via the official Docker image.
+            Once you have a valid license key from your
+            <a href="https://www.aurasensehk.com/dashboard.html" style="color:var(--accent-cyan)">license dashboard</a>,
+            you can be processing video in under 2 minutes.
+          </p>
+
+          <h3>Pull and run</h3>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            <span class="comment"># Pull the latest image</span><br>
+            <span class="cmd-prompt">$</span> docker pull aurasense/sfsvc:latest<br><br>
+            <span class="comment"># Run with your license key (replace YOUR_KEY)</span><br>
+            <span class="cmd-prompt">$</span> docker run --rm -it \<br>
+            &nbsp;&nbsp;-e SFSVC_LICENSE_KEY=YOUR_KEY \<br>
+            &nbsp;&nbsp;-p 8000:8000 \<br>
+            &nbsp;&nbsp;aurasense/sfsvc:latest
+          </div>
+
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            <span class="comment"># Show all options</span><br>
+            <span class="cmd-prompt">$</span> docker run --rm -it aurasense/sfsvc:latest --help
+          </div>
+
+          <div class="callout">
+            Your license key is available on the
+            <a href="https://www.aurasensehk.com/dashboard.html" style="color:var(--accent-cyan)">license dashboard</a>
+            after subscribing. The key is tied to your account; do not commit it to version control.
+          </div>
+        </section>
+
+        <section id="requirements">
+          <h2>Requirements</h2>
+          <p>SFSVC has minimal hardware requirements by design.</p>
+          <table class="param-table">
+            <thead>
+              <tr><th>Component</th><th>Minimum</th><th>Recommended</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>CPU</td><td>x86_64, 4 cores, SSE4.2</td><td>Intel N100 or better</td></tr>
+              <tr><td>RAM</td><td>512 MB</td><td>2 GB</td></tr>
+              <tr><td>GPU</td><td colspan="2">Not required</td></tr>
+              <tr><td>OS</td><td>Linux (kernel ≥ 5.4)</td><td>Ubuntu 22.04 LTS</td></tr>
+              <tr><td>Docker</td><td>20.10+</td><td>Latest stable</td></tr>
+              <tr><td>Camera input</td><td>USB or MIPI CSI, 1080p@30fps</td><td>1280×720@60fps</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="configuration">
+          <h2>Configuration</h2>
+          <p>SFSVC is configured via environment variables. All parameters have safe defaults.</p>
+          <table class="param-table">
+            <thead>
+              <tr><th>Variable</th><th>Default</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>SFSVC_LICENSE_KEY</td><td>—</td><td>Required. Your Ed25519 license key.</td></tr>
+              <tr><td>SFSVC_MISSION_PROFILE</td><td>Facade</td><td>CriticalBridge | PipelineGas | Facade | Demo</td></tr>
+              <tr><td>SFSVC_PORT</td><td>8000</td><td>Port for the REST API server.</td></tr>
+              <tr><td>SFSVC_ENABLE_THERMAL</td><td>false</td><td>Enable thermal lane (Pro/Enterprise only).</td></tr>
+              <tr><td>SFSVC_STDP_ENABLED</td><td>false</td><td>Enable on-device STDP learning (Pro/Enterprise).</td></tr>
+              <tr><td>SFSVC_LOG_LEVEL</td><td>info</td><td>debug | info | warn | error</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="api">
+          <h2 id="api-reference">API Reference</h2>
+          <p>
+            The SFSVC container exposes a REST API on <code style="font-family:var(--font-mono);color:var(--accent-cyan)">http://localhost:8000</code>.
+            All endpoints accept and return <code style="font-family:var(--font-mono);color:var(--accent-cyan)">application/json</code>.
+          </p>
+          <div class="callout warn">
+            The API is designed for on-device loopback calls from your application.
+            Do not expose port 8000 directly to the internet without a reverse proxy and authentication.
+          </div>
+        </section>
+
+        <section id="api-v1-facade">
+          <h2>Facade Mode API v1</h2>
+          <p>
+            New integrations should use the canonical Facade Mode API v1 contract.
+            This contract includes vertical crack summary outputs and Golden Frame memory fields
+            (<code style="font-family:var(--font-mono);color:var(--accent-cyan)">has_baseline</code>,
+            <code style="font-family:var(--font-mono);color:var(--accent-cyan)">area_growth_rate</code>,
+            <code style="font-family:var(--font-mono);color:var(--accent-cyan)">risk_acceleration</code>, and
+            <code style="font-family:var(--font-mono);color:var(--accent-cyan)">new_degradation_tiles</code>).
+          </p>
+          <div class="callout">
+            Canonical contract:
+            <a href="https://github.com/Dicksonchau1/AuraSense-SFSVC-Engine/blob/main/docs/API_V1_FACADE.md" style="color:var(--accent-cyan)">
+              Facade Mode API v1
+            </a>
+          </div>
+        </section>
+
+        <section id="api-frames">
+          <h2>POST /v1/frames (Legacy)</h2>
+          <div class="endpoint-card">
+            <span class="endpoint-method method-post">POST</span>
+            <span class="endpoint-path">/v1/frames</span>
+            <div class="endpoint-desc">
+              Legacy endpoint. Submit a raw frame (or pre-encoded spike event list) for neuromorphic processing.
+              Returns immediately; results are available via <code style="font-family:var(--font-mono)">/v1/events</code>.
+              New integrations should use Facade Mode API v1.
+            </div>
+          </div>
+
+          <h3>Request body</h3>
+          <div class="code-block">
+            <pre>{
+  "frame_id":   "f_1234",          <span class="comment">// caller-assigned identifier</span>
+  "timestamp":  1741183200000,     <span class="comment">// Unix ms</span>
+  "encoding":   "raw_bgr",         <span class="comment">// "raw_bgr" | "spike_events"</span>
+  "width":      1280,
+  "height":     720,
+  "data_b64":   "..."              <span class="comment">// base64-encoded frame bytes</span>
+}</pre>
+          </div>
+
+          <h3>Response</h3>
+          <div class="code-block">
+            <pre>{
+  "accepted": true,
+  "frame_id": "f_1234",
+  "queue_depth": 0
+}</pre>
+          </div>
+        </section>
+
+        <section id="api-events">
+          <h2>GET /v1/events (Legacy)</h2>
+          <div class="endpoint-card">
+            <span class="endpoint-method method-get">GET</span>
+            <span class="endpoint-path">/v1/events</span>
+            <div class="endpoint-desc">
+              Legacy endpoint. Poll for detection events. Returns crack events emitted since the last poll
+              (or since <code style="font-family:var(--font-mono)">since</code> timestamp if provided).
+              New integrations should use Facade Mode API v1.
+            </div>
+          </div>
+
+          <h3>Query parameters</h3>
+          <table class="param-table">
+            <thead><tr><th>Parameter</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td>since</td><td>integer</td><td>Unix ms. Return events after this timestamp.</td></tr>
+              <tr><td>min_confidence</td><td>float [0,1]</td><td>Filter events below this confidence score.</td></tr>
+              <tr><td>limit</td><td>integer</td><td>Max events per response. Default 100.</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Response</h3>
+          <div class="code-block">
+            <pre>{
+  "events": [
+    {
+      "event_id":    "ev_9af3",
+      "frame_id":    "f_1234",
+      "timestamp":   1741183200043,
+      "type":        "crack",
+      "confidence":  0.943,
+      "tile_x":      82,           <span class="comment">// tile column [0, 159]</span>
+      "tile_y":      44,           <span class="comment">// tile row    [0, 89]</span>
+      "lane_mask":   6,            <span class="comment">// bitmask of firing lanes</span>
+      "bbox_px":     [656, 352, 672, 360]
+    }
+  ],
+  "count": 1,
+  "next_since": 1741183200044
+}</pre>
+          </div>
+        </section>
+
+        <section id="risk-responsibility">
+          <h2>Risk &amp; Responsibility</h2>
+          <p>
+            SFSVC is decision-support software for inspection teams. It helps prioritize review,
+            trend facade degradation, and surface risk indicators.
+          </p>
+          <div class="callout warn">
+            SFSVC output is not a structural certification and is not a substitute for legal/compliance review.
+            Final structural and safety decisions must be made by qualified engineers under local codes and standards.
+          </div>
+          <p><strong>Q:</strong> Can I use SFSVC output as the sole basis for safety decisions?</p>
+          <p><strong>A:</strong> No. SFSVC is designed to assist qualified professionals, not replace them.</p>
+        </section>
+
+        <section id="roadmap">
+          <h2>Roadmap</h2>
+          <ul>
+            <li>Shear-angle risk channel (Sobel/atan2/sin(2theta)-based), to be exposed as <code style="font-family:var(--font-mono);color:var(--accent-cyan)">max_shear_risk</code> and per-tile shear factors in a future API revision.</li>
+            <li>Additional facade trend signals for long-horizon maintenance planning.</li>
+          </ul>
+          <p>Shear-specific metrics are experimental and not yet part of the public API.</p>
+        </section>
+
+        <section id="licensing">
+          <h2>Licensing</h2>
+          <p>
+            SFSVC uses Ed25519 offline license keys. The license is validated locally on startup
+            and via a periodic heartbeat call to <code style="font-family:var(--font-mono);color:var(--accent-cyan)">https://www.aurasensehk.com/license/validate</code>.
+            The drone does <strong>not</strong> send video or spike data off-device during validation.
+          </p>
+          <p>
+            Your license key, active plan details, and Docker image download link are always
+            available on your <a href="https://www.aurasensehk.com/dashboard.html" style="color:var(--accent-cyan)">license dashboard</a>.
+          </p>
+        </section>
+
+        <section id="support">
+          <h2>Support</h2>
+          <p>
+            <strong>Email:</strong> <a href="mailto:support@aurasensehk.com" style="color:var(--accent-cyan)">support@aurasensehk.com</a><br>
+            Typical response time: within 2 business days.<br>
+            Priority support is included with Pro and Enterprise plans.
+          </p>
+          <p>
+            <strong>Support &amp; Response Times</strong><br>
+            We strive for &gt;99% service uptime, but do not provide a formal uptime guarantee at this stage.
+          </p>
+        </section>
+
+      </div><!-- /.docs-content -->
+    </div><!-- /.docs-layout -->
+  </div>
+</section>
+
+<!-- ─── FOOTER ────────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="nav-brand" style="margin-bottom:16px">
+          <span class="brand-name">AURASENSE</span>
+          <span class="brand-badge">SFSVC</span>
+        </div>
+        <p class="footer-tagline">Neuromorphic perception codec for autonomous drone and robot inspection. Edge-native. Artifact-backed single-digit ms latency. No GPU.</p>
+        <p class="footer-copy">© 2026 AuraSense Limited. All rights reserved.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="https://www.aurasensehk.com/index.html#technology">Technology</a></li>
+          <li><a href="https://www.aurasensehk.com/benchmark.html">Benchmark</a></li>
+          <li><a href="https://www.aurasensehk.com/pricing.html">Pricing</a></li>
+          <li><a href="https://www.aurasensehk.com/compare.html">Compare</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="https://www.aurasensehk.com/why-neuromorphic.html">Why Neuromorphic?</a></li>
+          <li><a href="https://www.aurasensehk.com/docs.html">Docs</a></li>
+          <li><a href="https://www.aurasensehk.com/faq.html">FAQ</a></li>
+          <li><a href="https://www.aurasensehk.com/about.html">About</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="./legal/privacy.html">Privacy</a></li>
+          <li><a href="./legal/terms.html">Terms</a></li>
+          <li><a href="./legal/refund.html">Refund</a></li>
+          <li><a href="./legal/cookies.html">Cookies</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">SFSVC SDK v2.0 — Ed25519 Licensed — Built in Hong Kong 🇭🇰</div>
+  </div>
+</footer>
+
+<script src="./js/main.js"></script>
+<script>
+'use strict';
+// Sidebar active-link on scroll
+const sections = document.querySelectorAll('.docs-content section[id]');
+const sideLinks = document.querySelectorAll('.docs-sidebar a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
+  sideLinks.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+  });
+}, { passive: true });
+
+// Copy button
+function copyCode(btn) {
+  const block = btn.closest('.code-block');
+  const text = block.innerText.replace('Copy\n', '').replace(/^\$ /gm, '');
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+  });
+}
+</script>
+</body>
+</html>
