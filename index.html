@@ -4,234 +4,1070 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NEPA by AURASENSE – Deterministic Inspection Infrastructure</title>
-    <meta name="description" content="A deterministic neuromorphic inspection platform engineered for safety‑critical infrastructure and enterprise deployment.">
+    <meta name="description" content="A deterministic neuromorphic inspection platform engineered for safety-critical infrastructure and enterprise deployment.">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --black: #000000;
+            --dark-bg: #0a0a0a;
+            --surface: #111111;
+            --surface-2: #1a1a1a;
+            --border: #2a2a2a;
+            --border-light: #333333;
+            --white: #ffffff;
+            --off-white: #e8e8e8;
+            --muted: #888888;
+            --accent: #ffffff;
+            --accent-dim: #cccccc;
+            --green: #00ff88;
+            --green-dim: #00cc6a;
+            --red: #ff3b3b;
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
         }
-        
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            font-family: var(--font);
+            background: var(--black);
+            color: var(--off-white);
             line-height: 1.6;
-            color: #1a1a1a;
-            background: #ffffff;
+            overflow-x: hidden;
         }
-        
+
+        /* ─── HEADER / NAV ─────────────────────────────────────────── */
         header {
-            background: #000;
-            color: #fff;
-            padding: 1.5rem 2rem;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 9999;
+            background: rgba(0,0,0,0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2.5rem;
+            height: 60px;
+            display: flex;
+            align-items: center;
         }
-        
+
         nav {
-            max-width: 1200px;
+            max-width: 1400px;
+            width: 100%;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        
+
         .logo {
-            font-size: 1.5rem;
+            font-size: 0.9rem;
             font-weight: 700;
-            letter-spacing: -0.5px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--white);
         }
-        
-        .hero {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 8rem 2rem;
-            text-align: center;
+
+        .logo span {
+            color: var(--muted);
+            font-weight: 400;
         }
-        
-        .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            letter-spacing: -2px;
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
         }
-        
-        .hero p {
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
-            opacity: 0.95;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 4rem 2rem;
-        }
-        
-        section {
-            margin-bottom: 6rem;
-        }
-        
-        h2 {
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
-            font-weight: 700;
-            letter-spacing: -1px;
-        }
-        
-        p {
-            font-size: 1.1rem;
-            margin-bottom: 1.5rem;
-            color: #333;
-        }
-        
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 3rem;
-            margin-top: 3rem;
-        }
-        
-        .card {
-            padding: 2rem;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border: 1px solid #e0e0e0;
-        }
-        
-        .card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            font-weight: 600;
-        }
-        
-        footer {
-            background: #000;
-            color: #fff;
-            text-align: center;
-            padding: 3rem 2rem;
-            margin-top: 6rem;
-        }
-        
-        .btn {
-            display: inline-block;
-            padding: 1rem 2.5rem;
-            background: #fff;
-            color: #667eea;
+
+        .nav-links a {
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--muted);
             text-decoration: none;
-            border-radius: 6px;
-            font-weight: 600;
-            transition: all 0.3s;
+            transition: color 0.2s;
         }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+
+        .nav-links a:hover { color: var(--white); }
+
+        .nav-cta {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--black);
+            background: var(--white);
+            padding: 0.5rem 1.4rem;
+            text-decoration: none;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .nav-cta:hover { background: var(--off-white); }
+
+        /* ─── HERO ─────────────────────────────────────────────────── */
+        .hero {
+            position: relative;
+            height: 100vh;
+            min-height: 700px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            overflow: hidden;
+        }
+
+        .hero-video {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.45;
+            filter: grayscale(60%);
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(0,0,0,0.1) 0%,
+                rgba(0,0,0,0.3) 40%,
+                rgba(0,0,0,0.85) 100%
+            );
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2.5rem 6rem;
+            width: 100%;
+        }
+
+        .hero-eyebrow {
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .hero-eyebrow::before {
+            content: '';
+            display: inline-block;
+            width: 32px;
+            height: 1px;
+            background: var(--muted);
+        }
+
+        .hero h1 {
+            font-size: clamp(2.8rem, 5vw, 5.5rem);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            line-height: 1.0;
+            color: var(--white);
+            max-width: 800px;
+            margin-bottom: 2rem;
+        }
+
+        .hero-sub {
+            font-size: 1rem;
+            color: var(--accent-dim);
+            max-width: 560px;
+            line-height: 1.7;
+            margin-bottom: 2.5rem;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn-primary {
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--black);
+            background: var(--white);
+            padding: 0.85rem 2rem;
+            text-decoration: none;
+            border: 1px solid var(--white);
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .btn-primary:hover { background: transparent; color: var(--white); }
+
+        .btn-secondary {
+            font-size: 0.78rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--off-white);
+            background: transparent;
+            padding: 0.85rem 2rem;
+            text-decoration: none;
+            border: 1px solid var(--border-light);
+            transition: border-color 0.2s, color 0.2s;
+        }
+
+        .btn-secondary:hover { border-color: var(--white); color: var(--white); }
+
+        /* ─── TICKER / STATUS BAR ──────────────────────────────────── */
+        .status-bar {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 0.75rem 2.5rem;
+            display: flex;
+            gap: 3rem;
+            overflow-x: auto;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            white-space: nowrap;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--green);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .status-label {
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .status-value {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            color: var(--off-white);
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* ─── SECTION COMMONS ──────────────────────────────────────── */
+        .section {
+            padding: 8rem 2.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-full {
+            padding: 8rem 2.5rem;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-full-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-tag {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-tag::before {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 1px;
+            background: var(--border-light);
+        }
+
+        h2.section-title {
+            font-size: clamp(2rem, 3.5vw, 3.2rem);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            color: var(--white);
+            margin-bottom: 2rem;
+        }
+
+        .section-lead {
+            font-size: 1.05rem;
+            color: var(--muted);
+            max-width: 620px;
+            line-height: 1.8;
+            margin-bottom: 4rem;
+        }
+
+        /* ─── DIVIDER ──────────────────────────────────────────────── */
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 0;
+        }
+
+        /* ─── METRICS STRIP ────────────────────────────────────────── */
+        .metrics-strip {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            border: 1px solid var(--border);
+        }
+
+        .metric-cell {
+            padding: 2.5rem 2rem;
+            border-right: 1px solid var(--border);
+        }
+
+        .metric-cell:last-child { border-right: none; }
+
+        .metric-num {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            color: var(--white);
+            font-variant-numeric: tabular-nums;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-unit {
+            font-size: 1rem;
+            color: var(--muted);
+        }
+
+        .metric-desc {
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-top: 0.4rem;
+        }
+
+        /* ─── CARD GRID ─────────────────────────────────────────────── */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            border: 1px solid var(--border);
+        }
+
+        .card-grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            border: 1px solid var(--border);
+        }
+
+        .data-card {
+            padding: 2.5rem;
+            border-right: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            transition: background 0.3s;
+        }
+
+        .data-card:hover { background: var(--surface-2); }
+
+        .data-card:nth-child(3n) { border-right: none; }
+        .card-grid-2 .data-card:nth-child(2n) { border-right: none; }
+
+        .data-card .card-icon {
+            width: 36px;
+            height: 36px;
+            border: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+        }
+
+        .data-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            color: var(--white);
+            margin-bottom: 0.75rem;
+        }
+
+        .data-card p {
+            font-size: 0.85rem;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        /* ─── TWO-COL LAYOUT ───────────────────────────────────────── */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: start;
+        }
+
+        .two-col-wide {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 5rem;
+            align-items: start;
+        }
+
+        /* ─── TRACE LIST ───────────────────────────────────────────── */
+        .trace-list {
+            list-style: none;
+            border: 1px solid var(--border);
+        }
+
+        .trace-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.2rem;
+            padding: 1.4rem 1.8rem;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s;
+        }
+
+        .trace-item:last-child { border-bottom: none; }
+        .trace-item:hover { background: var(--surface-2); }
+
+        .trace-num {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            padding-top: 0.15rem;
+            min-width: 2rem;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .trace-text {
+            font-size: 0.88rem;
+            color: var(--off-white);
+            line-height: 1.6;
+        }
+
+        .trace-text strong {
+            color: var(--white);
+            font-weight: 600;
+        }
+
+        /* ─── TERMINAL BLOCK ───────────────────────────────────────── */
+        .terminal {
+            background: #0d0d0d;
+            border: 1px solid var(--border);
+            padding: 2rem;
+            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+        }
+
+        .terminal-bar {
+            display: flex;
+            gap: 0.4rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .terminal-dot {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+        }
+
+        .terminal-line {
+            font-size: 0.78rem;
+            line-height: 2;
+            color: var(--muted);
+        }
+
+        .terminal-line .t-key { color: #7dd3fc; }
+        .terminal-line .t-val { color: #86efac; }
+        .terminal-line .t-ok  { color: var(--green); font-weight: 700; }
+        .terminal-line .t-warn { color: #fbbf24; }
+        .terminal-line .t-comment { color: #444; }
+
+        /* ─── CALLOUT ──────────────────────────────────────────────── */
+        .callout {
+            border-left: 2px solid var(--white);
+            padding: 1.5rem 2rem;
+            background: var(--surface-2);
+            margin: 3rem 0;
+        }
+
+        .callout p {
+            font-size: 1.05rem;
+            color: var(--off-white);
+            line-height: 1.7;
+            font-style: italic;
+        }
+
+        /* ─── GOVERNANCE TABLE ─────────────────────────────────────── */
+        .gov-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid var(--border);
+        }
+
+        .gov-table th {
+            text-align: left;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--muted);
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface-2);
+        }
+
+        .gov-table td {
+            font-size: 0.85rem;
+            color: var(--off-white);
+            padding: 1.1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        .gov-table tr:last-child td { border-bottom: none; }
+        .gov-table tr:hover td { background: var(--surface-2); }
+
+        .badge {
+            display: inline-block;
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 0.2rem 0.6rem;
+            border: 1px solid var(--border-light);
+            color: var(--muted);
+        }
+
+        .badge-green {
+            border-color: var(--green-dim);
+            color: var(--green);
+        }
+
+        /* ─── CTA SECTION ──────────────────────────────────────────── */
+        .cta-section {
+            padding: 8rem 2.5rem;
+            text-align: center;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+        }
+
+        .cta-section h2 {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            color: var(--white);
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
+            line-height: 1.1;
+        }
+
+        .cta-section p {
+            font-size: 0.95rem;
+            color: var(--muted);
+            max-width: 480px;
+            margin: 0 auto 3rem;
+            line-height: 1.8;
+        }
+
+        /* ─── FOOTER ───────────────────────────────────────────────── */
+        footer {
+            background: var(--black);
+            border-top: 1px solid var(--border);
+            padding: 4rem 2.5rem 2.5rem;
+        }
+
+        .footer-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+            padding-bottom: 3rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+        }
+
+        .footer-brand {
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--white);
+            margin-bottom: 1rem;
+        }
+
+        .footer-desc {
+            font-size: 0.8rem;
+            color: var(--muted);
+            line-height: 1.8;
+            max-width: 280px;
+        }
+
+        .footer-col h4 {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 1.2rem;
+        }
+
+        .footer-col ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .footer-col a {
+            font-size: 0.8rem;
+            color: #666;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-col a:hover { color: var(--off-white); }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-copy {
+            font-size: 0.72rem;
+            color: #444;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-legal {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .footer-legal a {
+            font-size: 0.72rem;
+            color: #444;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-legal a:hover { color: var(--muted); }
+
+        /* ─── RESPONSIVE ───────────────────────────────────────────── */
+        @media (max-width: 900px) {
+            .metrics-strip { grid-template-columns: repeat(2, 1fr); }
+            .card-grid { grid-template-columns: 1fr; }
+            .card-grid-2 { grid-template-columns: 1fr; }
+            .data-card:nth-child(3n) { border-right: 1px solid var(--border); }
+            .data-card:nth-child(n) { border-right: none; }
+            .two-col, .two-col-wide { grid-template-columns: 1fr; gap: 3rem; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+            .nav-links { display: none; }
+        }
+
+        @media (max-width: 600px) {
+            .metrics-strip { grid-template-columns: 1fr 1fr; }
+            .footer-grid { grid-template-columns: 1fr; }
+            .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
+            .hero h1 { font-size: 2.4rem; }
         }
     </style>
 </head>
 <body>
 
+    <!-- ═══ HEADER ════════════════════════════════════════════════════ -->
     <header>
         <nav>
-            <div class="logo">NEPA by AURASENSE</div>
+            <div class="logo">NEPA <span>by AURASENSE</span></div>
+            <ul class="nav-links">
+                <li><a href="technology.html">Technology</a></li>
+                <li><a href="solutions.html">Solutions</a></li>
+                <li><a href="research.html">Research</a></li>
+                <li><a href="benchmark.html">Benchmarks</a></li>
+                <li><a href="docs.html">Docs</a></li>
+                <li><a href="pricing.html">Pricing</a></li>
+            </ul>
+            <a href="dashboard.html" class="nav-cta">Access Platform</a>
         </nav>
     </header>
 
+    <!-- ═══ HERO ══════════════════════════════════════════════════════ -->
     <section class="hero">
-        <h1>Inspection Intelligence Built for Accountability</h1>
-        <p>A deterministic neuromorphic inspection platform engineered for safety‑critical infrastructure and enterprise deployment.</p>
-        <p style="margin-top: 2rem;"><strong>Every finding is traceable. Every inspection run is version‑bound. Every result can be independently validated.</strong></p>
+        <video class="hero-video" autoplay muted loop playsinline>
+            <source src="veo2_video (3).mp4" type="video/mp4">
+        </video>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="hero-eyebrow">Neuromorphic Edge Infrastructure</div>
+            <h1>Inspection Intelligence Built for Accountability</h1>
+            <p class="hero-sub">A deterministic neuromorphic inspection platform engineered for safety-critical infrastructure, regulatory defensibility, and enterprise deployment at scale.</p>
+            <div class="hero-actions">
+                <a href="technology.html" class="btn-primary">Explore the Platform</a>
+                <a href="docs.html" class="btn-secondary">Read Documentation</a>
+            </div>
+        </div>
     </section>
 
-    <div class="container">
-        <section>
-            <h2>Purpose‑Built for Infrastructure Environments</h2>
-            <p>Inspection outcomes influence asset valuation, maintenance decisions, regulatory reporting, and operational safety.</p>
-            <p>NEPA is designed for environments where inspection systems must do more than detect — they must withstand scrutiny.</p>
-            <p>The platform introduces deterministic processing, explicit version control, and replay‑certified evidence into inspection workflows.</p>
-            <p><strong>This is infrastructure software, not experimental analytics.</strong></p>
-        </section>
-
-        <section>
-            <h2>Real‑Time Operational Discipline</h2>
-            <p>NEPA operates under a defined real‑time latency contract, separating time‑critical control from secondary analytics.</p>
-            <div class="grid">
-                <div class="card">
-                    <h3>Deterministic Multi‑Lane Architecture</h3>
-                    <p>Predictable processing paths with bounded latency guarantees.</p>
-                </div>
-                <div class="card">
-                    <h3>Continuous Latency Monitoring</h3>
-                    <p>Real‑time watchdog enforcement and per‑frame metrics.</p>
-                </div>
-                <div class="card">
-                    <h3>Stress‑Tested Under Load</h3>
-                    <p>Validated across sustained multi‑hour operational workloads.</p>
-                </div>
-            </div>
-            <p style="margin-top: 2rem;">The result is predictable behavior under operational conditions — a prerequisite for regulated and enterprise environments.</p>
-        </section>
-
-        <section>
-            <h2>Traceability by Design</h2>
-            <p>Each inspection run is cryptographically bound to a unique system configuration.</p>
-            <p><strong>NEPA records:</strong></p>
-            <ul style="font-size: 1.1rem; margin-left: 2rem; margin-bottom: 1.5rem; color: #333;">
-                <li>Exact engine version</li>
-                <li>Configuration contract version</li>
-                <li>Analytical parameter state</li>
-            </ul>
-            <p>This creates a verifiable linkage between system state → processing logic → inspection finding.</p>
-            <p><strong>No output exists without an attributable configuration.</strong></p>
-        </section>
-
-        <section>
-            <h2>Replay‑Certified Evidence</h2>
-            <p>Findings can be independently re‑derived from preserved inspection data.</p>
-            <p><strong>The system enforces:</strong></p>
-            <ul style="font-size: 1.1rem; margin-left: 2rem; margin-bottom: 1.5rem; color: #333;">
-                <li>Immutable evidence storage</li>
-                <li>Version consistency validation</li>
-                <li>Structured replay verification</li>
-                <li>Append‑only audit logging</li>
-                <li>Tamper‑evident chain sealing</li>
-            </ul>
-            <p>Any inconsistency is automatically recorded as a critical validation event.</p>
-            <p><strong>This framework supports enterprise governance, audit requirements, and regulatory defensibility.</strong></p>
-        </section>
-
-        <section>
-            <h2>Enterprise Integration</h2>
-            <p>NEPA integrates into existing camera → edge → cloud architectures.</p>
-            <p><strong>It is designed to:</strong></p>
-            <ul style="font-size: 1.1rem; margin-left: 2rem; margin-bottom: 1.5rem; color: #333;">
-                <li>Operate on standard CPU/GPU hardware</li>
-                <li>Reduce bandwidth and storage pressure</li>
-                <li>Enhance, not replace, existing analytics stacks</li>
-                <li>Scale across distributed inspection operations</li>
-            </ul>
-            <p>The platform aligns with enterprise risk management, compliance, and infrastructure lifecycle oversight.</p>
-        </section>
-
-        <section>
-            <h2>Operational Governance</h2>
-            <p>NEPA is supported by:</p>
-            <ul style="font-size: 1.1rem; margin-left: 2rem; margin-bottom: 1.5rem; color: #333;">
-                <li>Determinism policy documentation</li>
-                <li>Change control discipline</li>
-                <li>Parameter locking per inspection run</li>
-                <li>Structured fault injection testing</li>
-                <li>Defined readiness matrices</li>
-            </ul>
-            <p><strong>The system is engineered to support procurement review, technical due diligence, and regulatory evaluation.</strong></p>
-        </section>
+    <!-- ═══ STATUS BAR ════════════════════════════════════════════════ -->
+    <div class="status-bar">
+        <div class="status-item">
+            <div class="status-dot"></div>
+            <span class="status-label">Engine Status</span>
+            <span class="status-value">OPERATIONAL</span>
+        </div>
+        <div class="status-item">
+            <span class="status-label">P95 Latency</span>
+            <span class="status-value">&lt; 0.8ms</span>
+        </div>
+        <div class="status-item">
+            <span class="status-label">Detection Lanes</span>
+            <span class="status-value">8 Active</span>
+        </div>
+        <div class="status-item">
+            <span class="status-label">Last Audit</span>
+            <span class="status-value">VERIFIED</span>
+        </div>
+        <div class="status-item">
+            <span class="status-label">Chain Integrity</span>
+            <span class="status-value">SEALED</span>
+        </div>
+        <div class="status-item">
+            <span class="status-label">Replay Cert</span>
+            <span class="status-value">ACTIVE</span>
+        </div>
     </div>
 
+    <!-- ═══ SECTION 1: PURPOSE-BUILT ══════════════════════════════════ -->
+    <div class="divider"></div>
+    <div class="section">
+        <div class="section-tag">Platform Overview</div>
+        <div class="two-col-wide">
+            <div>
+                <h2 class="section-title">Purpose-Built for Infrastructure Environments</h2>
+                <p class="section-lead">Inspection outcomes influence asset valuation, maintenance decisions, regulatory reporting, and operational safety. NEPA is designed for environments where inspection systems must do more than detect — they must withstand scrutiny.</p>
+                <div class="callout">
+                    <p>The platform introduces deterministic processing, explicit version control, and replay-certified evidence into inspection workflows. <strong>This is infrastructure software, not experimental analytics.</strong></p>
+                </div>
+            </div>
+            <div>
+                <div class="metrics-strip" style="grid-template-columns: 1fr 1fr; margin-bottom: 0;">
+                    <div class="metric-cell">
+                        <div class="metric-num">8<span class="metric-unit" style="font-size:1.5rem">+</span></div>
+                        <div class="metric-desc">Processing Lanes</div>
+                    </div>
+                    <div class="metric-cell">
+                        <div class="metric-num">&lt;2<span class="metric-unit">ms</span></div>
+                        <div class="metric-desc">P95 Latency Target</div>
+                    </div>
+                    <div class="metric-cell" style="border-top: 1px solid var(--border);">
+                        <div class="metric-num">100<span class="metric-unit">%</span></div>
+                        <div class="metric-desc">Deterministic</div>
+                    </div>
+                    <div class="metric-cell" style="border-top: 1px solid var(--border);">
+                        <div class="metric-num">TRL<span class="metric-unit" style="font-size:1.5rem"> 6</span></div>
+                        <div class="metric-desc">Readiness Level</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ SECTION 2: REAL-TIME OPERATIONS ═══════════════════════════ -->
+    <div class="section-full">
+        <div class="section-full-inner">
+            <div class="section-tag">Real-Time Operations</div>
+            <h2 class="section-title">Operational Discipline Under Load</h2>
+            <p class="section-lead">NEPA operates under a defined real-time latency contract, separating time-critical control from secondary analytics. The result is predictable behavior under operational conditions — a prerequisite for regulated and enterprise environments.</p>
+            <div class="card-grid">
+                <div class="data-card">
+                    <div class="card-icon">⬡</div>
+                    <h3>Deterministic Multi-Lane Architecture</h3>
+                    <p>Eight parallel processing lanes with hard-bounded latency guarantees. Each lane operates independently with its own watchdog and telemetry channel. No shared mutable state between lanes.</p>
+                </div>
+                <div class="data-card">
+                    <div class="card-icon">◎</div>
+                    <h3>Continuous Latency Monitoring</h3>
+                    <p>Real-time watchdog enforcement and per-frame metric capture. Latency exceedance events are automatically flagged, logged, and escalated before they affect downstream reporting.</p>
+                </div>
+                <div class="data-card">
+                    <div class="card-icon">▦</div>
+                    <h3>Stress-Tested Under Load</h3>
+                    <p>Validated across sustained multi-hour operational workloads simulating peak drone inspection throughput. Benchmark suites run continuously in CI with regression alerts.</p>
+                </div>
+                <div class="data-card">
+                    <div class="card-icon">⊕</div>
+                    <h3>STDP Learning with Dopamine Modulation</h3>
+                    <p>Spike-timing-dependent plasticity rules enable online adaptation without retraining. Dopamine signals gate weight updates, preserving stability on safety-critical pathways.</p>
+                </div>
+                <div class="data-card">
+                    <div class="card-icon">⊞</div>
+                    <h3>GPU-Accelerated Edge Inference</h3>
+                    <p>C++ core engine with CUDA acceleration delivers sub-millisecond inference on embedded edge hardware. Optimised for Jetson-class devices without cloud round-trips.</p>
+                </div>
+                <div class="data-card">
+                    <div class="card-icon">⊟</div>
+                    <h3>Multi-Modal Sensor Fusion</h3>
+                    <p>Simultaneous ingestion of RGB video, LiDAR point clouds, and thermal imaging. Each modality processed in a dedicated lane before evidence-weighted fusion at the aggregation stage.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ SECTION 3: TRACEABILITY ═══════════════════════════════════ -->
+    <div class="divider"></div>
+    <div class="section">
+        <div class="section-tag">Audit Infrastructure</div>
+        <div class="two-col">
+            <div>
+                <h2 class="section-title">Traceability by Design</h2>
+                <p class="section-lead">Each inspection run is cryptographically bound to a unique system configuration. No output exists without an attributable configuration.</p>
+                <ul class="trace-list">
+                    <li class="trace-item">
+                        <span class="trace-num">01</span>
+                        <span class="trace-text"><strong>Engine Version Hash</strong> — every binary build is SHA-256 fingerprinted before deployment to any inspection node</span>
+                    </li>
+                    <li class="trace-item">
+                        <span class="trace-num">02</span>
+                        <span class="trace-text"><strong>Configuration Contract Version</strong> — parameter sets are versioned and locked at run-start, preventing mid-inspection drift</span>
+                    </li>
+                    <li class="trace-item">
+                        <span class="trace-num">03</span>
+                        <span class="trace-text"><strong>Analytical Parameter State</strong> — threshold values, lane weights, and fusion coefficients are recorded verbatim in the audit trail</span>
+                    </li>
+                    <li class="trace-item">
+                        <span class="trace-num">04</span>
+                        <span class="trace-text"><strong>Sensor Calibration Certificate</strong> — camera intrinsics, LiDAR extrinsics, and thermal offset records are linked to each run ID</span>
+                    </li>
+                    <li class="trace-item">
+                        <span class="trace-num">05</span>
+                        <span class="trace-text"><strong>Operator Identity &amp; Chain of Custody</strong> — signed operator tokens bind every finding to an authenticated inspector session</span>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <div class="terminal">
+                    <div class="terminal-bar">
+                        <div class="terminal-dot" style="background:#ff5f56"></div>
+                        <div class="terminal-dot" style="background:#ffbd2e"></div>
+                        <div class="terminal-dot" style="background:#27c93f"></div>
+                    </div>
+                    <div class="terminal-line"><span class="t-comment"># NEPA Audit Record v2.4.1</span></div>
+                    <div class="terminal-line"><span class="t-key">run_id</span>: <span class="t-val">"nepa-2026-03-17-09:41:02Z"</span></div>
+                    <div class="terminal-line"><span class="t-key">engine_sha</span>: <span class="t-val">"a7f3c8d..."</span></div>
+                    <div class="terminal-line"><span class="t-key">config_version</span>: <span class="t-val">"v2.4.1-stable"</span></div>
+                    <div class="terminal-line"><span class="t-key">lanes_active</span>: <span class="t-val">8</span></div>
+                    <div class="terminal-line"><span class="t-key">p95_latency_ms</span>: <span class="t-val">0.72</span></div>
+                    <div class="terminal-line"><span class="t-key">findings_count</span>: <span class="t-val">14</span></div>
+                    <div class="terminal-line"><span class="t-key">chain_sealed</span>: <span class="t-ok">true</span></div>
+                    <div class="terminal-line"><span class="t-key">replay_cert</span>: <span class="t-ok">VERIFIED</span></div>
+                    <div class="terminal-line"><span class="t-key">tamper_events</span>: <span class="t-val">0</span></div>
+                    <div class="terminal-line"><span class="t-key">status</span>: <span class="t-ok">AUDIT_PASS</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ SECTION 4: REPLAY-CERTIFIED EVIDENCE ══════════════════════ -->
+    <div class="section-full">
+        <div class="section-full-inner">
+            <div class="section-tag">Evidence Framework</div>
+            <h2 class="section-title">Replay-Certified Evidence</h2>
+            <p class="section-lead">Findings can be independently re-derived from preserved inspection data. Any inconsistency is automatically recorded as a critical validation event. This framework supports enterprise governance, audit requirements, and regulatory defensibility.</p>
+            <div class="card-grid-2">
+                <div class="data-card">
+                    <div class="card-icon">⬢</div>
+                    <h3>Immutable Evidence Storage</h3>
+                    <p>All raw sensor frames, processed spike representations, and derived findings are written to append-only storage with cryptographic sealing. No record can be modified without detection.</p>
+                </div>
+                <div class="data-card">
+                    <div class="card-icon">◈</div>
+                    <h3>Version Consistency Validation</h3>
+                    <p>Before any replay attempt, the system validates that stored configuration hashes match the requested engine version. Mismatches halt replay and generate a compliance incident.</p>
+                </div>
+                <div class="data-card">
+                    <div class="card-icon">⊛</div>
+                    <h3>Structured Replay Verification</h3>
+                    <p>Byte-level deterministic replay reproduces every intermediate processing state. Third-party auditors receive a signed attestation package alongside the replay artifacts.</p>
+                </div>
+                <div class="data-card">
+                    <div class="card-icon">◉</div>
+                    <h3>Append-Only Audit Logging &amp; Tamper-Evident Chain Sealing</h3>
+                    <p>Every system event — from lane initialisation to finding emission — enters a tamper-evident chain. Each block references its predecessor hash, making retrospective modification detectable.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ SECTION 5: ENTERPRISE INTEGRATION ═════════════════════════ -->
+    <div class="divider"></div>
+    <div class="section">
+        <div class="section-tag">Enterprise Integration</div>
+        <div class="two-col-wide">
+            <div>
+                <h2 class="section-title">Drop Into Your Stack. Not Against It.</h2>
+                <p class="section-lead">NEPA integrates into existing camera → edge → cloud architectures. It is designed to enhance, not replace, your current analytics infrastructure while adding the accountability layer your enterprise requires.</p>
+                <div class="callout">
+                    <p>The platform aligns with enterprise risk management, compliance, and infrastructure lifecycle oversight. Standard hardware. Standard interfaces. Non-standard accountability.</p>
+                </div>
+                <div class="card-grid-2" style="margin-top: 2rem;">
+                    <div class="data-card" style="border: none; border-top: 1px solid var(--border); border-right: 1px solid var(--border); padding: 1.8rem;">
+                        <h3 style="font-size:0.85rem;">Hardware Agnostic</h3>
+                        <p>Runs on standard CPU/GPU hardware. No proprietary silicon required. Optimised for Jetson, Intel NUC, and standard x86 edge nodes.</p>
+                    </div>
+                    <div class="data-card" style="border: none; border-top: 1px solid var(--border); padding: 1.8rem;">
+                        <h3 style="font-size:0.85rem;">Bandwidth Reduction</h3>
+                        <p>Spike-encoded representations reduce bandwidth and storage pressure by up to 90% versus raw video streaming to cloud.</p>
+                    </div>
+                    <div class="data-card" style="border: none; border-top: 1px solid var(--border); border-right: 1px solid var(--border); padding: 1.8rem;">
+                        <h3 style="font-size:0.85rem;">REST + gRPC APIs</h3>
+                        <p>Standard programmatic interfaces for CMMS, ERP, and GIS integration. OpenAPI spec available in the developer documentation.</p>
+                    </div>
+                    <div class="data-card" style="border: none; border-top: 1px solid var(--border); padding: 1.8rem;">
+                        <h3 style="font-size:0.85rem;">Distributed Scale</h3>
+                        <p>Coordinate inspection operations across multiple drone nodes with centralised evidence aggregation and site-level governance dashboards.</p>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h3 style="font-size:0.65rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:1.2rem;">Deployment Architecture</h3>
+                <ul class="trace-list">
+                    <li class="trace-item"><span class="trace-num">L1</span><span class="trace-text"><strong>Edge Node</strong> — Drone-mounted NEPA engine, real-time spike processing, &lt;2ms latency contract</span></li>
+                    <li class="trace-item"><span class="trace-num">L2</span><span class="trace-text"><strong>Site Gateway</strong> — Multi-drone aggregation, local evidence store, site-level audit chain</span></li>
+                    <li class="trace-item"><span class="trace-num">L3</span><span class="trace-text"><strong>Enterprise Hub</strong> — Centralised governance, cross-site analytics, compliance reporting</span></li>
+                    <li class="trace-item"><span class="trace-num">L4</span><span class="trace-text"><strong>Audit Vault</strong> — Immutable long-term evidence storage, third-party auditor access portal</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ SECTION 6: OPERATIONAL GOVERNANCE ═════════════════════════ -->
+    <div class="section-full">
+        <div class="section-full-inner">
+            <div class="section-tag">Governance Framework</div>
+            <h2 class="section-title">Engineered for Procurement Review</h2>
+            <p class="section-lead">NEPA is supported by structured governance documentation designed to meet enterprise procurement review, technical due diligence, and regulatory evaluation standards.</p>
+            <table class="gov-table">
+                <thead>
+                    <tr>
+                        <th>Governance Capability</th>
+                        <th>Mechanism</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Determinism Policy</strong><br><span style="font-size:0.75rem;color:var(--muted);">Formal documentation of deterministic processing guarantees</span></td>
+                        <td>Policy document v2.1 + automated regression tests</td>
+                        <td><span class="badge badge-green">Active</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Change Control Discipline</strong><br><span style="font-size:0.75rem;color:var(--muted);">Structured change management for all platform updates</span></td>
+                        <td>Git-tagged releases with signed changelogs + approval gates</td>
+                        <td><span class="badge badge-green">Active</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Parameter Locking</strong><br><span style="font-size:0.75rem;color:var(--muted);">Freeze analytical parameters at run-start</span></td>
+                        <td>Configuration contract binding at run initialisation</td>
+                        <td><span class="badge badge-green">Active</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fault Injection Testing</strong><br><span style="font-size:0.75rem;color:var(--muted);">Structured adversarial testing of failure modes</span></td>
+                        <td>Automated fault injection suite run in CI on every release</td>
+                        <td><span class="badge badge-green">Active</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Readiness Matrix</strong><br><span style="font-size:0.75rem;color:var(--muted);">Defined criteria for deployment readiness signoff</span></td>
+                        <td>TRL assessment + operational readiness review checklist</td>
+                        <td><span class="badge">In Review</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Third-Party Audit Support</strong><br><span style="font-size:0.75rem;color:var(--muted);">External validation of audit trail and replay system</span></td>
+                        <td>Auditor access portal with signed evidence packages</td>
+                        <td><span class="badge">Available on Request</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ═══ CTA ════════════════════════════════════════════════════════ -->
+    <div class="cta-section">
+        <h2>Deterministic. Traceable. Accountable.</h2>
+        <p>Ready to bring inspection-grade accountability to your infrastructure operations? Start with the platform documentation or request an enterprise evaluation.</p>
+        <div class="hero-actions" style="justify-content:center;">
+            <a href="docs.html" class="btn-primary">Read the Docs</a>
+            <a href="pricing.html" class="btn-secondary">View Pricing</a>
+        </div>
+    </div>
+
+    <!-- ═══ FOOTER ═════════════════════════════════════════════════════ -->
     <footer>
-        <h2 style="color: #fff; margin-bottom: 1rem;">Deterministic. Traceable. Accountable.</h2>
-        <p style="color: #ccc;">NEPA by AURASENSE</p>
-        <p style="color: #888; font-size: 0.9rem; margin-top: 2rem;">© 2026 AuraSense Limited. All rights reserved.</p>
+        <div class="footer-grid">
+            <div>
+                <div class="footer-brand">NEPA by AURASENSE</div>
+                <p class="footer-desc">Deterministic neuromorphic inspection infrastructure for safety-critical environments. Built for accountability at enterprise scale.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Platform</h4>
+                <ul>
+                    <li><a href="technology.html">Technology</a></li>
+                    <li><a href="solutions.html">Solutions</a></li>
+                    <li><a href="benchmark.html">Benchmarks</a></li>
+                    <li><a href="compare.html">Compare</a></li>
+                    <li><a href="pricing.html">Pricing</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="docs.html">Documentation</a></li>
+                    <li><a href="research.html">Research</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                    <li><a href="community.html">Community</a></li>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="security.html">Security</a></li>
+                    <li><a href="privacy.html">Privacy</a></li>
+                    <li><a href="terms.html">Terms</a></li>
+                    <li><a href="legal.html">Legal</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span class="footer-copy">© 2026 AuraSense Limited. All rights reserved. Hong Kong SAR.</span>
+            <div class="footer-legal">
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+                <a href="cookies.html">Cookies</a>
+                <a href="refund.html">Refunds</a>
+            </div>
+        </div>
     </footer>
 
 </body>
