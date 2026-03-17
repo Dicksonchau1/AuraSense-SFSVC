@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The SFSVC Architecture — AuraSense</title>
-  <meta name="description" content="SFSVC is a neuromorphic perception engine designed for deterministic CPU execution at the edge.">
+  <title>Research & Demo — AuraSense SFSVC</title>
+  <meta name="description" content="NEPA is a public reference implementation demonstrating neuromorphic codec concepts. Not the commercial SDK.">
   <meta name="theme-color" content="#06060A">
   <link rel="stylesheet" href="./css/design.css">
   <link rel="stylesheet" href="./css/animate.css">
@@ -21,12 +21,12 @@
     </a>
     <ul class="nav-links">
       <li><a href="./index.html">Home</a></li>
-      <li><a href="./technology.html" class="active">Technology</a></li>
+      <li><a href="./technology.html">Technology</a></li>
       <li><a href="./solutions.html">Solutions</a></li>
       <li><a href="./benchmark.html">Benchmarks</a></li>
       <li><a href="./pricing.html">Pricing</a></li>
       <li><a href="./security.html">Security</a></li>
-      <li><a href="./research.html">Research</a></li>
+      <li><a href="./research.html" class="active">Research</a></li>
       <li><a href="./about.html">About</a></li>
     </ul>
     <a href="./pricing.html" class="btn btn-primary">Start Free Trial</a>
@@ -50,96 +50,120 @@
 <!-- ─── HERO ──────────────────────────────────────────────────── -->
 <section class="page-hero">
   <div class="container">
-    <h1>The SFSVC Architecture</h1>
-    <p>SFSVC is a neuromorphic perception engine designed for deterministic CPU execution at the edge.</p>
+    <h1>Research & Demo</h1>
+    <p>Public reference implementations and experimental research.</p>
   </div>
 </section>
 
-<!-- ─── SPIKE ENCODING ────────────────────────────────────────── -->
+<!-- ─── NEPA REFERENCE ────────────────────────────────────────── -->
 <section class="section">
   <div class="container">
-    <span class="section-label reveal">1. Spike Encoding</span>
-    <h2 class="h2 reveal reveal-delay-1">Frames are converted into sparse temporal events before inference.</h2>
+    <span class="section-label reveal">NEPA Public Demo</span>
+    <h2 class="h2 reveal reveal-delay-1">NEPA is a public reference implementation.</h2>
+
     <p class="reveal reveal-delay-2" style="margin-top:24px;font-size:18px;line-height:1.7;max-width:900px;">
-      This reduces redundant computation and improves signal-to-noise efficiency.
+      NEPA (Neuromorphic Event Processing Architecture) demonstrates neuromorphic codec concepts in Python.
+      It is provided as an educational and prototyping tool.
     </p>
+
+    <div class="endpoint-card reveal" style="margin-top:40px;max-width:900px;">
+      <p style="margin:0;font-weight:600;color:var(--text-primary);margin-bottom:16px;">
+        Important: NEPA is NOT the commercial SDK
+      </p>
+      <ul style="margin:0;padding-left:24px;color:var(--text-primary);line-height:1.9;">
+        <li>NEPA is a Python-based research demo (~8 ms/frame)</li>
+        <li>SFSVC is the production C++ SDK (2.50 ms avg, 2.81 ms P99)</li>
+        <li>NEPA demonstrates concepts; SFSVC delivers production performance</li>
+      </ul>
+    </div>
   </div>
 </section>
 
-<!-- ─── PARALLEL LANE PROCESSING ──────────────────────────────── -->
+<!-- ─── WHAT IT DEMONSTRATES ──────────────────────────────────── -->
 <section class="section" style="background:var(--bg-surface)">
   <div class="container">
-    <span class="section-label reveal">2. Parallel Lane Processing</span>
-    <h2 class="h2 reveal reveal-delay-1">Independent SIMD-accelerated lanes handle:</h2>
+    <span class="section-label reveal">What It Demonstrates</span>
+    <h2 class="h2 reveal reveal-delay-1">NEPA illustrates core neuromorphic principles:</h2>
 
     <div class="feature-grid stagger" style="margin-top:32px;">
       <div class="feature-card">
-        <h3>Feature extraction</h3>
+        <h3>Spike-based encoding</h3>
+        <p>Frame-delta conversion to ON/OFF events</p>
       </div>
       <div class="feature-card">
-        <h3>Structural detection</h3>
+        <h3>Temporal contrast detection</h3>
+        <p>Edge detection through pixel change tracking</p>
       </div>
       <div class="feature-card">
-        <h3>Optional STDP learning</h3>
-        <p style="font-size:14px;color:var(--text-muted);margin-top:8px;">(Pro/Enterprise)</p>
+        <h3>Data compression</h3>
+        <p>Sparse representation reducing bandwidth</p>
       </div>
       <div class="feature-card">
-        <h3>Optional thermal fusion</h3>
+        <h3>Crack detection pipeline</h3>
+        <p>Basic defect identification workflow</p>
       </div>
     </div>
 
-    <p class="reveal" style="margin-top:32px;font-size:16px;line-height:1.7;max-width:900px;">
-      Designed for bounded execution and predictable latency.
+    <p class="reveal" style="margin-top:32px;font-size:16px;line-height:1.7;max-width:900px;color:var(--text-muted);">
+      These concepts are implemented in optimized C++ in the production SFSVC SDK with SIMD acceleration and deterministic scheduling.
     </p>
   </div>
 </section>
 
-<!-- ─── DETERMINISTIC EXECUTION ───────────────────────────────── -->
+<!-- ─── GITHUB REPOSITORY ─────────────────────────────────────── -->
 <section class="section">
   <div class="container">
-    <span class="section-label reveal">3. Deterministic Execution Model</span>
-    <h2 class="h2 reveal reveal-delay-1">SFSVC is built for operational environments, not lab conditions.</h2>
+    <span class="section-label reveal">GitHub Repository</span>
 
-    <div class="grid-2 stagger" style="margin-top:32px;">
-      <div class="info-card">
-        <h3>CPU pinning supported</h3>
-      </div>
-      <div class="info-card">
-        <h3>No GPU dependency</h3>
-      </div>
-      <div class="info-card">
-        <h3>No unbounded memory growth in hot path</h3>
-      </div>
-      <div class="info-card">
-        <h3>Offline-first deployment model</h3>
-      </div>
+    <div class="endpoint-card reveal reveal-delay-1" style="margin-top:32px;max-width:700px;">
+      <p style="margin:0;color:var(--text-primary);margin-bottom:16px;">
+        <strong>Public Demo Repository:</strong>
+      </p>
+      <p style="margin:0;color:var(--text-primary);">
+        <a href="https://github.com/Dicksonchau1/AuraSense-NEPA_v1" style="color:var(--cyan);text-decoration:underline;" target="_blank" rel="noopener">
+          github.com/Dicksonchau1/AuraSense-NEPA_v1
+        </a>
+      </p>
+    </div>
+
+    <div class="endpoint-card reveal" style="margin-top:24px;max-width:700px;">
+      <p style="margin:0;color:var(--text-muted);font-size:14px;">
+        Note: Performance benchmarks on this website refer to the production SFSVC SDK, not the NEPA demo.
+      </p>
     </div>
   </div>
 </section>
 
-<!-- ─── HARDWARE TARGETS ───────────────────────────────────────── -->
+<!-- ─── PERFORMANCE COMPARISON ────────────────────────────────── -->
 <section class="section" style="background:var(--bg-surface)">
   <div class="container">
-    <span class="section-label reveal">4. Hardware Targets</span>
-    <h2 class="h2 reveal reveal-delay-1">Supported platforms:</h2>
+    <span class="section-label reveal">Performance Comparison</span>
 
-    <div class="endpoint-card reveal reveal-delay-2" style="margin-top:32px;max-width:700px;">
-      <ul style="margin:0;padding-left:24px;color:var(--text-primary);line-height:1.9;">
-        <li>Ubuntu 22.04</li>
-        <li>x86_64 (AVX2)</li>
-        <li>ARM64 (NEON)</li>
-      </ul>
+    <div class="grid-2 stagger" style="margin-top:32px;">
+      <div class="endpoint-card">
+        <h3 style="color:var(--text-primary);margin-bottom:16px;">NEPA Demo</h3>
+        <ul style="margin:0;padding-left:24px;color:var(--text-primary);line-height:1.9;">
+          <li>Language: Python</li>
+          <li>Latency: ~8 ms/frame</li>
+          <li>Purpose: Education & prototyping</li>
+          <li>License: Open Source</li>
+        </ul>
+      </div>
+
+      <div class="endpoint-card">
+        <h3 style="color:var(--text-primary);margin-bottom:16px;">SFSVC SDK</h3>
+        <ul style="margin:0;padding-left:24px;color:var(--text-primary);line-height:1.9;">
+          <li>Language: C++</li>
+          <li>Latency: 2.50 ms avg (P95: 2.61 ms)</li>
+          <li>Purpose: Production deployment</li>
+          <li>License: Commercial</li>
+        </ul>
+      </div>
     </div>
 
-    <div class="grid-2 stagger" style="margin-top:40px;">
-      <div class="info-card">
-        <h3>Minimum</h3>
-        <p>2 cores, 2GB RAM</p>
-      </div>
-      <div class="info-card">
-        <h3>Recommended</h3>
-        <p>Intel N100 or equivalent</p>
-      </div>
+    <div style="margin-top:40px;" class="reveal">
+      <a href="./benchmark.html" class="btn btn-primary">View Production Benchmarks</a>
+      <a href="./pricing.html" class="btn btn-outline" style="margin-left:12px;">Get SFSVC SDK</a>
     </div>
   </div>
 </section>
