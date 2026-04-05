@@ -79,7 +79,7 @@ export function SFSVCHero() {
           >
             Structural Facade Scanning
             <br />
-            &amp; Vectorisation Core
+            & Vectorisation Core
           </h1>
 
           {/* Subheading */}
