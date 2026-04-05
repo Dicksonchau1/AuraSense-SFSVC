@@ -46,32 +46,81 @@
   <div class="site-nav__inner">
     <a href="./index.html" class="site-nav__logo">AURASENSE <span>/ NEPA</span></a>
     <ul class="site-nav__links">
-      <li><a href="./platform.html">Platform</a></li>
-      <li><a href="./technology.html">Technology</a></li>
-      <li><a href="./governance.html">Governance</a></li>
-      <li class="company-dropdown" id="company-dd">
-        <button aria-haspopup="true" aria-expanded="false" id="company-btn">
-          Company <span class="site-nav__chevron"></span>
+      <li class="nav-dropdown" id="business-dd">
+        <button aria-haspopup="true" aria-expanded="false" id="business-btn">
+          Business <span class="site-nav__chevron"></span>
         </button>
         <div class="site-nav__dropdown" role="menu">
-          <a href="./about.html" role="menuitem">About</a>
-          <a href="./careers.html" role="menuitem">Careers</a>
-          <a href="./contact.html" class="active" role="menuitem">Contact</a>
+          <div class="nav-submenu-wrap">
+            <button class="nav-submenu-trigger" aria-haspopup="true" aria-expanded="false">
+              NEPA Platform <span class="site-nav__chevron"></span>
+            </button>
+            <div class="nav-submenu" role="menu">
+              <a href="./sfsvc.html" role="menuitem">SFSVC</a>
+              <a href="./platform.html" role="menuitem">NERNM</a>
+              <a href="./platform.html" role="menuitem">NSSIM</a>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li class="nav-dropdown" id="about-dd">
+        <button aria-haspopup="true" aria-expanded="false" id="about-btn">
+          About <span class="site-nav__chevron"></span>
+        </button>
+        <div class="site-nav__dropdown" role="menu">
+          <a href="./about.html" role="menuitem">Company</a>
+          <a href="./contact.html" role="menuitem">Contact</a>
+          <a href="./careers.html" role="menuitem">Career</a>
+        </div>
+      </li>
+      <li class="nav-dropdown" id="resources-dd">
+        <button aria-haspopup="true" aria-expanded="false" id="resources-btn">
+          Resources <span class="site-nav__chevron"></span>
+        </button>
+        <div class="site-nav__dropdown" role="menu">
+          <a href="./docs.html" role="menuitem">API Docs</a>
+          <a href="./governance.html" role="menuitem">Licensing</a>
+          <a href="./research.html" role="menuitem">Articles</a>
+          <a href="./technology.html" role="menuitem">IP</a>
         </div>
       </li>
     </ul>
-    <a href="./contact.html" class="site-nav__cta">Request Briefing</a>
-    <button class="site-nav__hamburger" id="hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+    <button class="site-nav__hamburger" id="hamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </header>
 <nav class="site-nav__drawer" id="mobile-drawer">
-  <a href="./platform.html">Platform</a>
-  <a href="./technology.html">Technology</a>
-  <a href="./governance.html">Governance</a>
-  <a href="./about.html">About</a>
-  <a href="./careers.html">Careers</a>
-  <a href="./contact.html">Contact</a>
-  <a href="./contact.html" style="color:#FFB020">Request Briefing →</a>
+  <div class="drawer-section">
+    <button class="drawer-toggle" aria-expanded="false">Business <span class="site-nav__chevron"></span></button>
+    <div class="drawer-panel">
+      <div class="drawer-section drawer-nested">
+        <button class="drawer-toggle" aria-expanded="false">NEPA Platform <span class="site-nav__chevron"></span></button>
+        <div class="drawer-panel">
+          <a href="./sfsvc.html">SFSVC</a>
+          <a href="./platform.html">NERNM</a>
+          <a href="./platform.html">NSSIM</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="drawer-section">
+    <button class="drawer-toggle" aria-expanded="false">About <span class="site-nav__chevron"></span></button>
+    <div class="drawer-panel">
+      <a href="./about.html">Company</a>
+      <a href="./contact.html">Contact</a>
+      <a href="./careers.html">Career</a>
+    </div>
+  </div>
+  <div class="drawer-section">
+    <button class="drawer-toggle" aria-expanded="false">Resources <span class="site-nav__chevron"></span></button>
+    <div class="drawer-panel">
+      <a href="./docs.html">API Docs</a>
+      <a href="./governance.html">Licensing</a>
+      <a href="./research.html">Articles</a>
+      <a href="./technology.html">IP</a>
+    </div>
+  </div>
 </nav>
 
 <!-- ═══ PAGE HERO ═════════════════════════════════════════════ -->
@@ -146,12 +195,63 @@
   </div>
 </footer>
 
+
+<!-- ═══ NAV DROPDOWN + MOBILE ══════════════════════════════════ -->
 <script>
 (function(){
-  const dd=document.getElementById('company-dd'),btn=document.getElementById('company-btn');
-  if(dd&&btn){btn.addEventListener('click',function(e){e.stopPropagation();const o=dd.classList.toggle('open');btn.setAttribute('aria-expanded',o);});document.addEventListener('click',()=>{dd.classList.remove('open');btn.setAttribute('aria-expanded','false');});}
-  const ham=document.getElementById('hamburger'),drawer=document.getElementById('mobile-drawer');
-  if(ham&&drawer){ham.addEventListener('click',()=>drawer.classList.toggle('open'));}
+  /* ── Desktop dropdowns (hover + click) ── */
+  var dropdowns = document.querySelectorAll('.site-nav__links > .nav-dropdown');
+  dropdowns.forEach(function(dd){
+    var btn = dd.querySelector('button');
+    if(!btn) return;
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      var isOpen = dd.classList.toggle('open');
+      btn.setAttribute('aria-expanded', isOpen);
+      dropdowns.forEach(function(other){
+        if(other !== dd){ other.classList.remove('open'); other.querySelector('button').setAttribute('aria-expanded','false'); }
+      });
+    });
+  });
+
+  /* ── Nested submenu (desktop hover handled by CSS, click fallback) ── */
+  document.querySelectorAll('.nav-submenu-trigger').forEach(function(trigger){
+    trigger.addEventListener('click', function(e){
+      e.stopPropagation();
+      var wrap = trigger.closest('.nav-submenu-wrap');
+      if(wrap) wrap.classList.toggle('open');
+    });
+  });
+
+  /* ── Close on outside click ── */
+  document.addEventListener('click', function(){
+    dropdowns.forEach(function(dd){
+      dd.classList.remove('open');
+      var btn = dd.querySelector('button');
+      if(btn) btn.setAttribute('aria-expanded','false');
+    });
+    document.querySelectorAll('.nav-submenu-wrap').forEach(function(w){ w.classList.remove('open'); });
+  });
+
+  /* ── Hamburger ── */
+  var ham = document.getElementById('hamburger');
+  var drawer = document.getElementById('mobile-drawer');
+  if(ham && drawer){
+    ham.addEventListener('click', function(){
+      var isOpen = drawer.classList.toggle('open');
+      ham.classList.toggle('active', isOpen);
+      ham.setAttribute('aria-expanded', isOpen);
+    });
+  }
+
+  /* ── Mobile accordion toggles ── */
+  document.querySelectorAll('.drawer-toggle').forEach(function(toggle){
+    toggle.addEventListener('click', function(){
+      var section = toggle.closest('.drawer-section');
+      var isOpen = section.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', isOpen);
+    });
+  });
 })();
 </script>
 </body>
