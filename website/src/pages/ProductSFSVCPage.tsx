@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Hero } from '../components/sections/Hero';
+import { SFSVCHero } from '../components/sections/SFSVCHero';
+import { SFSVCWorkflow } from '../components/sections/SFSVCWorkflow';
+import { SFSVCInferenceOutput } from '../components/sections/SFSVCInferenceOutput';
 import { SectionWrapper } from '../components/ui/SectionWrapper';
 import { FeatureGrid } from '../components/sections/FeatureGrid';
 import { Button } from '../components/ui/Button';
@@ -11,12 +13,15 @@ export function ProductSFSVCPage() {
     window.scrollTo(0, 0);
   }, []);
 
-  const { hero, sections, specs, faqItems } = sfsvcContent as ProductPageContent;
+  const { sections, specs, faqItems } = sfsvcContent as ProductPageContent;
 
   return (
     <main>
-      <Hero content={hero} />
+      <SFSVCHero />
+      <SFSVCWorkflow />
+      <SFSVCInferenceOutput />
 
+      {/* Existing content sections (capabilities, integration, etc.) */}
       {sections.map((section, index) => (
         <SectionWrapper key={section.id} id={section.id} dark={index % 2 === 0}>
           <header className="section-header">
@@ -36,7 +41,7 @@ export function ProductSFSVCPage() {
         <SectionWrapper id="specs" dark>
           <header className="section-header">
             <h2>Technical Specifications</h2>
-            <p>Measured performance characteristics under reference conditions.</p>
+            <p>Measured performance under reference conditions on Jetson Nano.</p>
           </header>
           <div className="specs-table" role="table" aria-label="SFSVC Specifications">
             {specs.map((spec) => (
@@ -48,7 +53,7 @@ export function ProductSFSVCPage() {
                   display: 'flex',
                   justifyContent: 'space-between',
                   padding: '0.75rem 1rem',
-                  borderBottom: '1px solid var(--border-subtle, #1e293b)',
+                  borderBottom: '1px solid rgba(255,255,255,0.06)',
                 }}
               >
                 <span style={{ color: '#94a3b8', fontWeight: 500 }}>{spec.label}</span>
