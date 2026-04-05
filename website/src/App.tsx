@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Layout } from './components/layout/Layout';
 import { HomePage } from './pages/HomePage';
+import { AboutPage } from './pages/AboutPage';
 import { PlatformPage } from './pages/PlatformPage';
 import { ProductsPage } from './pages/ProductsPage';
 import { ProductSFSVCPage } from './pages/ProductSFSVCPage';
@@ -16,7 +17,7 @@ export default function App() {
       <Routes>
         <Route element={<Layout />}>
           <Route index element={<HomePage />} />
-          <Route path="about" element={<PlatformPage />} />
+          <Route path="about" element={<AboutPage />} />
           <Route path="platform" element={<PlatformPage />} />
           <Route path="products" element={<ProductsPage />} />
           <Route path="products/sfsvc" element={<ProductSFSVCPage />} />
