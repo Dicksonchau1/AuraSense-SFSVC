@@ -1,13 +1,13 @@
 # ==============================================================================
 # Private engine code (in separate private repo: AuraSense-SFSVC-Engine)
 # ==============================================================================
-src/
-tests/
-third_party/
+/src/
+/tests/
+/third_party/
 server.cpp
-CMakeLists.txt
+/CMakeLists.txt
 ringbuffer.js
-package.json
+/package.json
 
 # ==============================================================================
 # Build outputs
@@ -57,7 +57,7 @@ env/
 # Node.js
 # ==============================================================================
 node_modules/
-package-lock.json
+/package-lock.json
 npm-debug.log*
 
 # ==============================================================================
