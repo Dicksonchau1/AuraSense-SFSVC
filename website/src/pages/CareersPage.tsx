@@ -4,8 +4,7 @@ import { SectionWrapper } from '../components/ui/SectionWrapper';
 import { FeatureGrid } from '../components/sections/FeatureGrid';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
-import { careersPageContent, roleCategories } from '../content/careers';
-import type { RoleCategory } from '../types/content';
+import { careersPageContent } from '../content/careers';
 
 export function CareersPage() {
   useEffect(() => {
@@ -14,11 +13,7 @@ export function CareersPage() {
 
   const { hero, sections } = careersPageContent;
   const workOnSection = sections.find((s) => s.id?.includes('work-on') || s.id?.includes('what-we'));
-  const cultureSection = sections.find((s) => s.id?.includes('culture') || s.id?.includes('how-we'));
-  const expectSection = sections.find((s) => s.id?.includes('expect') || s.id?.includes('candidate'));
-  const remainingSections = sections.filter(
-    (s) => s !== workOnSection && s !== cultureSection && s !== expectSection
-  );
+  const remainingSections = sections.filter((s) => s !== workOnSection);
 
   return (
     <main>
@@ -71,94 +66,6 @@ export function CareersPage() {
                 </span>
               ))}
             </div>
-          )}
-        </SectionWrapper>
-      )}
-
-      {/* Who We Hire */}
-      <SectionWrapper id="who-we-hire">
-        <header className="section-header">
-          <h2>Who We Hire</h2>
-          <p>
-            We look for engineers who build systems that work under constraints —
-            not demos that work under ideal conditions.
-          </p>
-        </header>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-            gap: '1.5rem',
-            marginTop: '2rem',
-          }}
-        >
-          {roleCategories.map((role: RoleCategory) => (
-            <Card key={role.title} title={role.title} description={role.description} />
-          ))}
-        </div>
-      </SectionWrapper>
-
-      {/* How We Work */}
-      {cultureSection && (
-        <SectionWrapper id={cultureSection.id} dark>
-          <header className="section-header">
-            {cultureSection.eyebrow && (
-              <span className="section-eyebrow">{cultureSection.eyebrow}</span>
-            )}
-            <h2>{cultureSection.title}</h2>
-            <p>{cultureSection.description}</p>
-          </header>
-          {cultureSection.items && cultureSection.items.length > 0 ? (
-            <FeatureGrid items={cultureSection.items} columns={3} />
-          ) : (
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-                gap: '1.5rem',
-                marginTop: '2rem',
-              }}
-            >
-              {[
-                {
-                  title: 'Deterministic by Default',
-                  description:
-                    'We build systems with bounded latency and reproducible behavior. Every output is auditable.',
-                },
-                {
-                  title: 'Small Teams, Full Ownership',
-                  description:
-                    'Engineers own their modules end-to-end — from algorithm design through deployment and support.',
-                },
-                {
-                  title: 'Evidence Over Opinion',
-                  description:
-                    'Technical decisions are backed by benchmarks, profiling data, and field validation. Not slide decks.',
-                },
-              ].map((principle) => (
-                <Card
-                  key={principle.title}
-                  title={principle.title}
-                  description={principle.description}
-                />
-              ))}
-            </div>
-          )}
-        </SectionWrapper>
-      )}
-
-      {/* What Candidates Should Expect */}
-      {expectSection && (
-        <SectionWrapper id={expectSection.id}>
-          <header className="section-header">
-            {expectSection.eyebrow && (
-              <span className="section-eyebrow">{expectSection.eyebrow}</span>
-            )}
-            <h2>{expectSection.title}</h2>
-            <p>{expectSection.description}</p>
-          </header>
-          {expectSection.items && expectSection.items.length > 0 && (
-            <FeatureGrid items={expectSection.items} columns={3} />
           )}
         </SectionWrapper>
       )}

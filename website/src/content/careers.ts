@@ -1,37 +1,4 @@
-import type { PageContent, RoleCategory } from '../types/content';
-
-export const roleCategories: RoleCategory[] = [
-  {
-    title: 'C++ / Systems Engineers',
-    description:
-      'Low-latency runtime development, SIMD pipelines, lock-free structures, deterministic memory. C++17 with hard latency SLAs. Experience with AVX2/NEON and real-time scheduling.',
-  },
-  {
-    title: 'Computer Vision / ML Engineers',
-    description:
-      'Spike-based encoding, temporal differencing, anomaly detection. Build deterministic, auditable perception systems. Experience with neuromorphic computing or structured CV applies directly.',
-  },
-  {
-    title: 'Edge AI / Embedded Engineers',
-    description:
-      'Deploy ML on ARM64 embedded platforms with real power and thermal constraints. Cross-compilation, offline operation. Jetson, Pi, Qualcomm experience relevant.',
-  },
-  {
-    title: 'Robotics / Autonomy Engineers',
-    description:
-      'Navigation, sensor fusion, safety supervision, watchdog architectures. Build systems that move platforms safely in unstructured environments. ROS2, MAVLink, event cameras, LiDAR experience relevant.',
-  },
-  {
-    title: 'Full-Stack Product Engineers',
-    description:
-      'Dashboards, telemetry visualization, configuration tools, deployment tooling. TypeScript, React, real-time data visualization. Build tools operators rely on under pressure.',
-  },
-  {
-    title: 'Technical Product / Deployment Operators',
-    description:
-      'Field deployment, customer onboarding, integration engineering, documentation. Bridge the gap between engineering and operational reality. Edge or industrial IoT experience valued.',
-  },
-];
+import type { PageContent } from '../types/content';
 
 const whatWeWorkOnSection = {
   id: 'what-we-work-on',
@@ -73,83 +40,6 @@ const whatWeWorkOnSection = {
   ],
 };
 
-const whoWeHireSection = {
-  id: 'who-we-hire',
-  eyebrow: 'Roles',
-  title: 'Who We Hire',
-  description:
-    'We hire engineers who build systems that work in operational environments. No exact title matches required — cross-domain experience is often more valuable.',
-  items: roleCategories.map((role) => ({
-    title: role.title,
-    description: role.description,
-  })),
-};
-
-const howWeWorkSection = {
-  id: 'how-we-work',
-  eyebrow: 'Culture',
-  title: 'How We Work',
-  description:
-    'Small engineering team building production infrastructure for critical applications. Careful, accountable, technically rigorous. Not consumer product. Not growth metrics.',
-  items: [
-    {
-      title: 'Ownership',
-      description:
-        'Own your systems from design through deployment. You build it, you support it. This produces engineers who build operable systems.',
-    },
-    {
-      title: 'Technical Depth',
-      description:
-        'Understand systems at the detail level that matters for production reliability. Know your SIMD throughput. Know your evidence chain integrity.',
-    },
-    {
-      title: 'Deployment Realism',
-      description:
-        'Every design decision evaluated against power, compute, connectivity, and operational reality. Optimize for systems that work where they actually run.',
-    },
-    {
-      title: 'Careful Engineering',
-      description:
-        'Ship carefully, not cautiously. Understand risk, bound it, ship with confidence. Thorough testing and explicit safety margins over reckless speed.',
-    },
-    {
-      title: 'Low-Ego, High-Accountability',
-      description:
-        'Technical disagreements resolved with evidence, not seniority. Mistakes addressed without blame, but failure to learn is not tolerated.',
-    },
-  ],
-};
-
-const whatCandidatesShouldExpectSection = {
-  id: 'interview-process',
-  eyebrow: 'Process',
-  title: 'What Candidates Should Expect',
-  description:
-    'Assess whether you can do the work — not algorithmic puzzles. We look for technical depth, practical judgment, and clear communication.',
-  items: [
-    {
-      title: 'Technical Conversation',
-      description:
-        'Discuss your background, systems you built, and decisions you made. We care about engineering judgment and tradeoffs, not rote answers.',
-    },
-    {
-      title: 'Project Discussion',
-      description:
-        'Deep dive into a specific project — architecture, challenges, and lessons. Bring a project you are proud of or one that taught you something.',
-    },
-    {
-      title: 'Practical Relevance',
-      description:
-        'Problems drawn from our actual work — edge processing, sensor fusion, real-time systems, evidence integrity. Not algorithmic puzzle collections.',
-    },
-    {
-      title: 'Writing Clarity',
-      description:
-        'Clear technical writing is part of the job — documentation, design proposals, incident reports. Clarity and precision matter more than volume.',
-    },
-  ],
-};
-
 const openRolesSection = {
   id: 'open-roles',
   eyebrow: 'Roles',
@@ -186,9 +76,6 @@ export const careersPageContent: PageContent = {
   },
   sections: [
     whatWeWorkOnSection,
-    whoWeHireSection,
-    howWeWorkSection,
-    whatCandidatesShouldExpectSection,
     openRolesSection,
   ],
 };
