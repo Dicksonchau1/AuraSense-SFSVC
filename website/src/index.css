@@ -1,0 +1,208 @@
+@import "tailwindcss";
+
+@theme {
+  --color-surface:          #0c0e12;
+  --color-surface-raised:   #111318;
+  --color-surface-overlay:  #181c23;
+  --color-border-subtle:    rgba(255,255,255,0.07);
+  --color-border-accent:    rgba(20,184,166,0.35);
+  --color-accent:           #14b8a6;
+  --color-accent-muted:     #0d9488;
+  --color-text-primary:     #f0f2f5;
+  --color-text-secondary:   #8a919e;
+  --color-text-muted:       #555d6b;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* ── Section header ───────────────────────────── */
+.section-header {
+  max-width: 580px;
+  margin-bottom: 3rem;
+}
+.section-header .section-eyebrow {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 0.75rem;
+}
+.section-header h2 {
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--color-text-primary);
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
+}
+.section-header p {
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+  max-width: 52ch;
+}
+
+/* ── CTA row ──────────────────────────────────── */
+.cta-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+/* ── Module badge / pill ──────────────────────── */
+.module-label {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  border: 1px solid var(--color-border-accent);
+  background: rgba(20,184,166,0.07);
+  padding: 0.25rem 0.65rem;
+  border-radius: 3px;
+  margin-bottom: 1rem;
+}
+
+/* ── Stat callout ─────────────────────────────── */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+.stat-item .stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+.stat-item .stat-label {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  margin-top: 0.3rem;
+  letter-spacing: 0.02em;
+}
+
+/* ── Pipeline node row ────────────────────────── */
+.pipeline-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 2rem;
+}
+.pipeline-node {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-accent);
+  background: rgba(20,184,166,0.06);
+  border: 1px solid var(--color-border-accent);
+  padding: 0.35rem 0.85rem;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.pipeline-arrow {
+  color: var(--color-text-muted);
+  font-size: 0.7rem;
+}
+
+/* ── Split layout (60/40) ─────────────────────── */
+.split-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+@media (max-width: 768px) {
+  .split-layout { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+/* ── Thin horizontal divider ──────────────────── */
+.divider { border: none; border-top: 1px solid var(--color-border-subtle); }
+
+/* ── Open role card ───────────────────────────── */
+.role-card {
+  border: 1px solid var(--color-border-subtle);
+  background: var(--color-surface-raised);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+.role-card:hover {
+  border-color: var(--color-border-accent);
+  transition: border-color 0.2s ease;
+}
+.role-card .role-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+.role-card .role-meta {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  margin-top: 0.2rem;
+}
+.role-tag {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  border: 1px solid var(--color-border-accent);
+  padding: 0.2rem 0.6rem;
+  border-radius: 3px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── Visuals / images ─────────────────────────── */
+.media-frame {
+  border-radius: 10px;
+  border: 1px solid var(--color-border-subtle);
+  overflow: hidden;
+  background: var(--color-surface-raised);
+  transition: box-shadow 0.3s ease;
+}
+.media-frame:hover {
+  box-shadow: 0 0 32px rgba(20,184,166,0.12);
+}
+.media-frame img, .media-frame video {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* ── Radar / SVG canvas ───────────────────────── */
+.radar-canvas {
+  width: 100%;
+  max-width: 480px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1px solid var(--color-border-accent);
+  background: radial-gradient(circle at center,
+    rgba(20,184,166,0.04) 0%,
+    rgba(20,184,166,0.01) 50%,
+    transparent 100%);
+  position: relative;
+  overflow: hidden;
+}
