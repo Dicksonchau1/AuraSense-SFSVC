@@ -150,10 +150,10 @@ const ctaSection: SectionContent = {
 
 export const homepageContent: PageContent = {
   hero: {
-    headline: 'Deterministic Edge Intelligence for Critical Infrastructure',
-    subheadline: 'Neuromorphic Edge Perception Architecture',
+    headline: 'Perceive. Percept. Process.',
+    subheadline: 'NEPA — Neuromorphic Edge Perception Architecture',
     description:
-      'NEPA is a neuromorphic edge platform for infrastructure inspection, surveillance, and robotic autonomy. Deterministic processing, replay-verified outputs, governed evidence retention. CPU-native. Offline-capable.',
+      'CPU-native. Offline-capable. Infrastructure inspection, surveillance, and robotic autonomy.',
     primaryCta: { label: 'Request Technical Briefing', href: '/contact' },
     secondaryCta: { label: 'View Platform', href: '/platform' },
   },
