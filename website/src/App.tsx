@@ -16,6 +16,7 @@ export default function App() {
       <Routes>
         <Route element={<Layout />}>
           <Route index element={<HomePage />} />
+          <Route path="about" element={<PlatformPage />} />
           <Route path="platform" element={<PlatformPage />} />
           <Route path="products" element={<ProductsPage />} />
           <Route path="products/sfsvc" element={<ProductSFSVCPage />} />

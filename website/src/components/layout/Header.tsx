@@ -4,23 +4,23 @@ import { mainNavLinks } from '../../content/navigation';
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const navRef = useRef<HTMLElement>(null);
   const location = useLocation();
 
   function closeMenus() {
     setMobileOpen(false);
-    setDropdownOpen(false);
+    setOpenDropdown(null);
   }
 
   // Close dropdown on outside click
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node)
+        navRef.current &&
+        !navRef.current.contains(e.target as Node)
       ) {
-        setDropdownOpen(false);
+        setOpenDropdown(null);
       }
     }
     document.addEventListener('mousedown', handleClick);
@@ -35,19 +35,19 @@ export function Header() {
     <header className="fixed top-0 inset-x-0 z-50 bg-surface/80 backdrop-blur-xl border-b border-border-subtle">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" onClick={closeMenus} className="flex items-center gap-2 text-text-primary text-lg font-bold tracking-tight">
-          <img src="/assets/logo-aurasensehk.svg" alt="AuraSenseHK" className="h-7 w-auto drop-shadow-[0_0_6px_rgba(34,211,238,0.4)]" />
-          AuraSense
+        <Link to="/" onClick={closeMenus} className="nav-logo-link">
+          <img src="/assets/logo-aurasensehk.svg" alt="AuraSenseHK" className="nav-logo-img" />
+          <span className="nav-logo-text">AuraSense</span>
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-8">
+        <nav ref={navRef} className="hidden md:flex items-center gap-8">
           {mainNavLinks.map((link) =>
             link.children ? (
-              <div key={link.label} ref={dropdownRef} className="relative">
+              <div key={link.label} className="relative">
                 <button
                   type="button"
-                  onClick={() => setDropdownOpen((o) => !o)}
+                  onClick={() => setOpenDropdown((o) => o === link.label ? null : link.label)}
                   className={`flex items-center gap-1 text-sm transition-colors duration-150 ${
                     isActive(link.href)
                       ? 'text-accent'
@@ -56,7 +56,7 @@ export function Header() {
                 >
                   {link.label}
                   <svg
-                    className={`w-3.5 h-3.5 transition-transform duration-150 ${dropdownOpen ? 'rotate-180' : ''}`}
+                    className={`w-3.5 h-3.5 transition-transform duration-150 ${openDropdown === link.label ? 'rotate-180' : ''}`}
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -66,7 +66,7 @@ export function Header() {
                   </svg>
                 </button>
 
-                {dropdownOpen && (
+                {openDropdown === link.label && (
                   <div className="absolute top-full left-0 mt-2 w-48 bg-surface-raised border border-border-subtle rounded-lg py-2 shadow-lg">
                     {link.children.map((child) => (
                       <Link

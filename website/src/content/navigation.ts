@@ -2,8 +2,12 @@ import type { NavLink } from '../types/content';
 
 export const mainNavLinks: NavLink[] = [
   {
-    label: 'Platform',
-    href: '/platform',
+    label: 'About',
+    href: '/about',
+    children: [
+      { label: 'Company', href: '/about' },
+      { label: 'Platform', href: '/platform' },
+    ],
   },
   {
     label: 'Products',

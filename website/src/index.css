@@ -26,6 +26,38 @@ body {
 }
 
 /* ═══ Scroll-triggered animations ═══ */
+
+/* ═══ Nav logo — floating with glow ═══ */
+@keyframes navLogoFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-3px); }
+}
+
+.nav-logo-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+}
+
+.nav-logo-img {
+  height: 2.4rem;
+  width: auto;
+  filter: drop-shadow(0 0 10px rgba(20, 184, 166, 0.5)) drop-shadow(0 0 20px rgba(20, 184, 166, 0.25));
+  animation: navLogoFloat 3s ease-in-out infinite;
+}
+
+.nav-logo-text {
+  color: var(--color-text-primary);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-shadow: 0 0 12px rgba(20, 184, 166, 0.35), 0 2px 8px rgba(0, 0, 0, 0.5);
+  animation: navLogoFloat 3s ease-in-out infinite;
+  animation-delay: 0.15s;
+}
+
+/* ═══ Scroll-triggered animations ═══ */
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(24px); }
   to   { opacity: 1; transform: translateY(0); }
