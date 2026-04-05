@@ -268,6 +268,111 @@
       .section-inner { padding: 0 1.5rem; }
       .sfsvc-tab { padding: 0.9rem 1.2rem; }
     }
+
+    /* ═══════════ LIVE INTELLIGENCE SECTION ═══════════ */
+
+    .live-intel-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: var(--space-10, 2.5rem);
+        margin-top: 3rem;
+    }
+
+    .live-intel-card {
+        background: #0d0d0d;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        overflow: hidden;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .live-intel-card:hover {
+        border-color: rgba(0, 200, 180, 0.3);
+        box-shadow: 0 8px 32px rgba(0, 200, 180, 0.08);
+    }
+
+    .live-intel-label {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.875rem 1.25rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        background: rgba(255, 255, 255, 0.02);
+    }
+
+    .live-intel-badge {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #00c8b4;
+        background: rgba(0, 200, 180, 0.1);
+        border: 1px solid rgba(0, 200, 180, 0.25);
+        padding: 0.2rem 0.6rem;
+        border-radius: 4px;
+    }
+
+    .live-intel-badge-amber {
+        color: #f59e0b;
+        background: rgba(245, 158, 11, 0.1);
+        border-color: rgba(245, 158, 11, 0.25);
+    }
+
+    .live-intel-meta {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.7rem;
+        color: rgba(255, 255, 255, 0.35);
+        letter-spacing: 0.04em;
+    }
+
+    .live-intel-image-wrap {
+        width: 100%;
+        overflow: hidden;
+        background: #000;
+        line-height: 0;
+    }
+
+    .live-intel-img {
+        width: 100%;
+        height: auto;
+        display: block;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+
+    .live-intel-card:hover .live-intel-img {
+        transform: scale(1.015);
+    }
+
+    .live-intel-caption {
+        padding: 1rem 1.25rem;
+        font-size: 0.8rem;
+        line-height: 1.6;
+        color: rgba(255, 255, 255, 0.45);
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .live-intel-caption strong {
+        color: rgba(255, 255, 255, 0.75);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.75rem;
+    }
+
+    @media (min-width: 900px) {
+        .live-intel-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .live-intel-label {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.4rem;
+        }
+    }
   </style>
 </head>
 <body>
@@ -450,6 +555,67 @@
       </div>
     </div>
   </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══════════ LIVE INTELLIGENCE VISUALISATION ═══════════ -->
+  <section class="section section-dark" id="live-intelligence">
+      <div class="section-inner">
+          <div class="section-header" data-aos>
+              <span class="section-tag">Live Intelligence</span>
+              <h2 class="section-title">What SFSVC sees. In real time.</h2>
+              <p class="section-lead">SFSVC fuses LiDAR point clouds, thermal heatmaps, and neuromorphic spike streams into a unified facade intelligence feed — detecting crack zones, growth trajectories, and structural risk before any human operator reacts.</p>
+          </div>
+
+          <div class="live-intel-grid" data-aos>
+
+              <!-- Image 1: NEPA Live Feed -->
+              <div class="live-intel-card">
+                  <div class="live-intel-label">
+                      <span class="live-intel-badge">LIVE FEED</span>
+                      <span class="live-intel-meta">LiDAR · Thermal · Spike Stream</span>
+                  </div>
+                  <div class="live-intel-image-wrap">
+                      <img
+                          src="assets/images/nepa_live_feed.jpg"
+                          alt="NEPA Live Feed — LiDAR Overlay, Thermal Heatmap, and Spike Stream showing facade crack zone detection with cyan spike events and thermal heatmap over a building facade"
+                          width="1400"
+                          height="750"
+                          loading="lazy"
+                          decoding="async"
+                          class="live-intel-img"
+                      >
+                  </div>
+                  <div class="live-intel-caption">
+                      <strong>NEPA LIVE FEED</strong> — AuraSense NEPA CognitiveMode: FACADE · 115μs P95 · NERM: ACTIVE. Cyan dots represent neuromorphic spike events; the dashed teal bounding box marks a detected CRACK ZONE with HIGH spike density. Colour gradient encodes LiDAR depth (yellow = 0.2m, cyan = 0.8m).
+                  </div>
+              </div>
+
+              <!-- Image 2: NEPA Inference Engine -->
+              <div class="live-intel-card">
+                  <div class="live-intel-label">
+                      <span class="live-intel-badge live-intel-badge-amber">INFERENCE ENGINE</span>
+                      <span class="live-intel-meta">Crack Detect · CHEM_MAP · Growth · Risk</span>
+                  </div>
+                  <div class="live-intel-image-wrap">
+                      <img
+                          src="assets/images/nepa_inference.jpg"
+                          alt="NEPA Inference Engine dashboard — four-panel view showing crack zone CHEM_MAP overlay, crack width growth chart, risk score with NERM interventions, and carbonation depth profile using Fick's Law"
+                          width="1400"
+                          height="750"
+                          loading="lazy"
+                          decoding="async"
+                          class="live-intel-img"
+                      >
+                  </div>
+                  <div class="live-intel-caption">
+                      <strong>NEPA INFERENCE ENGINE</strong> — CR-0047 · Conf: 0.94 · Risk: 0.73 · LiDAR Δdepth: −38mm. Four-panel output: CHEM_MAP overlay (top-left), crack width growth +0.383mm/mo (top-right), NEPA Risk Score with STDP_FREEZE / DEGRADED_HOLD / DRONE_RECALL intervention markers (bottom-left), and Carbonation Depth Profile by Fick's Law across Years 5–30 (bottom-right).
+                  </div>
+              </div>
+
+          </div>
+      </div>
+  </section>
 
   <div class="divider"></div>
 
