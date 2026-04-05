@@ -6,6 +6,7 @@ import { ProductCard } from '../components/sections/ProductCard';
 import { Button } from '../components/ui/Button';
 import { homepageContent } from '../content/homepage';
 import { productSummaries } from '../content/products';
+import { NepaAgentSection } from '../components/sections/NepaAgentSection';
 
 export function HomePage() {
   useEffect(() => {
@@ -20,6 +21,8 @@ export function HomePage() {
   return (
     <main>
       <Hero content={hero} large />
+
+      <NepaAgentSection />
 
       {contentSections.map((section, index) => (
         <SectionWrapper key={section.id} id={section.id} dark={index % 2 === 0}>
