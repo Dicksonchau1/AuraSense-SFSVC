@@ -91,36 +91,6 @@ const deploymentInfrastructureSection: SectionContent = {
   ],
 };
 
-const evidenceGovernanceSection: SectionContent = {
-  id: 'evidence-governance',
-  eyebrow: 'Governance',
-  title: 'Evidence & Governance',
-  description:
-    'NEPA treats evidence integrity as a first-class architectural requirement — built for regulatory scrutiny, legal discovery, and operational audit.',
-  items: [
-    {
-      title: 'Chain Sealing',
-      description:
-        'Every record is sealed into an append-only hash chain using SHA-256 canonical JSON. Tamper-evident and independently verifiable without runtime access.',
-    },
-    {
-      title: 'Tamper-Evident Logs',
-      description:
-        'Canonical JSON logs with lexicographic ordering. Any modification breaks the hash chain and is detectable without specialized forensic tools.',
-    },
-    {
-      title: 'Append-Only Storage',
-      description:
-        'Write-once storage with no in-place mutation or deletion. Retention policies enforced at the storage layer, governed by organizational policy.',
-    },
-    {
-      title: 'Compliance Architecture',
-      description:
-        'Configurable compliance from internal audits to regulatory packages. Bundle versioning and promotion gates provide complete provenance from development to deployment.',
-    },
-  ],
-};
-
 const ctaSection: SectionContent = {
   id: 'cta',
   title: 'Ready to Evaluate?',
@@ -161,7 +131,6 @@ export const homepageContent: PageContent = {
     whyDeterministicSection,
     productModulesSection,
     deploymentInfrastructureSection,
-    evidenceGovernanceSection,
     ctaSection,
   ],
 };
