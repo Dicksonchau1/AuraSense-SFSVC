@@ -1,0 +1,475 @@
+/* ═══════════════════════════════════════════════════════════════
+   PRODUCT SHOWCASE — AuraSense Product Module Cards
+   Premium enterprise 2×2 grid for NERNM and NSSIM modules.
+   Designed for integration at www.aurasensehk.com/products
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── DESIGN TOKENS ──────────────────────────────────────────── */
+:root {
+  /* Showcase-specific tokens */
+  --ps-page-bg:        #e8eaed;
+  --ps-card-bg:        #0c1017;
+  --ps-card-border:    rgba(255, 255, 255, 0.06);
+  --ps-card-radius:    16px;
+  --ps-accent:         #5de0e6;
+  --ps-accent-hover:   #7aeaef;
+  --ps-accent-glow:    rgba(93, 224, 230, 0.15);
+  --ps-heading:        #ffffff;
+  --ps-body:           #9ca3af;
+  --ps-muted:          #5a6370;
+  --ps-nav-text:       #7a8290;
+  --ps-node-bg:        #141a24;
+  --ps-node-border:    rgba(93, 224, 230, 0.18);
+  --ps-node-text:      #c8d0d8;
+  --ps-connector:      rgba(93, 224, 230, 0.25);
+  --ps-annotation:     #5a6878;
+  --ps-glow:           rgba(93, 224, 230, 0.06);
+  --ps-spacing-card:   24px;
+  --ps-spacing-grid:   24px;
+}
+
+/* ─── PAGE BODY OVERRIDE ─────────────────────────────────────── */
+.ps-page-body {
+  background: var(--ps-page-bg) !important;
+  color: #1a1a2e;
+}
+
+/* ─── SHOWCASE SECTION ───────────────────────────────────────── */
+.ps-showcase {
+  padding: 3rem 1.5rem 4rem;
+  min-height: 100vh;
+}
+
+.ps-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ─── 2×2 GRID ───────────────────────────────────────────────── */
+.ps-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--ps-spacing-grid);
+}
+
+/* ─── PRODUCT CARD ───────────────────────────────────────────── */
+.ps-card {
+  background: var(--ps-card-bg);
+  border: 1px solid var(--ps-card-border);
+  border-radius: var(--ps-card-radius);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ps-card:hover {
+  border-color: rgba(93, 224, 230, 0.12);
+  box-shadow: 0 0 40px var(--ps-glow), 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* ─── CARD NAV STRIP ─────────────────────────────────────────── */
+.ps-card__nav {
+  display: flex;
+  align-items: center;
+  padding: 0 var(--ps-spacing-card);
+  height: 48px;
+  border-bottom: 1px solid var(--ps-card-border);
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+.ps-card__logo {
+  font-family: var(--font, 'IBM Plex Sans', sans-serif);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ps-heading);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.ps-card__nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+  margin-left: auto;
+}
+
+.ps-card__nav-links a {
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ps-nav-text);
+  padding: 0.4rem 0.6rem;
+  border-radius: 4px;
+  transition: color 0.15s ease;
+}
+
+.ps-card__nav-links a:hover {
+  color: var(--ps-heading);
+}
+
+.ps-card__nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-left: 0.5rem;
+  flex-shrink: 0;
+}
+
+.ps-card__login {
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ps-nav-text);
+  transition: color 0.15s ease;
+}
+
+.ps-card__login:hover {
+  color: var(--ps-heading);
+}
+
+.ps-card__download {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ps-card-bg);
+  background: var(--ps-accent);
+  padding: 0.35rem 0.9rem;
+  border-radius: 20px;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+  white-space: nowrap;
+}
+
+.ps-card__download:hover {
+  background: var(--ps-accent-hover);
+  box-shadow: 0 0 12px var(--ps-accent-glow);
+}
+
+/* ─── CARD BODY ──────────────────────────────────────────────── */
+.ps-card__body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  padding: var(--ps-spacing-card);
+  flex: 1;
+  align-items: center;
+  min-height: 340px;
+}
+
+/* ─── LEFT CONTENT ───────────────────────────────────────────── */
+.ps-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-right: 0.5rem;
+}
+
+.ps-card__label {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.ps-card__product-name {
+  font-family: var(--mono, 'IBM Plex Mono', monospace);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ps-accent);
+}
+
+.ps-card__badge {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ps-card-bg);
+  background: var(--ps-accent);
+  padding: 0.2rem 0.6rem;
+  border-radius: 10px;
+}
+
+.ps-card__badge--muted {
+  background: transparent;
+  color: var(--ps-muted);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ps-card__title {
+  font-size: 1.45rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--ps-heading);
+  letter-spacing: -0.01em;
+}
+
+.ps-card__desc {
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--ps-body);
+}
+
+.ps-card__ctas {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.ps-card__btn {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.55rem 1.3rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.ps-card__btn--primary {
+  background: var(--ps-accent);
+  color: var(--ps-card-bg);
+}
+
+.ps-card__btn--primary:hover {
+  background: var(--ps-accent-hover);
+  box-shadow: 0 0 16px var(--ps-accent-glow);
+}
+
+.ps-card__btn--secondary {
+  background: transparent;
+  color: var(--ps-body);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ps-card__btn--secondary:hover {
+  color: var(--ps-heading);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* ─── ARCHITECTURE DIAGRAM ───────────────────────────────────── */
+.ps-card__diagram {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 0;
+}
+
+.ps-arch-svg {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+}
+
+/* Node styling */
+.ps-arch-node rect {
+  fill: var(--ps-node-bg);
+  stroke: var(--ps-node-border);
+  stroke-width: 1;
+  transition: stroke 0.2s ease, filter 0.2s ease;
+}
+
+.ps-arch-node text {
+  font-family: var(--font, 'IBM Plex Sans', sans-serif);
+  font-size: 10.5px;
+  font-weight: 500;
+  fill: var(--ps-node-text);
+  text-anchor: middle;
+}
+
+/* Core node glow */
+.ps-arch-node--core rect {
+  stroke: rgba(93, 224, 230, 0.35);
+  filter: drop-shadow(0 0 6px rgba(93, 224, 230, 0.1));
+}
+
+.ps-arch-node--core text {
+  fill: var(--ps-accent);
+  font-weight: 600;
+}
+
+/* Output node accent */
+.ps-arch-node--output rect {
+  stroke: rgba(93, 224, 230, 0.25);
+}
+
+.ps-arch-node--output text {
+  fill: var(--ps-accent);
+  font-weight: 500;
+}
+
+/* Connectors */
+.ps-arch-connector {
+  stroke: var(--ps-connector);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 3;
+}
+
+/* Annotations */
+.ps-arch-annotation line {
+  stroke: rgba(90, 104, 120, 0.4);
+  stroke-width: 1;
+}
+
+.ps-arch-annotation text {
+  font-family: var(--mono, 'IBM Plex Mono', monospace);
+  font-size: 7.5px;
+  font-weight: 400;
+  fill: var(--ps-annotation);
+}
+
+/* ─── CARD FOOTER ────────────────────────────────────────────── */
+.ps-card__footer {
+  display: flex;
+  align-items: center;
+  padding: 0.65rem var(--ps-spacing-card);
+  border-top: 1px solid var(--ps-card-border);
+  gap: 0.75rem;
+}
+
+.ps-card__footer-item {
+  font-family: var(--mono, 'IBM Plex Mono', monospace);
+  font-size: 0.62rem;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  color: var(--ps-muted);
+}
+
+.ps-card__footer-sep {
+  width: 1px;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ─── HOVER STATE DIAGRAM GLOW ───────────────────────────────── */
+.ps-card:hover .ps-arch-node rect {
+  stroke: rgba(93, 224, 230, 0.25);
+}
+
+.ps-card:hover .ps-arch-node--core rect {
+  filter: drop-shadow(0 0 10px rgba(93, 224, 230, 0.18));
+}
+
+.ps-card:hover .ps-arch-connector {
+  stroke: rgba(93, 224, 230, 0.4);
+}
+
+/* ─── RESPONSIVE: TABLET ─────────────────────────────────────── */
+@media (max-width: 1200px) {
+  .ps-card__body {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    min-height: auto;
+  }
+
+  .ps-card__content {
+    padding-right: 0;
+  }
+
+  .ps-card__diagram {
+    max-height: 300px;
+  }
+
+  .ps-arch-svg {
+    max-width: 280px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .ps-grid {
+    grid-template-columns: 1fr;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .ps-card__body {
+    grid-template-columns: 1fr 1fr;
+    min-height: auto;
+  }
+
+  .ps-card__title {
+    font-size: 1.3rem;
+  }
+}
+
+/* ─── RESPONSIVE: MOBILE ─────────────────────────────────────── */
+@media (max-width: 768px) {
+  .ps-showcase {
+    padding: 2rem 1rem 3rem;
+  }
+
+  .ps-grid {
+    gap: 16px;
+  }
+
+  .ps-card__body {
+    grid-template-columns: 1fr;
+    padding: 20px;
+    gap: 1.5rem;
+  }
+
+  .ps-card__nav-links {
+    display: none;
+  }
+
+  .ps-card__title {
+    font-size: 1.2rem;
+  }
+
+  .ps-card__desc {
+    font-size: 0.78rem;
+  }
+
+  .ps-arch-svg {
+    max-width: 260px;
+  }
+
+  .ps-card__footer {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .ps-card__nav {
+    padding: 0 16px;
+    height: 44px;
+  }
+
+  .ps-card__body {
+    padding: 16px;
+  }
+
+  .ps-card__title {
+    font-size: 1.1rem;
+  }
+
+  .ps-card__ctas {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ps-card__btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* ─── SITE FOOTER OVERRIDE (light page) ─────────────────────── */
+.ps-page-body .site-footer {
+  background: #f0f1f3;
+  border-top: 1px solid #d8dce2;
+}
+
+.ps-page-body .site-footer__inner {
+  color: #5a6878;
+}
