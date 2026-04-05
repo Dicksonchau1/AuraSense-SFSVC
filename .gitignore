@@ -1,5 +1,6 @@
 # ==============================================================================
 # Private engine code (in separate private repo: AuraSense-SFSVC-Engine)
+# Root-level files only — leading slashes allow website/ subdirectory files
 # ==============================================================================
 /src/
 /tests/
