@@ -8,11 +8,10 @@ export function Header() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
 
-  // Close menus on route change
-  useEffect(() => {
+  function closeMenus() {
     setMobileOpen(false);
     setDropdownOpen(false);
-  }, [location.pathname]);
+  }
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -36,7 +35,7 @@ export function Header() {
     <header className="fixed top-0 inset-x-0 z-50 bg-surface/80 backdrop-blur-xl border-b border-border-subtle">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="text-text-primary text-lg font-bold tracking-tight">
+        <Link to="/" onClick={closeMenus} className="text-text-primary text-lg font-bold tracking-tight">
           AuraSense
         </Link>
 
@@ -72,6 +71,7 @@ export function Header() {
                       <Link
                         key={child.href}
                         to={child.href}
+                        onClick={closeMenus}
                         className={`block px-4 py-2 text-sm transition-colors duration-150 ${
                           isActive(child.href)
                             ? 'text-accent'
@@ -88,6 +88,7 @@ export function Header() {
               <Link
                 key={link.href}
                 to={link.href}
+                onClick={closeMenus}
                 className={`text-sm transition-colors duration-150 ${
                   isActive(link.href)
                     ? 'text-accent'
@@ -126,6 +127,7 @@ export function Header() {
             <div key={link.label}>
               <Link
                 to={link.href}
+                onClick={closeMenus}
                 className={`block py-2 text-sm transition-colors duration-150 ${
                   isActive(link.href)
                     ? 'text-accent'
@@ -138,6 +140,7 @@ export function Header() {
                 <Link
                   key={child.href}
                   to={child.href}
+                  onClick={closeMenus}
                   className={`block py-2 pl-4 text-sm transition-colors duration-150 ${
                     isActive(child.href)
                       ? 'text-accent'
