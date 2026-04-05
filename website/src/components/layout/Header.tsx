@@ -35,7 +35,8 @@ export function Header() {
     <header className="fixed top-0 inset-x-0 z-50 bg-surface/80 backdrop-blur-xl border-b border-border-subtle">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" onClick={closeMenus} className="text-text-primary text-lg font-bold tracking-tight">
+        <Link to="/" onClick={closeMenus} className="flex items-center gap-2 text-text-primary text-lg font-bold tracking-tight">
+          <img src="/assets/logo-aurasensehk.svg" alt="AuraSenseHK" className="h-7 w-auto drop-shadow-[0_0_6px_rgba(34,211,238,0.4)]" />
           AuraSense
         </Link>
 
