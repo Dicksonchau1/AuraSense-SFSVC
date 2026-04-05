@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { Hero } from '../components/sections/Hero';
 import { SectionWrapper } from '../components/ui/SectionWrapper';
 import { FeatureGrid } from '../components/sections/FeatureGrid';
-import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { careersPageContent } from '../content/careers';
 
