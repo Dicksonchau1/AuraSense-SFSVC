@@ -4,6 +4,7 @@ import { SectionWrapper } from '../components/ui/SectionWrapper';
 import { FeatureGrid } from '../components/sections/FeatureGrid';
 import { Button } from '../components/ui/Button';
 import { platformContent } from '../content/platform';
+import { NepaMiddleLayerSection } from '../components/sections/NepaMiddleLayerSection';
 
 export function PlatformPage() {
   useEffect(() => {
@@ -15,6 +16,8 @@ export function PlatformPage() {
   return (
     <main>
       <Hero content={hero} />
+
+      <NepaMiddleLayerSection />
 
       {sections.map((section, index) => (
         <SectionWrapper key={section.id} id={section.id} dark={index % 2 === 0}>
