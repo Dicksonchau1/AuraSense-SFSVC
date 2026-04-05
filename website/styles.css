@@ -179,6 +179,12 @@ ul { list-style: none; }
     filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.6));
 }
 
+.logo-img {
+    height: 32px;
+    width: auto;
+    filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.5));
+}
+
 .nav-links {
     display: flex;
     align-items: center;
