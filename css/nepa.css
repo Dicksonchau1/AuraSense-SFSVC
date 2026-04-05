@@ -100,7 +100,7 @@ img, video { display: block; max-width: 100%; }
   display: inline-block;
   transition: transform 0.2s;
 }
-.nav-dropdown:hover .site-nav__links > .nav-dropdown > button > .site-nav__chevron,
+.nav-dropdown:hover > button > .site-nav__chevron,
 .nav-dropdown.open > button > .site-nav__chevron {
   transform: rotate(225deg) translateY(-2px);
 }
@@ -329,7 +329,7 @@ img, video { display: block; max-width: 100%; }
   margin: 0 auto;
   padding: 5rem 2.5rem;
   display: grid;
-  grid-template-columns: 55% 45%;
+  grid-template-columns: 1.22fr 1fr;
   gap: 4rem;
   align-items: center;
   width: 100%;
