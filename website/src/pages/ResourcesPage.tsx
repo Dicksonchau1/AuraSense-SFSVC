@@ -1,7 +1,6 @@
 ﻿import { useEffect, useState } from 'react';
 import { Hero } from '../components/sections/Hero';
 import { SectionWrapper } from '../components/ui/SectionWrapper';
-import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import {
   resourcesPageContent,
@@ -38,7 +37,7 @@ export function ResourcesPage() {
       <SectionWrapper>
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-2xl font-semibold text-text-primary mb-4">
-            {resourcesIntro.title}
+            {resourcesIntro.heading}
           </h2>
           <p className="text-text-secondary leading-relaxed">
             {resourcesIntro.body}
@@ -81,7 +80,10 @@ export function ResourcesPage() {
         {/* Featured resources grid */}
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((resource) => (
-            <Card key={resource.title}>
+            <div
+              key={resource.title}
+              className="border border-border-subtle rounded-lg p-6 bg-surface-raised transition-all duration-200 hover:border-accent/40 hover:-translate-y-1 hover:shadow-lg hover:shadow-accent/5"
+            >
               <div className="flex flex-wrap gap-2 mb-3">
                 <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-accent/10 text-accent">
                   {resource.type}
@@ -101,7 +103,7 @@ export function ResourcesPage() {
                   {resource.cta.label}
                 </Button>
               )}
-            </Card>
+            </div>
           ))}
         </div>
       </SectionWrapper>
@@ -113,14 +115,17 @@ export function ResourcesPage() {
         </h2>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {audienceSegments.map((seg) => (
-            <Card key={seg.title}>
+            <div
+              key={seg.title}
+              className="border border-border-subtle rounded-lg p-6 bg-surface-raised transition-all duration-200 hover:border-accent/40 hover:-translate-y-1 hover:shadow-lg hover:shadow-accent/5"
+            >
               <h3 className="text-lg font-semibold text-text-primary mb-2">
                 {seg.title}
               </h3>
               <p className="text-sm text-text-secondary leading-relaxed">
                 {seg.description}
               </p>
-            </Card>
+            </div>
           ))}
         </div>
       </SectionWrapper>
@@ -129,22 +134,25 @@ export function ResourcesPage() {
       <SectionWrapper>
         <div className="max-w-3xl mx-auto text-center mb-8">
           <h2 className="text-2xl font-semibold text-text-primary mb-4">
-            {accessModel.title}
+            {accessModel.heading}
           </h2>
           <p className="text-text-secondary leading-relaxed">
-            {accessModel.description}
+            {accessModel.body}
           </p>
         </div>
         <div className="grid gap-6 sm:grid-cols-3 max-w-4xl mx-auto">
           {accessModel.items.map((item) => (
-            <Card key={item.title}>
+            <div
+              key={item.title}
+              className="border border-border-subtle rounded-lg p-6 bg-surface-raised transition-all duration-200 hover:border-accent/40 hover:-translate-y-1 hover:shadow-lg hover:shadow-accent/5"
+            >
               <h3 className="text-lg font-semibold text-text-primary mb-2">
                 {item.title}
               </h3>
               <p className="text-sm text-text-secondary leading-relaxed">
                 {item.description}
               </p>
-            </Card>
+            </div>
           ))}
         </div>
       </SectionWrapper>
@@ -158,8 +166,8 @@ export function ResourcesPage() {
           <p className="text-text-secondary mb-6 leading-relaxed">
             {signInPanel.description}
           </p>
-          <Button variant="primary" href={signInPanel.cta.href}>
-            {signInPanel.cta.label}
+          <Button variant="primary" href={signInPanel.primaryCta.href}>
+            {signInPanel.primaryCta.label}
           </Button>
         </div>
       </SectionWrapper>
@@ -168,13 +176,13 @@ export function ResourcesPage() {
       <SectionWrapper>
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-2xl font-semibold text-text-primary mb-4">
-            {resourcesCta.title}
+            {resourcesCta.heading}
           </h2>
           <p className="text-text-secondary mb-6 leading-relaxed">
-            {resourcesCta.description}
+            {resourcesCta.body}
           </p>
-          <Button variant="primary" href={resourcesCta.cta.href}>
-            {resourcesCta.cta.label}
+          <Button variant="primary" href={resourcesCta.primaryCta.href}>
+            {resourcesCta.primaryCta.label}
           </Button>
         </div>
       </SectionWrapper>
